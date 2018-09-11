@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lr_refresh_header_behavior" translatable="false">com.androidpi.literefresh.core.behavior.RefreshHeaderBehavior</string>
+    <string name="lr_refresh_footer_behavior" translatable="false">com.androidpi.literefresh.core.behavior.RefreshFooterBehavior</string>
+    <string name="lr_refresh_content_behavior" translatable="false">com.androidpi.literefresh.core.behavior.RefreshContentBehavior</string>
+</resources>
