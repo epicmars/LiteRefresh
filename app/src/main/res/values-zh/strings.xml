@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--news-->
+    <string name="loading_complete">加载完成</string>
+    <string name="no_more_date">无更多数据</string>
+
+    <string name="refresh_start">下拉更新</string>
+    <string name="release_to_refresh">释放以更新</string>
+    <string name="refreshing">更新中...</string>
+    <string name="refresh_complete">更新完成</string>
+</resources>

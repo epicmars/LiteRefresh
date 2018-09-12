@@ -21,7 +21,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.androidpi.literefresh.core.behavior.RefreshFooterBehavior;
+import com.androidpi.literefresh.behavior.RefreshFooterBehavior;
 
 /**
  */

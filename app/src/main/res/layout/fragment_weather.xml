@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:background="@mipmap/bg_weather">
 
-        <com.androidpi.literefresh.sample.demos.weather.ui.WeatherHeaderView
+        <com.androidpi.literefresh.sample.ui.widget.WeatherHeaderView
             android:id="@+id/refresh_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -30,5 +30,12 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation project(':core')
+    implementation project(':literefresh')
 }
+
+ext {
+    artifactId = 'literefresh-widget'
+    bintrayPackage = 'LiteRefresh-Widget'
+}
+
+apply from: rootProject.file('publish.gradle')

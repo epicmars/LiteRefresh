@@ -1,0 +1,86 @@
+/*
+ * Copyright 2018 yinpinjiu@gmail.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.androidpi.literefresh.sample.ui.fragment
+
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
+import android.os.Bundle
+import android.support.design.widget.CoordinatorLayout
+import android.view.View
+import com.androidpi.literefresh.OnRefreshListener
+
+
+import com.androidpi.literefresh.behavior.RefreshHeaderBehavior
+import com.androidpi.literefresh.sample.R
+import com.androidpi.literefresh.sample.base.ui.BaseFragment
+import com.androidpi.literefresh.sample.base.ui.BindLayout
+import com.androidpi.literefresh.sample.databinding.FragmentWeatherBinding
+import com.androidpi.literefresh.sample.vm.WeatherViewModel
+
+@BindLayout(value = R.layout.fragment_weather)
+class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
+
+    lateinit var viewModel: WeatherViewModel
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProviders.of(this).get(WeatherViewModel::class.java)
+
+        val behavior = (binding.refreshHeader.layoutParams as CoordinatorLayout.LayoutParams).behavior as RefreshHeaderBehavior
+        behavior.addOnRefreshListener(object : OnRefreshListener {
+            override fun onRefreshEnd(throwable: Throwable?) {
+            }
+
+            override fun onReleaseToRefresh() {
+            }
+
+            override fun onRefreshStart() {
+            }
+
+            override fun onRefresh() {
+                viewModel.getCurrentWeather(21.34f, -158.12f)
+            }
+        })
+
+        viewModel.weatherResult.observe(this, Observer { resCurrentWeatherResource ->
+            if (resCurrentWeatherResource == null) return@Observer
+            if (resCurrentWeatherResource.isSuccess) {
+                behavior.refreshComplete()
+                val weatherBean = resCurrentWeatherResource.data!!.weather[0]
+                val mainBean = resCurrentWeatherResource.data.main
+                binding.ivIcon.setImageResource(resources.getIdentifier("ic_" + weatherBean.icon, "drawable", context?.packageName))
+                binding.tvDescription.text = weatherBean.description.capitalize()
+                binding.tvTemperature.text = getString(R.string.format_temperature, mainBean.temp - 273.15)
+            } else if (resCurrentWeatherResource.isError) {
+                behavior.refreshError(resCurrentWeatherResource.throwable)
+            }
+        })
+
+        behavior.refresh()
+    }
+
+    companion object {
+
+        fun newInstance(): WeatherFragment {
+
+            val args = Bundle()
+
+            val fragment = WeatherFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
+}

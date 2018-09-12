@@ -21,11 +21,10 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.androidpi.literefresh.core.behavior.RefreshHeaderBehavior;
+import com.androidpi.literefresh.behavior.RefreshHeaderBehavior;
 
 /**
  * A scrolling header layout that has a attached {@link RefreshHeaderBehavior}.
- * Created by jastrelax on 2018/8/19.
  */
 public class RefreshHeaderLayout extends FrameLayout implements CoordinatorLayout.AttachedBehavior{
 

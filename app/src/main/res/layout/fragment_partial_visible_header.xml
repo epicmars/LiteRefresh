@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_dark">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/view_header"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:transitionName="@string/transition_header"
+            app:layout_behavior="@string/lr_refresh_header_behavior"
+            app:lr_maxOffsetRatio="120%p"
+            app:lr_triggerOffset="96dp"
+            app:lr_visibleHeight="180dp">
+
+            <ImageView
+                android:id="@+id/iv_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.androidpi.literefresh.sample.ui.widget.CircularLoadingView
+                android:id="@+id/circle_progress"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="182dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <fragment
+            android:id="@+id/fragment_list"
+            android:name="com.androidpi.literefresh.sample.ui.fragment.UnsplashPhotoListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/lr_refresh_content_behavior" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/view_footer"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_behavior="@string/lr_refresh_footer_behavior">
+
+            <TextView
+                android:id="@+id/footer_tv_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.androidpi.literefresh.sample.ui.widget.CircularLoadingView
+                android:id="@+id/footer_circle_progress"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_photo"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="-32dp"
+            android:elevation="4dp"
+            android:src="@mipmap/photo5"
+            app:civ_border_color="@android:color/white"
+            app:civ_border_overlay="true"
+            app:civ_border_width="4dp"
+            app:layout_anchor="@id/fragment_list"
+            app:layout_anchorGravity="top|end" />
+
+        <com.androidpi.literefresh.sample.ui.widget.SampleToolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:theme="@style/AppTheme.NoActionBar.AppBarOverlay"
+            app:elevation="0dp"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

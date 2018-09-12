@@ -20,8 +20,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.androidpi.literefresh.core.OnScrollListener;
-import com.androidpi.literefresh.core.behavior.RefreshHeaderBehavior;
+import com.androidpi.literefresh.OnScrollListener;
+import com.androidpi.literefresh.behavior.RefreshHeaderBehavior;
 
 /**
  * A simple scalable header layout.
