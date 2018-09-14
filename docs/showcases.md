@@ -1,11 +1,31 @@
 Sample showcases
 ==============
 
-|   |     |    | 
-|---|-----|----|
-![img](/docs/images/weather.gif) | ![img](/docs/images/news.gif) | ![img](/docs/images/unsplash.gif)
-Weather report | News feed | Photos from Unsplash
-![img](/docs/images/movies.gif)  | ![img](/docs/images/partial-list.gif) | ![img](/docs/images/collapsible.gif)
-Movies | Partial visible list | Collapsible header 
-![img](/docs/images/partial-header.gif) | |
-Partial visible header ||
+Weather report
+
+<img src="/docs/images/weather.gif" width="30%">
+
+News feed
+
+<img src="/docs/images/news.gif" width="30%">
+
+Photos from Unsplash 
+
+<img src="/docs/images/unsplash.gif" width="30%">
+
+Movies
+
+<img src="/docs/images/movies.gif" width="30%">
+
+Partial visible list
+
+<img src="/docs/images/partial-list.gif" width="30%">
+
+Collapsible header
+
+<img src="/docs/images/collapsible.gif" width="30%">
+
+Partial visible header
+
+<img src="/docs/images/partial-header.gif" width="30%">
+

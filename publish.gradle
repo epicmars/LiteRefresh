@@ -17,7 +17,7 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-version = '0.8.0-beta'
+version = '0.8.0'
 group = 'com.androidpi'
 
 // build a jar with source files
@@ -45,23 +45,53 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 artifacts {
-    archives sourcesJar
-    archives javadocJar
+    archives sourcesJar, javadocJar
 }
 
+def pomConfig = {
+    scm {
+        connection 'scm:git:git@github.com:jastrelax/LiteRefresh.git'
+        developerConnection 'scm:git:git@github.com:jastrelax/LiteRefresh.git'
+        url 'https://github.com/jastrelax/LiteRefresh'
+    }
 
+    licenses {
+        license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        }
+    }
+
+    developers {
+        developer {
+            id 'jastrelax'
+            name 'PinJiu Yin'
+            email 'yinpinjiu@gmail.com'
+        }
+    }
+}
 
 publishing {
     publications {
         Production(MavenPublication) {
-            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
-            artifact sourcesJar
-            artifact javadocJar
+//            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+//            artifact sourcesJar
+//            artifact javadocJar
+
             groupId this.group
-            artifactId project.ext.artifactId
+            artifactId archivesBaseName
             version this.version
+
+            pom {
+                packaging = 'aar'
+            }
+
             pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
+                def root = asNode()
+                root.appendNode('name', project.ext.projectName)
+                root.appendNode('description', project.ext.projectDescription)
+                root.appendNode('url', project.ext.projectUrl)
+                def dependenciesNode = root.appendNode('dependencies')
                 // Iterate over the implementation dependencies (we don't want the test ones), adding a <dependency> node for each
                 configurations.implementation.allDependencies.each {
                     // Ensure dependencies such as fileTree are not included.
@@ -72,6 +102,7 @@ publishing {
                         dependencyNode.appendNode('version', it.version)
                     }
                 }
+                root.children().last() + pomConfig
             }
         }
     }
@@ -88,17 +119,21 @@ bintray {
     key = localProperties['bintray.api.key']
 
     publications = ['Production']
-    override = false
+    configurations = ['archives']
+    override = true
+    publish = true
+    dryRun = true
 
     pkg {
         repo = 'maven'
         name = project.ext.bintrayPackage
-        description = "A lite and flexible UI library for Android application."
-        publish = true
-        publicDownloadNumbers = true
+        desc = project.ext.projectDescription
+        publicDownloadNumbers = false
         licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/jastrelax/AndroidPi.git'
-        dryRun = true
+        vcsUrl = 'https://github.com/jastrelax/LiteRefresh.git'
+        websiteUrl = 'https://github.com/jastrelax/LiteRefresh'
+
+        githubRepo = 'jastrelax/LiteRefresh'
 
         version {
             name = this.version
@@ -106,11 +141,16 @@ bintray {
             released = new Date()
             vcsTag = this.version
 
+            gpg {
+                sign = true
+                passphrase = localProperties['signing.password']
+            }
+
             //Configuration for Maven Central sync of the version
             mavenCentralSync {
                 sync = false
-                user = localProperties['sonatype.user']
-                password = localProperties['sonatype.passwd']
+                user = localProperties['sonatype.ossrh.user']
+                password = localProperties['sonatype.ossrh.passwd']
                 close = '0'
             }
         }

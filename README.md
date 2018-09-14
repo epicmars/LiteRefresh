@@ -1,11 +1,9 @@
 LiteRefresh
 =============
-A lite and flexible nested scrolling UI library based on CoordinatorLayout.
-
 When the right behaviors are attached to the right and direct child views of CoordinatorLayout
 and when the content view to which the content behavior is attached is scrolling, 
-the header and footer views can react to that scrolling, the content behavior also has a internal 
-state machine which trace the scrolling state, so the pull-to-refresh and pull-to-load features are 
+the header and footer views can react to that scrolling, the content behavior also has internal 
+state machines that trace it's scrolling states, so the pull-to-refresh and pull-to-load features are 
 well supported.
 
 ## Behaviors
@@ -13,18 +11,20 @@ There are three type of behaviors can be used to attached to direct children of 
 
 - `RefreshContentBehavior`
     + Make nested scrolling content partially visible
-    + Add scrolling listeners to observe content view's scrolling position
+    + Add scrolling listeners to observe content view's scrolling offset 
     + Add refreshing state listener to observe the header refreshing state
     + Add loading state listener to observe the footer loading state
     
 - `RefreshHeaderBehavior`
+    + Make header view partially visible or totally visible
     + Make header view follow with content view or not
-    + Add scrolling listeners to observe header view's scrolling position
+    + Add scrolling listeners to observe header view's scrolling offset
     + Add refreshing state listener to observe the refreshing state
     
 - `RefreshFooterBehavior`
+    + Make footer view partially visible or totally visible
     + Make footer view follow with content view or not
-    + Add scrolling listeners to observe footer view's scrolling position
+    + Add scrolling listeners to observe footer view's scrolling offset
     + Add loading state listener to observe the loading state
 
 ## Mode of header and footer behaviors
@@ -46,9 +46,11 @@ Four modes are defined:
 Showcases from sample application can be visited in the [showcases page](/docs/showcases.md).
     
 ## QuickStart
-### Use content behavior standalone
+### Attach behaviors in layout
+#### Use content behavior standalone
 Just make your nested scrollable view a direct child of `CoordinatorLayout`, and set
 the `layout_behavior` attribute to `@string/lr_refresh_content_behavior`.
+
 ```xml
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -62,15 +64,15 @@ the `layout_behavior` attribute to `@string/lr_refresh_content_behavior`.
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/lr_refresh_content_behavior">
-
         </android.support.v7.widget.RecyclerView>
     </android.support.design.widget.CoordinatorLayout>
 ```
 
-### Add a header and footer to content
+#### Work with header and footer view 
 
 Below is an example from the sample application, notice that there is an anchored view
 that is a feature of CoordinatorLayout which make the behaviors more powerful.
+
 ```xml
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -111,13 +113,14 @@ that is a feature of CoordinatorLayout which make the behaviors more powerful.
     </android.support.design.widget.CoordinatorLayout>
 ```
 
-### Attach behavior from code
+### Attach behaviors from code
 Unlike attach behavior in the layout that you can configure the behavior with attributes.
 Add behavior through code has some limitations that the configuration is not supported right now, 
 but will be supported soon in a later version.
  
-#### Set behavior in `CoordinatorLayout.LayoutParams`
+#### Set behaviors in `CoordinatorLayout.LayoutParams`
 When using this method you must be sure the layout params has been generated. 
+
 ```java
     CoordinatorLayout.LayoutParams params = ((CoordinatorLayout.LayoutParams) getLayoutParams());
     RefreshHeaderBehavior headerBehavior = new RefreshHeaderBehavior(context);
@@ -159,8 +162,10 @@ The supported nested scrolling view for content are list below.
 ## Download
 
 ```gradle
-implementation 'com.androidpi:literefresh:0.8.0-alpha'
-implementation 'com.androidpi:literefresh-widget:0.8.0-alpha'
+dependencies {
+    implementation 'com.androidpi:literefresh:0.8.0-alpha'
+    implementation 'com.androidpi:literefresh-widget:0.8.0-alpha'
+}
 ```
 
 ## Licence

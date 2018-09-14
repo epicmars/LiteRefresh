@@ -31,7 +31,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class NewsViewModel: ViewModel(){
+class NewsViewModel : ViewModel() {
 
     val newsApi: NewsApi = RetrofitClientFactory.newRetrofit(NewsApi.BASE_URL).create(NewsApi::class.java)
 
@@ -42,7 +42,7 @@ class NewsViewModel: ViewModel(){
     var page = NewsPagination.FIRST_PAGE
 
     fun getLatestNews(isNext: Boolean, count: Int = NewsPagination.PAGE_SIZE) {
-        val page = if(isNext) this.page + 1 else NewsPagination.FIRST_PAGE
+        val page = if (isNext) this.page + 1 else NewsPagination.FIRST_PAGE
         this.page = page
         Timber.d("getLatestedNews $page")
         refreshNews(page, count, mCategory)
@@ -51,11 +51,7 @@ class NewsViewModel: ViewModel(){
                 .subscribe(object : SingleObserver<List<News>> {
 
                     override fun onSuccess(t: List<News>) {
-                        if (t.isEmpty()) {
-                            mNews.value = Resource.error(null, NewsPagination(page, t), Exception("No more data."))
-                        } else {
-                            mNews.value = Resource.success(NewsPagination(page, t))
-                        }
+                        mNews.value = Resource.success(NewsPagination(page, t))
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -68,11 +64,11 @@ class NewsViewModel: ViewModel(){
                 })
     }
 
-    fun refreshNews(page:Int=1, count:Int= NewsPagination.PAGE_SIZE, category:String?="general"): Single<List<News>> {
-        return newsApi.topHeadlines(pageSize=count,page=page,category=category)
+    fun refreshNews(page: Int = 1, count: Int = NewsPagination.PAGE_SIZE, category: String? = "general"): Single<List<News>> {
+        return newsApi.topHeadlines(pageSize = count, page = page, category = category)
                 .toObservable()
-                .flatMap{resNews-> Observable.fromIterable(resNews.articles)}
-                .map{t: ResTopHeadlines.ArticlesBean->t.toNewsArticle()}
+                .flatMap { resNews -> Observable.fromIterable(resNews.articles) }
+                .map { t: ResTopHeadlines.ArticlesBean -> t.toNewsArticle() }
                 .toList()
     }
 

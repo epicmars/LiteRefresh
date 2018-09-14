@@ -1,1 +1,1 @@
-include ':app', ':literefresh', ':widget'
+include ':app', ':literefresh', ':literefresh-widgets'

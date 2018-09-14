@@ -91,5 +91,5 @@ dependencies {
     implementation 'me.relex:circleindicator:1.2.2@aar'
 
     implementation project(':literefresh')
-    implementation project(':widget')
+    implementation project(':literefresh-widgets')
 }

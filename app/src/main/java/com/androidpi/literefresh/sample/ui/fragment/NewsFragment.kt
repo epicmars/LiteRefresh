@@ -95,8 +95,12 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
                     refreshFinished()
                     mAdapter.setPayloads(pagination.newsList)
                 } else {
-                    loadFinished(null)
-                    mAdapter.addPayloads(pagination.newsList)
+                    if (pagination.newsList.isEmpty()) {
+                        loadFinished(Exception(getString(R.string.no_more_date)))
+                    } else {
+                        loadFinished(null)
+                        mAdapter.addPayloads(pagination.newsList)
+                    }
                 }
             } else if (t.isError) {
                 if (pagination == null) {

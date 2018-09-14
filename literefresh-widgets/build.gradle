@@ -33,9 +33,12 @@ dependencies {
     implementation project(':literefresh')
 }
 
+archivesBaseName = 'literefresh-widgets'
 ext {
-    artifactId = 'literefresh-widget'
-    bintrayPackage = 'LiteRefresh-Widget'
+    bintrayPackage = 'LiteRefresh-Widgets'
+    projectName = 'LiteRefresh Widgets'
+    projectDescription = "Widgets of LiteRefresh."
+    projectUrl = 'https://github.com/jastrelax/LiteRefresh'
 }
 
 apply from: rootProject.file('publish.gradle')

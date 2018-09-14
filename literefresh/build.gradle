@@ -32,9 +32,12 @@ dependencies {
     implementation "com.android.support:support-dynamic-animation:$android_support_version"
 }
 
+archivesBaseName = 'literefresh'
 ext {
-    artifactId = 'literefresh'
     bintrayPackage = 'LiteRefresh'
+    projectName = 'LiteRefresh'
+    projectDescription = "Nested scrolling UI library for Android based on CoordinatorLayout. Pull-to-refresh and pull-to-load-more are supported."
+    projectUrl = 'https://github.com/jastrelax/LiteRefresh'
 }
 
 apply from: rootProject.file('publish.gradle')
