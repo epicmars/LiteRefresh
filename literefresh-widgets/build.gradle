@@ -35,7 +35,6 @@ dependencies {
 
 archivesBaseName = 'literefresh-widgets'
 ext {
-    bintrayPackage = 'LiteRefresh-Widgets'
     projectName = 'LiteRefresh Widgets'
     projectDescription = "Widgets of LiteRefresh."
     projectUrl = 'https://github.com/jastrelax/LiteRefresh'

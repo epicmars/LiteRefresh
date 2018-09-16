@@ -126,7 +126,7 @@ bintray {
 
     pkg {
         repo = 'maven'
-        name = project.ext.bintrayPackage
+        name = "${this.group}:${this.archivesBaseName}"
         desc = project.ext.projectDescription
         publicDownloadNumbers = false
         licenses = ['Apache-2.0']
@@ -137,7 +137,7 @@ bintray {
 
         version {
             name = this.version
-            desc = "${project.ext.bintrayPackage} ${this.version}"
+            desc = "${project.ext.projectName} ${this.version}"
             released = new Date()
             vcsTag = this.version
 

@@ -34,7 +34,6 @@ dependencies {
 
 archivesBaseName = 'literefresh'
 ext {
-    bintrayPackage = 'LiteRefresh'
     projectName = 'LiteRefresh'
     projectDescription = "Nested scrolling UI library for Android based on CoordinatorLayout. Pull-to-refresh and pull-to-load-more are supported."
     projectUrl = 'https://github.com/jastrelax/LiteRefresh'
