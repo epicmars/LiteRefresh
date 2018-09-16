@@ -163,8 +163,8 @@ The supported nested scrolling view for content are list below.
 
 ```gradle
 dependencies {
-    implementation 'com.androidpi:literefresh:0.8.0-alpha'
-    implementation 'com.androidpi:literefresh-widget:0.8.0-alpha'
+    implementation 'com.androidpi:literefresh:0.8.0'
+    implementation 'com.androidpi:literefresh-widgets:0.8.0'
 }
 ```
 
