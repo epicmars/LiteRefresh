@@ -3,4 +3,5 @@
     <dimen name="app_status_bar_height">24dp</dimen>
 
     <dimen name="view_holder_padding">8dp</dimen>
+
 </resources>

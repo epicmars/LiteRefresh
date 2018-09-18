@@ -18,9 +18,8 @@ package com.androidpi.literefresh.controller;
 import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 
-import com.androidpi.literefresh.behavior.VerticalIndicatorBehavior;
-import com.androidpi.literefresh.behavior.BehaviorController;
 import com.androidpi.literefresh.behavior.ScrollingContentBehavior;
+import com.androidpi.literefresh.behavior.VerticalIndicatorBehavior;
 
 /**
  * Super class of header and footer behavior controller.

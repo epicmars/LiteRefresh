@@ -10,7 +10,7 @@
         android:id="@+id/iv_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@mipmap/photo9"
+        tools:src="@mipmap/photo9"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

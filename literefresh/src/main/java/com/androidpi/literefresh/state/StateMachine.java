@@ -96,7 +96,6 @@ public class StateMachine implements AnimationOffsetBehavior.ScrollingListener, 
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                               int initial, int trigger, int min, int max, int type) {
-//        Timber.d("onStartScroll: isTouch %b", isTouch);
         // If current state is ready, when touch event is MotionEvent.ACTION_UP, may be followed a
         // fling that start another scroll immediately.
         moveToState(STATE_IDLE);
@@ -105,7 +104,6 @@ public class StateMachine implements AnimationOffsetBehavior.ScrollingListener, 
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                             int current, int initial, int trigger, int min, int max, int type) {
-//        Timber.d("onPreScroll: isTouch %b", isTouch);
         // Only allow STATE_IDLE to translate to STATE_START here.
         if (mState == STATE_IDLE) {
             moveToState(STATE_START);
@@ -115,7 +113,6 @@ public class StateMachine implements AnimationOffsetBehavior.ScrollingListener, 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                          int current, int delta, int initial, int trigger, int min, int max, int type) {
-//        Timber.d("onScroll: isTouch %b", isTouch);
         if (!mStateHandler.hasRefreshStateListeners() || !mStateHandler.isValidOffset(current)) {
             return;
         }
@@ -131,7 +128,6 @@ public class StateMachine implements AnimationOffsetBehavior.ScrollingListener, 
                              int current, int initial, int trigger, int min, int max, int type) {
         // When child start dispatching touch events, the MotionEvent.DOWN event may cause
         // a defensive clean up for new gesture.
-//        Timber.d("onStopScroll: isTouch %b", isTouch);
         if (!mStateHandler.isValidOffset(current)) {
             return;
         }
