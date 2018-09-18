@@ -50,7 +50,7 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
     private static final int INVALID_OFFSET = Integer.MIN_VALUE;
     private IndicatorConfiguration headerConfig;
     private IndicatorConfiguration footerConfig;
-    private int initialOffset = INVALID_OFFSET;
+    private int savedOffset = INVALID_OFFSET;
 
     public ScrollingContentBehavior(Context context) {
         this(context, null);
@@ -136,14 +136,14 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             headerConfig.setSettled(true);
             footerConfig.setSettled(true);
             cancelAnimation();
-            if (initialOffset != INVALID_OFFSET) {
-                // fixme: If screen orientation changed, the initial offset may be larger than initial visible height.
+            if (savedOffset != INVALID_OFFSET) {
+                // fixme: If screen orientation changed, the saved offset may be larger than initial visible height.
 //                if (headerConfig.getInitialVisibleHeight() > 0
 //                        && initialOffset > headerConfig.getInitialVisibleHeight()) {
 //                    initialOffset = MathUtils.clamp(initialOffset, getConfiguration().getMinOffset(),
 //                            headerConfig.getInitialVisibleHeight());
 //                }
-                setContentTopAndBottomOffset(parent, child, initialOffset, TYPE_NON_TOUCH);
+                restoreContentTopAndBottomOffset(parent, child, savedOffset, TYPE_NON_TOUCH);
             } else {
                 setTopAndBottomOffset(headerConfig.getInitialVisibleHeight());
             }
@@ -201,8 +201,8 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                                        @NonNull V child, @NonNull View directTargetChild,
                                        @NonNull View target, int axes, int type) {
         // If scrolling started by touch event we need to invalidate restored initial offset.
-        if (initialOffset != INVALID_OFFSET && type == TYPE_TOUCH) {
-            initialOffset = INVALID_OFFSET;
+        if (savedOffset != INVALID_OFFSET && type == TYPE_TOUCH) {
+            savedOffset = INVALID_OFFSET;
         }
         boolean start = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         if (start) {
@@ -374,16 +374,9 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         return delta;
     }
 
-    public void setContentTopAndBottomOffset(CoordinatorLayout coordinatorLayout, V child, int offset, int type) {
+    public void restoreContentTopAndBottomOffset(CoordinatorLayout coordinatorLayout, V child, int offset, int type) {
         int currentOffset = getTopAndBottomOffset();
         int offsetDelta = offset - currentOffset;
-        for (ScrollingListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child, currentOffset,
-                    headerConfig.getInitialVisibleHeight(),
-                    headerConfig.getInitialVisibleHeight()
-                            + headerConfig.getTriggerOffset(),
-                    getConfiguration().getMinOffset(), configuration.getMaxOffset(), type);
-        }
         setTopAndBottomOffset(offset);
         coordinatorLayout.dispatchDependentViewsChanged(child);
         for (ScrollingListener l : mListeners) {
@@ -640,7 +633,7 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         if (state instanceof SavedState) {
             super.onRestoreInstanceState(parent, child, ((SavedState) state).getSuperState());
             final SavedState ss = ((SavedState) state);
-            initialOffset = ss.topAndBottomOffset;
+            savedOffset = ss.topAndBottomOffset;
         } else {
             super.onRestoreInstanceState(parent, child, state);
         }
