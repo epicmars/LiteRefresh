@@ -92,7 +92,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
 
         mNewsModel.mNews.observe(this, Observer { t ->
             if (t == null) return@Observer
-            val pagination : NewsPagination? = t.data
+            val pagination: NewsPagination? = t.data
             if (t.isSuccess) {
                 if (pagination == null) {
                     mAdapter.setPayloads(ErrorItem("Empty data"))
@@ -139,7 +139,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
 
         //
         val headerParams = binding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
-        headerBehavior  = RefreshHeaderBehavior<View>(context)
+        headerBehavior = RefreshHeaderBehavior<View>(context)
         headerBehavior.addOnScrollListener(object : OnScrollListener {
 
             override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {

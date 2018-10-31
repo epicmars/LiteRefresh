@@ -55,7 +55,7 @@ public class SampleHeaderView extends ConstraintLayout{
                 CoordinatorLayout.LayoutParams params = ((CoordinatorLayout.LayoutParams) getLayoutParams());
                 params.setBehavior(behavior = new RefreshHeaderBehavior(getContext()));
                 behavior.with(getContext())
-                        .visibleHeightRatioRes(R.fraction.sample_header_visible_ratio)
+                        .visibleHeightRatioRes(R.fraction.percent_50)
                         .config();
             } catch (ClassCastException e) {
 

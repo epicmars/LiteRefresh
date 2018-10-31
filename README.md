@@ -12,8 +12,8 @@ There are three type of behaviors can be used to attached to direct children of 
 - `RefreshContentBehavior`
     + Make nested scrolling content partially visible
     + Add scrolling listeners to observe content view's scrolling offset 
-    + Add refreshing state listener to observe the header refreshing state
-    + Add loading state listener to observe the footer loading state
+    + Add refreshing state listener to observe the refreshing state
+    + Add loading state listener to observe the loading state
     
 - `RefreshHeaderBehavior`
     + Make header view partially visible or totally visible
@@ -163,8 +163,8 @@ The supported nested scrolling view for content are list below.
 
 ```gradle
 dependencies {
-    implementation 'com.androidpi:literefresh:0.8.0-alpha'
-    implementation 'com.androidpi:literefresh-widget:0.8.0-alpha'
+    implementation 'com.androidpi:literefresh:0.9.1-alpha'
+    implementation 'com.androidpi:literefresh-widgets:0.9.1-alpha'
 }
 ```
 

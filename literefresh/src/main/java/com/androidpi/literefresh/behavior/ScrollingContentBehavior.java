@@ -98,8 +98,9 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                                   int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
         boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed,
                 parentHeightMeasureSpec, heightUsed);
-        // The minimum offset is used to limit the content view offset.
-        // Besides, the minimum offset and header's visible height are used to reset content.
+        // The minimum offset is used to limit the content view's scrolling offset.
+        // Besides, the minimum offset and header's visible height are used together to reset
+        // content's position.
         // We must make sure after resetting, either it's top reaches the minimum offset or
         // header visible height, it depends on which one is larger. When do the layout, we set
         // minimum offset to be always less than or equal to header visible height.
@@ -138,11 +139,11 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             cancelAnimation();
             if (savedOffset != INVALID_OFFSET) {
                 // fixme: If screen orientation changed, the saved offset may be larger than initial visible height.
-//                if (headerConfig.getInitialVisibleHeight() > 0
-//                        && initialOffset > headerConfig.getInitialVisibleHeight()) {
-//                    initialOffset = MathUtils.clamp(initialOffset, getConfiguration().getMinOffset(),
-//                            headerConfig.getInitialVisibleHeight());
-//                }
+                //if (headerConfig.getInitialVisibleHeight() > 0
+                //        && initialOffset > headerConfig.getInitialVisibleHeight()) {
+                //        initialOffset = MathUtils.clamp(initialOffset, getConfiguration().getMinOffset(),
+                //        headerConfig.getInitialVisibleHeight());
+                //}
                 restoreContentTopAndBottomOffset(parent, child, savedOffset, TYPE_NON_TOUCH);
             } else {
                 setTopAndBottomOffset(headerConfig.getInitialVisibleHeight());

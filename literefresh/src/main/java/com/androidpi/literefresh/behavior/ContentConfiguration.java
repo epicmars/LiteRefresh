@@ -146,7 +146,7 @@ public class ContentConfiguration extends Configuration {
         }
 
         @Override
-        public Builder maxOffsetRes(int maxOffsetRes) {
+        public Builder maxOffsetRes(@DimenRes int maxOffsetRes) {
             super.maxOffsetRes(maxOffsetRes);
             return this;
         }
@@ -164,7 +164,7 @@ public class ContentConfiguration extends Configuration {
         }
 
         @Override
-        public Builder maxOffsetRatioRes(int maxOffsetRatioRes) {
+        public Builder maxOffsetRatioRes(@FractionRes int maxOffsetRatioRes) {
             super.maxOffsetRatioRes(maxOffsetRatioRes);
             return this;
         }
@@ -227,10 +227,10 @@ public class ContentConfiguration extends Configuration {
         }
 
         @Override
-        public ContentConfiguration config() {
+        public <B extends AnimationOffsetBehavior> B config() {
             ContentConfiguration config = setSettled(false).build();
             behavior.setConfiguration(config);
-            return config;
+            return ((B) behavior);
         }
     }
 }

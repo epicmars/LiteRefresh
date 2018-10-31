@@ -209,7 +209,7 @@ public class IndicatorConfiguration extends Configuration {
         }
 
         @Override
-        public Builder maxOffsetRes(int maxOffsetRes) {
+        public Builder maxOffsetRes(@DimenRes int maxOffsetRes) {
             super.maxOffsetRes(maxOffsetRes);
             return this;
         }
@@ -227,7 +227,7 @@ public class IndicatorConfiguration extends Configuration {
         }
 
         @Override
-        public Builder maxOffsetRatioRes(int maxOffsetRatioRes) {
+        public Builder maxOffsetRatioRes(@FractionRes int maxOffsetRatioRes) {
             super.maxOffsetRatioRes(maxOffsetRatioRes);
             return this;
         }
@@ -285,10 +285,10 @@ public class IndicatorConfiguration extends Configuration {
         }
 
         @Override
-        public IndicatorConfiguration config() {
+        public <B extends AnimationOffsetBehavior> B config() {
             IndicatorConfiguration config = setSettled(false).build();
             behavior.setConfiguration(config);
-            return config;
+            return ((B) behavior);
         }
     }
 }

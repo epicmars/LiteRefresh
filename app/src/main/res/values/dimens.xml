@@ -4,4 +4,6 @@
 
     <dimen name="view_holder_padding">8dp</dimen>
 
+    <!-- unsplash fragment-->
+    <dimen name="unsplash_fragment_trigger_offset">96dp</dimen>
 </resources>

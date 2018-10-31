@@ -19,9 +19,7 @@ import android.content.Context;
 import android.support.annotation.DimenRes;
 import android.support.annotation.FractionRes;
 
-/**
- * Common configurations of content and indicator behavior.
- */
+/** Common configurations of content and indicator behavior. */
 abstract class Configuration {
     int defaultTriggerOffset;
     int maxOffset;
@@ -35,11 +33,14 @@ abstract class Configuration {
     boolean isSettled;
 
     public Configuration(Builder builder) {
-        this.defaultTriggerOffset = builder.defaultTriggerOffset == null ? 196 : builder.defaultTriggerOffset;
+        this.defaultTriggerOffset =
+                builder.defaultTriggerOffset == null ? 196 : builder.defaultTriggerOffset;
         this.maxOffset = builder.maxOffset == null ? 0 : builder.maxOffset;
         this.maxOffsetRatio = builder.maxOffsetRatio == null ? 0f : builder.maxOffsetRatio;
-        this.maxOffsetRatioOfParent = builder.maxOffsetRatioOfParent == null ? 0f : builder.maxOffsetRatioOfParent;
-        this.isUseDefaultMaxOffset = builder.isUseDefaultMaxOffset == null ? false : builder.isUseDefaultMaxOffset;
+        this.maxOffsetRatioOfParent =
+                builder.maxOffsetRatioOfParent == null ? 0f : builder.maxOffsetRatioOfParent;
+        this.isUseDefaultMaxOffset =
+                builder.isUseDefaultMaxOffset == null ? false : builder.isUseDefaultMaxOffset;
         this.height = builder.height == null ? 0 : builder.height;
         this.parentHeight = builder.parentHeight == null ? 0 : builder.parentHeight;
         this.topMargin = builder.topMargin == null ? 0 : builder.topMargin;
@@ -127,7 +128,7 @@ abstract class Configuration {
         isSettled = settled;
     }
 
-    static abstract class Builder {
+    abstract static class Builder {
         Context context;
         AnimationOffsetBehavior behavior;
         Integer defaultTriggerOffset;
@@ -141,8 +142,7 @@ abstract class Configuration {
         Integer bottomMargin;
         Boolean isSettled;
 
-        Builder() {
-        }
+        Builder() {}
 
         Builder(Context context, AnimationOffsetBehavior behavior, Configuration configuration) {
             this(configuration);
@@ -151,8 +151,7 @@ abstract class Configuration {
         }
 
         public Builder(Configuration configuration) {
-            if (configuration == null)
-                return;
+            if (configuration == null) return;
             this.defaultTriggerOffset = configuration.defaultTriggerOffset;
             this.maxOffset = configuration.getMaxOffset();
             this.maxOffsetRatio = configuration.getMaxOffsetRatio();
@@ -164,7 +163,6 @@ abstract class Configuration {
             this.bottomMargin = configuration.getBottomMargin();
             this.isSettled = configuration.isSettled();
         }
-
 
         public Builder maxOffset(int maxOffset) {
             this.maxOffset = maxOffset;
@@ -192,7 +190,8 @@ abstract class Configuration {
 
         public Builder maxOffsetRatioRes(@FractionRes int maxOffsetRatioRes) {
             this.maxOffsetRatio = context.getResources().getFraction(maxOffsetRatioRes, 1, 1);
-            this.maxOffsetRatioOfParent = context.getResources().getFraction(maxOffsetRatioRes, 1, 2);
+            this.maxOffsetRatioOfParent =
+                    context.getResources().getFraction(maxOffsetRatioRes, 1, 2);
             this.isUseDefaultMaxOffset = false;
             return this;
         }
@@ -234,6 +233,6 @@ abstract class Configuration {
 
         public abstract Configuration build();
 
-        public abstract Configuration config();
+        public abstract <B extends AnimationOffsetBehavior> B config();
     }
 }
