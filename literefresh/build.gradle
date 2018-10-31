@@ -27,6 +27,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    compileOnly "com.android.support:recyclerview-v7:$android_support_version"
 
     implementation "com.android.support:appcompat-v7:$android_support_version"
     implementation "com.android.support:support-dynamic-animation:$android_support_version"
@@ -34,7 +35,6 @@ dependencies {
 
 archivesBaseName = 'literefresh'
 ext {
-    bintrayPackage = 'LiteRefresh'
     projectName = 'LiteRefresh'
     projectDescription = "Nested scrolling UI library for Android based on CoordinatorLayout. Pull-to-refresh and pull-to-load-more are supported."
     projectUrl = 'https://github.com/jastrelax/LiteRefresh'

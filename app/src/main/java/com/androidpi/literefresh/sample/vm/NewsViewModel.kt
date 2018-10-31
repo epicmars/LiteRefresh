@@ -39,11 +39,11 @@ class NewsViewModel : ViewModel() {
 
     var mCategory: String? = null
 
-    var page = NewsPagination.FIRST_PAGE
+    var currentPage = NewsPagination.FIRST_PAGE
 
     fun getLatestNews(isNext: Boolean, count: Int = NewsPagination.PAGE_SIZE) {
-        val page = if (isNext) this.page + 1 else NewsPagination.FIRST_PAGE
-        this.page = page
+        val page = if (isNext) this.currentPage + 1 else NewsPagination.FIRST_PAGE
+        this.currentPage = page
         Timber.d("getLatestedNews $page")
         refreshNews(page, count, mCategory)
                 .subscribeOn(Schedulers.io())
@@ -51,6 +51,9 @@ class NewsViewModel : ViewModel() {
                 .subscribe(object : SingleObserver<List<News>> {
 
                     override fun onSuccess(t: List<News>) {
+                        if (t.isEmpty() && isNext) {
+                            currentPage--
+                        }
                         mNews.value = Resource.success(NewsPagination(page, t))
                     }
 

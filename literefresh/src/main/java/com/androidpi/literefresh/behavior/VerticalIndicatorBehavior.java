@@ -59,10 +59,10 @@ import java.util.List;
  * </pre>
  * <p>
  */
-public abstract class VerticalIndicatorBehavior<V extends View, CTR extends VerticalIndicatorBehaviorController>
-        extends AnimationOffsetBehavior<V, CTR> {
+public abstract class VerticalIndicatorBehavior<V extends View>
+        extends AnimationOffsetBehavior<V> {
 
-    private final int defaultMinTriggerRange;
+    private final int defaultMinTriggerOffset;
 
     public VerticalIndicatorBehavior(Context context) {
         this(context, null);
@@ -73,27 +73,27 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.OffsetBehavior, 0, 0);
         if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeight)) {
-            configuration.setVisibleHeight(Math.round(a.getDimension(
+            getConfiguration().setVisibleHeight(Math.round(a.getDimension(
                     R.styleable.OffsetBehavior_lr_visibleHeight, 0)));
         }
         if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeightRatio)) {
-            configuration.setVisibleHeightRatio(a.getFraction(
+            getConfiguration().setVisibleHeightRatio(a.getFraction(
                     R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 1, 0f));
-            configuration.setVisibleHeightParentRatio(a.getFraction(
+            getConfiguration().setVisibleHeightRatioOfParent(a.getFraction(
                     R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 2, 0f));
         }
         if (a.hasValue(R.styleable.OffsetBehavior_lr_showUpWhenRefresh)) {
-            configuration.setShowUpWhenRefresh(a.getBoolean(
+            getConfiguration().setShowUpWhenRefresh(a.getBoolean(
                     R.styleable.OffsetBehavior_lr_showUpWhenRefresh, false));
         }
 
-        configuration.setUseDefinedRefreshTriggerRange(a.hasValue(
+        getConfiguration().setUseDefinedTriggerOffset(a.hasValue(
                 R.styleable.OffsetBehavior_lr_triggerOffset));
-        configuration.setRefreshTriggerRange(a.getDimensionPixelOffset(
+        getConfiguration().setTriggerOffset(a.getDimensionPixelOffset(
                 R.styleable.OffsetBehavior_lr_triggerOffset, 0));
         a.recycle();
-        defaultMinTriggerRange = context.getResources().getDimensionPixelOffset(
-                R.dimen.lr_default_min_trigger_range);
+        defaultMinTriggerOffset = context.getResources().getDimensionPixelOffset(
+                R.dimen.lr_default_min_trigger_offset);
     }
 
     @Override
@@ -107,36 +107,33 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-        if (configuration.getHeight() != child.getHeight()) {
-            configuration.setHeight(child.getHeight());
-            configuration.setSettled(false);
-        }
         // Compute visible height of child.
-        int visibleHeight = (int) Math.max((float) configuration.getVisibleHeight(),
-                configuration.getVisibleHeightParentRatio()
-                        > configuration.getVisibleHeightRatio()
-                        ? configuration.getVisibleHeightRatio() * parent.getHeight()
-                        : configuration.getVisibleHeightRatio() * child.getHeight());
-        int invisibleHeight = child.getHeight() - visibleHeight;
-        // Compute refresh trigger range.
-        if (configuration.getRefreshTriggerRange() < 0) {
-            // User define a invalid trigger range, use the default.
-            configuration.setRefreshTriggerRange(configuration.getDefaultRefreshTriggerRange());
-        } else if (!configuration.isUseDefinedRefreshTriggerRange()) {
+        final int visibleHeight = (int) Math.max((float) getConfiguration().getVisibleHeight(),
+                getConfiguration().getVisibleHeightRatioOfParent()
+                        > getConfiguration().getVisibleHeightRatio()
+                        ? getConfiguration().getVisibleHeightRatio() * parent.getHeight()
+                        : getConfiguration().getVisibleHeightRatio() * child.getHeight());
+        final int invisibleHeight = child.getHeight() - visibleHeight;
+        getConfiguration().setVisibleHeight(visibleHeight);
+        getConfiguration().setInvisibleHeight(invisibleHeight);
+
+        // Compute refresh trigger offset.
+        if (getConfiguration().getTriggerOffset() < 0) {
+            // User define a invalid trigger offset, use the default.
+            getConfiguration().setTriggerOffset(configuration.getDefaultTriggerOffset());
+        } else if (!getConfiguration().isUseDefinedTriggerOffset()) {
             // User doesn't predefined one, we need to ensure the refreshing is triggered when
             // indicator is totally visible, no matter whether child height is zero or not.
             // If child is already visible, the invisible height will be non-positive, in this
             // case we use the default .
-            if (defaultMinTriggerRange > 0 && invisibleHeight >= defaultMinTriggerRange
-                    && invisibleHeight <= configuration.getDefaultRefreshTriggerRange()) {
-                configuration.setRefreshTriggerRange(invisibleHeight);
+            if (defaultMinTriggerOffset > 0 && invisibleHeight >= defaultMinTriggerOffset
+                    && invisibleHeight <= getConfiguration().getDefaultTriggerOffset()) {
+                getConfiguration().setTriggerOffset(invisibleHeight);
             } else {
-                configuration.setRefreshTriggerRange(Math.max(invisibleHeight,
-                        configuration.getDefaultRefreshTriggerRange()));
+                getConfiguration().setTriggerOffset(Math.max(invisibleHeight,
+                        getConfiguration().getDefaultTriggerOffset()));
             }
-        } // Otherwise we use predefined trigger range.
-        configuration.setVisibleHeight(visibleHeight);
-        configuration.setInvisibleHeight(invisibleHeight);
+        } // Otherwise we use predefined trigger offset.
         return handled;
     }
 
@@ -160,7 +157,7 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                    @NonNull View target, int type) {
         for (ScrollingListener l : mListeners) {
-            l.onStopScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(
+            l.onStopScroll(coordinatorLayout, child, getController().transformOffsetCoordinate(
                     coordinatorLayout, child, this, getTopAndBottomOffset()),
                     getInitialOffset(coordinatorLayout, child),
                     getRefreshTriggerOffset(coordinatorLayout, child),
@@ -209,7 +206,7 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
     private boolean onDependenceOffsetChanged(CoordinatorLayout parent, V child, View dependency,
                                               ScrollingContentBehavior contentBehavior,
                                               VerticalIndicatorBehavior behavior) {
-        final int offsetDelta = controller.computeOffsetDeltaOnDependentViewChanged(parent, child,
+        final int offsetDelta = getController().computeOffsetDeltaOnDependentViewChanged(parent, child,
                 dependency, this, contentBehavior);
         if (offsetDelta != 0) {
             consumeOffsetOnDependentViewChanged(parent, child, contentBehavior, offsetDelta,
@@ -227,20 +224,20 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         int height = child.getHeight();
         // Before child consume the offset.
         for (ScrollingListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(
+            l.onPreScroll(coordinatorLayout, child, getController().transformOffsetCoordinate(
                     coordinatorLayout, child, this, currentOffset
                     ),
                     getInitialOffset(coordinatorLayout, child),
                     getRefreshTriggerOffset(coordinatorLayout, child),
                     getMinOffset(coordinatorLayout, child), height, type);
         }
-        float consumed = controller.consumeOffsetOnDependentViewChanged(coordinatorLayout, child,
+        float consumed = getController().consumeOffsetOnDependentViewChanged(coordinatorLayout, child,
                 this, contentBehavior, currentOffset, offsetDelta);
         currentOffset = Math.round(currentOffset + consumed);
         // If the offset is already at the top don't reset it again.
         setTopAndBottomOffset(currentOffset);
         for (ScrollingListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(
+            l.onScroll(coordinatorLayout, child, getController().transformOffsetCoordinate(
                     coordinatorLayout, child, this, currentOffset
                     ),
                     offsetDelta, getInitialOffset(coordinatorLayout, child),
@@ -283,6 +280,26 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
 
     protected ScrollingContentBehavior getContentBehavior(CoordinatorLayout parent, View child) {
         return findDependencyBehavior(parent, child);
+    }
+
+    @Override
+    public IndicatorConfiguration getConfiguration() {
+        return (IndicatorConfiguration) configuration;
+    }
+
+    @Override
+    IndicatorConfiguration.Builder newConfigBuilder() {
+        return new IndicatorConfiguration.Builder(getConfiguration());
+    }
+
+    @Override
+    public IndicatorConfiguration.Builder with(@NonNull Context context) {
+        return new IndicatorConfiguration.Builder(context, this, getConfiguration());
+    }
+
+    @Override
+    public VerticalIndicatorBehaviorController getController() {
+        return (VerticalIndicatorBehaviorController) super.getController();
     }
 
     protected abstract int getInitialOffset(@NonNull CoordinatorLayout parent, @NonNull View child);

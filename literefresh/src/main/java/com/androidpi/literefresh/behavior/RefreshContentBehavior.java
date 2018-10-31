@@ -22,11 +22,12 @@ import android.view.View;
 import android.view.animation.Interpolator;
 
 import com.androidpi.literefresh.Loader;
-import com.androidpi.literefresh.OnScrollListener;
-import com.androidpi.literefresh.Refresher;
 import com.androidpi.literefresh.OnLoadListener;
 import com.androidpi.literefresh.OnRefreshListener;
+import com.androidpi.literefresh.OnScrollListener;
+import com.androidpi.literefresh.Refresher;
 import com.androidpi.literefresh.animator.ViscousFluidInterpolator;
+import com.androidpi.literefresh.controller.ContentBehaviorController;
 
 /**
  * This class is what we use to attach to an nested scrolling view, add new scrolling features to it.
@@ -35,7 +36,8 @@ import com.androidpi.literefresh.animator.ViscousFluidInterpolator;
  * work. All the offset and state changes come from it, so it can be used standalone.
  * <p>
  * For now, the nested scrolling view supported by {@link CoordinatorLayout} are
- * {@link android.support.v4.widget.NestedScrollView}, {@link android.support.v7.widget.RecyclerView}
+ * {@link android.support.v4.widget.NestedScrollView},
+ * {@link android.support.v7.widget.RecyclerView}
  * which implement {@link android.support.v4.view.NestedScrollingChild}.
  * <p>
  * Use other parent view to wrap these scrollable child is OK, cause the {@link android.view.ViewGroup}
@@ -49,6 +51,10 @@ import com.androidpi.literefresh.animator.ViscousFluidInterpolator;
 
 public class RefreshContentBehavior<V extends View> extends ScrollingContentBehavior<V>
         implements Refresher, Loader {
+
+    {
+        addScrollListener(controller = new ContentBehaviorController(this));
+    }
 
     public RefreshContentBehavior(Context context) {
         this(context, null);

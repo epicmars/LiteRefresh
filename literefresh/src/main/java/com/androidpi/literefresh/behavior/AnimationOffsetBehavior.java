@@ -27,6 +27,7 @@ import android.view.View;
 import com.androidpi.literefresh.R;
 import com.androidpi.literefresh.animator.OffsetAnimator;
 import com.androidpi.literefresh.animator.SpringOffsetAnimator;
+import com.androidpi.literefresh.controller.BehaviorController;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -37,7 +38,7 @@ import java.util.Queue;
  * A behavior that with offset animation feature.
  */
 
-public abstract class AnimationOffsetBehavior<V extends View, CTR extends BehaviorController>
+public abstract class AnimationOffsetBehavior<V extends View>
         extends ViewOffsetBehavior<V> implements Handler.Callback {
 
     public static final int TYPE_UNKNOWN = 2;
@@ -61,15 +62,14 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
 
     public static final float GOLDEN_RATIO = 0.618F;
 
+    private OffsetAnimator offsetAnimator;
     protected V mChild;
     protected CoordinatorLayout mParent;
-    private OffsetAnimator offsetAnimator;
-    protected int progressBase = 0;
     protected List<ScrollingListener> mListeners = new ArrayList<>();
     protected Handler handler = new Handler(this);
     private Queue<Runnable> pendingActions = new LinkedList<>();
-    protected CTR controller;
-    protected BehaviorConfiguration configuration;
+    protected BehaviorController controller;
+    protected Configuration configuration;
 
     public AnimationOffsetBehavior(Context context) {
         this(context, null);
@@ -78,7 +78,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
     public AnimationOffsetBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (configuration == null) {
-            configuration = new BehaviorConfiguration();
+            configuration = newConfigBuilder().build();
         }
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.OffsetBehavior,
                 0, 0);
@@ -96,8 +96,8 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         }
         // If maxOffset and maxOffsetRatio is not set then use default.
         configuration.setUseDefaultMaxOffset(!hasMaxOffsetRatio && !hasMaxOffset);
-        configuration.setDefaultRefreshTriggerRange(context.getResources().getDimensionPixelOffset(
-                R.dimen.lr_default_trigger_range));
+        configuration.setDefaultTriggerOffset(context.getResources().getDimensionPixelOffset(
+                R.dimen.lr_default_trigger_offset));
         a.recycle();
     }
 
@@ -113,7 +113,11 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-
+        // If child view's height have changed.
+        if (configuration.getHeight() != child.getHeight()) {
+            configuration.setHeight(child.getHeight());
+            configuration.setSettled(false);
+        }
         if (mParent == null) {
             mParent = parent;
         }
@@ -167,7 +171,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
                                              int destOffset, final int initialOffset,
                                              final int triggerOffset, final int minOffset,
                                              final int maxOffset, long duration, final int type) {
-        int current = getTopAndBottomOffset();
+        final int current = getTopAndBottomOffset();
         // No need to change offset.
         if (destOffset == current) {
             if (offsetAnimator != null && offsetAnimator.isRunning()) {
@@ -182,7 +186,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         }
         offsetAnimator.animateOffsetWithDuration(current, destOffset, duration,
                 new OffsetAnimator.AnimationUpdateListener() {
-                    private int last;
+                    private int last = current;
 
                     @Override
                     public void onAnimationUpdate(int value) {
@@ -225,7 +229,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         mListeners.remove(listener);
     }
 
-    protected void runWithView(Runnable action) {
+    public void runWithView(Runnable action) {
         if (action == null) return;
         if (getParent() == null || getChild() == null) {
             enqueuePendingActions(action);
@@ -234,7 +238,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         }
     }
 
-    protected void runOnUiThread(Runnable action) {
+    public void runOnUiThread(Runnable action) {
         if (action == null) return;
         if (handler == null) {
             handler = new Handler(this);
@@ -242,7 +246,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         handler.post(action);
     }
 
-    protected void enqueuePendingActions(Runnable action) {
+    public void enqueuePendingActions(Runnable action) {
         pendingActions.offer(action);
     }
 
@@ -258,7 +262,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         return true;
     }
 
-    protected void executePendingActions() {
+    public void executePendingActions() {
         Runnable action;
         while ((action = pendingActions.poll()) != null) {
             runOnUiThread(action);
@@ -274,16 +278,22 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         });
     }
 
-    public CTR getController() {
+    public BehaviorController getController() {
         return controller;
     }
 
-    public BehaviorConfiguration getConfiguration() {
+    protected void setConfiguration(Configuration configuration) {
+        if (!configuration.isSettled()) {
+            this.configuration = configuration;
+            requestLayout();
+        }
+    }
+
+    public Configuration getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(BehaviorConfiguration configuration) {
-        this.configuration = configuration;
-        requestLayout();
-    }
+    abstract Configuration.Builder newConfigBuilder();
+
+    public abstract Configuration.Builder with(@NonNull Context context);
 }

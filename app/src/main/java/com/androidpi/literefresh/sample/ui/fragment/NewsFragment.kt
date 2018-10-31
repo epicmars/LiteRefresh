@@ -31,11 +31,13 @@ import com.androidpi.literefresh.behavior.RefreshContentBehavior
 import com.androidpi.literefresh.behavior.RefreshFooterBehavior
 import com.androidpi.literefresh.behavior.RefreshHeaderBehavior
 import com.androidpi.literefresh.sample.R
+import com.androidpi.literefresh.sample.base.model.Resource
 import com.androidpi.literefresh.sample.base.ui.BaseFragment
 import com.androidpi.literefresh.sample.base.ui.BindLayout
 import com.androidpi.literefresh.sample.base.ui.RecyclerAdapter
 import com.androidpi.literefresh.sample.databinding.FragmentNewsBinding
 import com.androidpi.literefresh.sample.model.ErrorItem
+import com.androidpi.literefresh.sample.model.News
 import com.androidpi.literefresh.sample.model.NewsPagination
 import com.androidpi.literefresh.sample.model.NewsPagination.Companion.PAGE_SIZE
 import com.androidpi.literefresh.sample.ui.viewholder.ErrorViewHolder
@@ -83,9 +85,14 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
         mNewsCategory = if (mNewsCategory == null) "general" else mNewsCategory
         mNewsModel.mCategory = mNewsCategory
 
+        mAdapter = RecyclerAdapter()
+        mAdapter.setFragmentManager(childFragmentManager)
+        mAdapter.register(NewsViewHolder::class.java,
+                ErrorViewHolder::class.java)
+
         mNewsModel.mNews.observe(this, Observer { t ->
             if (t == null) return@Observer
-            val pagination : NewsPagination? = t.data
+            val pagination: NewsPagination? = t.data
             if (t.isSuccess) {
                 if (pagination == null) {
                     mAdapter.setPayloads(ErrorItem("Empty data"))
@@ -93,7 +100,9 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
                 }
                 if (pagination.isFirstPage()) {
                     refreshFinished()
-                    mAdapter.setPayloads(pagination.newsList)
+                    if (pagination.newsList.isNotEmpty()) {
+                        mAdapter.setPayloads(pagination.newsList)
+                    }
                 } else {
                     if (pagination.newsList.isEmpty()) {
                         loadFinished(Exception(getString(R.string.no_more_date)))
@@ -126,15 +135,11 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
         binding.recyclerNews.layoutManager = LinearLayoutManager(context)
         binding.recyclerNews.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
-        mAdapter = RecyclerAdapter()
-        mAdapter.setFragmentManager(childFragmentManager)
-        mAdapter.register(NewsViewHolder::class.java,
-                ErrorViewHolder::class.java)
         binding.recyclerNews.adapter = mAdapter
 
         //
         val headerParams = binding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
-        headerBehavior  = RefreshHeaderBehavior<View>(context)
+        headerBehavior = RefreshHeaderBehavior<View>(context)
         headerBehavior.addOnScrollListener(object : OnScrollListener {
 
             override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
@@ -250,6 +255,16 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
         })
 
         return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (mNewsModel.mNews.value == null)
+            return
+        var newsResource: Resource<NewsPagination> = mNewsModel.mNews.value as Resource<NewsPagination>
+        newsResource.data?.newsList?.clear()
+        newsResource.data?.newsList?.addAll(mAdapter.payloads as List<News>)
+        mNewsModel.mNews.value = newsResource
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

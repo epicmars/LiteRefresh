@@ -21,7 +21,6 @@ import android.view.View;
 
 import com.androidpi.literefresh.OnLoadListener;
 import com.androidpi.literefresh.OnRefreshListener;
-import com.androidpi.literefresh.behavior.BehaviorController;
 import com.androidpi.literefresh.behavior.ScrollingContentBehavior;
 import com.androidpi.literefresh.state.StateMachine;
 
@@ -56,7 +55,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public int readyRefreshOffset() {
-            return behavior.getFooterConfig().getRefreshTriggerRange()
+            return behavior.getFooterConfig().getTriggerOffset()
                     + behavior.getFooterConfig().getInitialVisibleHeight();
         }
 
@@ -77,7 +76,6 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public void onStateChanged(int state, Throwable throwable) {
-//            Timber.d("footer state: %d", state);
             switch (state) {
                 case STATE_START:
                     onLoadStart();
@@ -118,7 +116,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public int readyRefreshOffset() {
-            return behavior.getHeaderConfig().getRefreshTriggerRange()
+            return behavior.getHeaderConfig().getTriggerOffset()
                     + behavior.getHeaderConfig().getInitialVisibleHeight();
         }
 
@@ -139,7 +137,6 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public void onStateChanged(int state, Throwable throwable) {
-//            Timber.d("header state: %d", state);
             switch (state) {
                 case STATE_START:
                     onRefreshStart();

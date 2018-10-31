@@ -59,7 +59,13 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
         super.onViewCreated(view, savedInstanceState);
         binding.imagePagerHeader.setFragmentManager(getChildFragmentManager());
         UnsplashPhotoListFragment fragment = ((UnsplashPhotoListFragment) getChildFragmentManager().findFragmentById(R.id.fragment));
-        RefreshHeaderBehavior headerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.scaleableHeader);
+        RefreshHeaderBehavior headerBehavior =
+                LiteRefreshHelper.getHeaderBehavior(binding.scaleableHeader)
+                        .with(getContext())
+                        .maxOffsetRatio(R.fraction.percent_100p)
+                        .triggerOffsetRes(R.dimen.unsplash_fragment_trigger_offset)
+                        .visibleHeightRatioRes(R.fraction.percent_100)
+                        .config();
         unsplashViewModel = getViewModelOfActivity(UnsplashViewModel.class);
         unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<UnsplashPhotoPage>>() {
             @Override

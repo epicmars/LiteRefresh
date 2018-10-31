@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.androidpi.literefresh.behavior;
+package com.androidpi.literefresh.controller;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -24,14 +24,15 @@ import com.androidpi.literefresh.OnScrollListener;
 import com.androidpi.literefresh.Refresher;
 import com.androidpi.literefresh.OnLoadListener;
 import com.androidpi.literefresh.OnRefreshListener;
+import com.androidpi.literefresh.behavior.AnimationOffsetBehavior;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Other than change view's offset, behavior controller's primary responsibility is to control how
- * behavior react to offset changes.
+ * Rather than change view's offset, the primary responsibility of behavior controller is to control
+ * how behavior react to offset changes and provide API to control the behavior's states.
  */
 public class BehaviorController<B extends AnimationOffsetBehavior>
         implements AnimationOffsetBehavior.ScrollingListener, Refresher, Loader {
