@@ -1,5 +1,7 @@
 LiteRefresh
 =============
+[ ![Download](https://api.bintray.com/packages/jastrelax/maven/com.androidpi%3Aliterefresh/images/download.svg) ](https://bintray.com/jastrelax/maven/com.androidpi%3Aliterefresh/_latestVersion)
+
 When the right behaviors are attached to the right and direct child views of CoordinatorLayout
 and when the content view to which the content behavior is attached is scrolling, 
 the header and footer views can react to that scrolling, the content behavior also has internal 
