@@ -44,16 +44,15 @@
                 android:background="@android:color/white"
                 tools:listitem="@layout/view_holder_news" />
 
-            <com.androidpi.literefresh.sample.ui.widget.RefreshingHeaderView
+            <com.androidpi.literefresh.widget.RefreshingHeaderView
                 android:id="@+id/scroll_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <com.androidpi.literefresh.sample.ui.widget.LoadingFooterView
+            <com.androidpi.literefresh.widget.LoadingFooterView
                 android:id="@+id/scroll_footer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </com.androidpi.literefresh.sample.ui.widget.LoadingFooterView>
+                android:layout_height="wrap_content"/>
 
         </android.support.design.widget.CoordinatorLayout>
 
