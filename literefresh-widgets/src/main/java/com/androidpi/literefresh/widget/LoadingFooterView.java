@@ -26,9 +26,6 @@ import com.androidpi.literefresh.LiteRefreshHelper;
 import com.androidpi.literefresh.OnLoadListener;
 import com.androidpi.literefresh.OnScrollListener;
 import com.androidpi.literefresh.behavior.RefreshFooterBehavior;
-import com.androidpi.literefresh.sample.R;
-import com.androidpi.literefresh.widget.LoadingView;
-import com.androidpi.literefresh.widget.RefreshFooterLayout;
 
 public class LoadingFooterView extends RefreshFooterLayout implements OnScrollListener, OnLoadListener {
 

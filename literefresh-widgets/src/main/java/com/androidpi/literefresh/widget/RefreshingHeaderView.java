@@ -30,9 +30,6 @@ import com.androidpi.literefresh.LiteRefreshHelper;
 import com.androidpi.literefresh.OnRefreshListener;
 import com.androidpi.literefresh.OnScrollListener;
 import com.androidpi.literefresh.behavior.RefreshHeaderBehavior;
-import com.androidpi.literefresh.sample.R;
-import com.androidpi.literefresh.widget.LoadingView;
-import com.androidpi.literefresh.widget.RefreshHeaderLayout;
 
 public class RefreshingHeaderView extends RefreshHeaderLayout implements OnScrollListener, OnRefreshListener {
 
