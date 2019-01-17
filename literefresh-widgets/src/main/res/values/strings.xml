@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">LiteRefreshWidget</string>
+
+    <string name="loading_complete">Loading complete.</string>
+    <string name="no_more_date">No more data.</string>
+
+    <string name="refresh_start">Pull down to refresh</string>
+    <string name="release_to_refresh">Release to refresh</string>
+    <string name="refreshing">Refreshing...</string>
+    <string name="refresh_complete">Refresh complete</string>
 </resources>
