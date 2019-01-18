@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LiteRefreshWidget</string>
-
     <string name="loading_complete">加载完成</string>
     <string name="no_more_date">无更多数据</string>
 

@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">LiteRefreshWidget</string>
-
     <string name="loading_complete">Loading complete.</string>
     <string name="no_more_date">No more data.</string>
 
