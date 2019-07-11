@@ -17,7 +17,7 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-version = '0.9.3-alpha'
+version = '0.10.0-alpha'
 group = 'com.androidpi'
 
 // build a jar with source files
