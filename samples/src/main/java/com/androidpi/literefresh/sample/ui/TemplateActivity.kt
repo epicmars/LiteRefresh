@@ -51,7 +51,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>() {
         try {
             val ft = supportFragmentManager.beginTransaction()
             val fragment = factory?.create()
-            ft.replace(R.id.content, fragment)
+            ft.replace(R.id.content, fragment!!)
             ft.commitAllowingStateLoss()
         } catch (e: Exception) {
             Timber.e(e)

@@ -237,17 +237,17 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
 
             val THRESHOULD = PAGE_SIZE / 2
 
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
             }
 
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy == 0)
                     return
-                val lastVisibleItem = (recyclerView?.layoutManager as LinearLayoutManager)
+                val lastVisibleItem = (recyclerView.layoutManager as LinearLayoutManager)
                         .findLastVisibleItemPosition()
-                val totalItemCount = recyclerView.layoutManager.itemCount
+                val totalItemCount = recyclerView.layoutManager!!.itemCount
                 if (totalItemCount <= lastVisibleItem + THRESHOULD) {
 //                    footerBehavior.refresh()
                 }

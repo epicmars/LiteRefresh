@@ -7,11 +7,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion rootProject.ext.android.compile_sdk_version
+
     defaultConfig {
+        minSdkVersion rootProject.ext.android.min_sdk_version
+        targetSdkVersion rootProject.ext.android.target_sdk_version
         applicationId "com.androidpi.literefresh.sample"
-        minSdkVersion 16
-        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
