@@ -18,9 +18,11 @@ package com.androidpi.literefresh.sample.ui.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.v4.widget.CircularProgressDrawable;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
+
 import com.androidpi.literefresh.sample.R;
 
 

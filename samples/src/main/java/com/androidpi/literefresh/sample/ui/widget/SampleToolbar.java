@@ -19,14 +19,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
-import android.support.design.widget.AppBarLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+
 import com.androidpi.literefresh.sample.R;
 import com.androidpi.literefresh.sample.ui.TemplateActivity;
+import com.google.android.material.appbar.AppBarLayout;
 
 public class SampleToolbar extends AppBarLayout {
 

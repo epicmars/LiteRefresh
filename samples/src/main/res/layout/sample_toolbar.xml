@@ -7,9 +7,9 @@
     android:layout_height="match_parent"
     android:background="@color/transparent"
     android:theme="@style/AppTheme.NoActionBar.AppBarOverlay"
-    tools:parentTag="android.support.design.widget.AppBarLayout">
+    tools:parentTag="com.google.android.material.appbar.AppBarLayout">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/main_container">
@@ -68,5 +68,5 @@
             app:toolbar_title="Photos on Unsplash"
             android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
         </com.androidpi.literefresh.sample.ui.widget.SampleToolbar>
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

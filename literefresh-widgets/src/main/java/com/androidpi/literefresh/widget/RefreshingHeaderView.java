@@ -18,13 +18,14 @@ package com.androidpi.literefresh.widget;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.widget.ImageViewCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.ImageViewCompat;
 
 import com.androidpi.literefresh.LiteRefreshHelper;
 import com.androidpi.literefresh.OnRefreshListener;

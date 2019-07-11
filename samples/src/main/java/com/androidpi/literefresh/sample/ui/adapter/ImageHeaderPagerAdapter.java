@@ -15,10 +15,11 @@
  */
 package com.androidpi.literefresh.sample.ui.adapter;
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.androidpi.literefresh.sample.data.remote.dto.ResTrendingPage;
 import com.androidpi.literefresh.sample.data.remote.dto.ResUnsplashPhoto;

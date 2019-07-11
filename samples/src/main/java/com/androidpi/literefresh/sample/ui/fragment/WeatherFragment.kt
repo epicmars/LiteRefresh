@@ -15,14 +15,13 @@
  */
 package com.androidpi.literefresh.sample.ui.fragment
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.androidpi.literefresh.OnRefreshListener
-
-
 import com.androidpi.literefresh.behavior.RefreshHeaderBehavior
 import com.androidpi.literefresh.sample.R
 import com.androidpi.literefresh.sample.base.ui.BaseFragment
@@ -30,7 +29,7 @@ import com.androidpi.literefresh.sample.base.ui.BindLayout
 import com.androidpi.literefresh.sample.databinding.FragmentWeatherBinding
 import com.androidpi.literefresh.sample.vm.WeatherViewModel
 
-@BindLayout(value = R.layout.fragment_weather)
+@BindLayout(R.layout.fragment_weather)
 class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
 
     lateinit var viewModel: WeatherViewModel

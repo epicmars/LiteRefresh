@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -20,14 +20,14 @@
             app:lr_visibleHeight="300dp"
             tools:src="@mipmap/post_sample" />
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
             app:layout_behavior="@string/lr_refresh_content_behavior">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="16dp"
@@ -42,10 +42,10 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="content"/>
 
-            </android.support.constraint.ConstraintLayout>
-        </android.support.v4.widget.NestedScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/anchor_view"
             android:layout_width="match_parent"
             android:layout_height="278dp"
@@ -71,7 +71,7 @@
                 app:layout_constraintStart_toEndOf="@+id/card_post"
                 tools:text="Interstellar" />
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/card_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                     android:layout_height="150dp"
                     android:scaleType="centerCrop"
                     tools:src="@mipmap/post_sample" />
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/tv_label"
@@ -101,6 +101,6 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
-        </android.support.constraint.ConstraintLayout>
-    </android.support.design.widget.CoordinatorLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

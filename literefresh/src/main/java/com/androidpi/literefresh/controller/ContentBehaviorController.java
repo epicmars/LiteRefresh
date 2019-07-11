@@ -15,9 +15,10 @@
  */
 package com.androidpi.literefresh.controller;
 
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.androidpi.literefresh.OnLoadListener;
 import com.androidpi.literefresh.OnRefreshListener;
@@ -27,7 +28,13 @@ import com.androidpi.literefresh.state.StateMachine;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static com.androidpi.literefresh.state.StateMachine.*;
+import static com.androidpi.literefresh.state.StateMachine.STATE_CANCELLED;
+import static com.androidpi.literefresh.state.StateMachine.STATE_COMPLETE;
+import static com.androidpi.literefresh.state.StateMachine.STATE_IDLE;
+import static com.androidpi.literefresh.state.StateMachine.STATE_READY;
+import static com.androidpi.literefresh.state.StateMachine.STATE_REFRESH;
+import static com.androidpi.literefresh.state.StateMachine.STATE_START;
+import static com.androidpi.literefresh.state.StateMachine.StateHandler;
 
 /**
  * Content behavior's controller, it has to state machines that manage header and footer view's

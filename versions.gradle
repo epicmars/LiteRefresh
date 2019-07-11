@@ -7,6 +7,10 @@ ext {
             min_sdk_version: 16
     ]
 
+    androidx = [
+            appcompat_version : '1.0.0'
+    ]
+
     // android support library
     android_support_version = '28.0.0'
     // lifecycle architecture
@@ -38,9 +42,9 @@ ext {
     // leakcanary
     leakcanary_version = '1.5.1'
     // glide
-    glide_version = '4.3.1'
+    glide_version = '4.9.0'
     // glide compile
-    glide_compiler_version = '4.3.1'
+    glide_compiler_version = '4.9.0'
     // ExoPlayer version
     exoplayer_version = '2.8.1'
     // Anko version

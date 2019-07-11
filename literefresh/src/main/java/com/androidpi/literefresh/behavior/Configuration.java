@@ -16,8 +16,9 @@
 package com.androidpi.literefresh.behavior;
 
 import android.content.Context;
-import android.support.annotation.DimenRes;
-import android.support.annotation.FractionRes;
+
+import androidx.annotation.DimenRes;
+import androidx.annotation.FractionRes;
 
 /** Common configurations of content and indicator behavior. */
 abstract class Configuration {

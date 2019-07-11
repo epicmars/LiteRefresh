@@ -15,7 +15,7 @@
  */
 package com.androidpi.literefresh.sample.ui
 
-import android.databinding.ViewDataBinding
+import androidx.databinding.ViewDataBinding
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View

@@ -17,10 +17,11 @@ package com.androidpi.literefresh.behavior;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.androidpi.literefresh.OnRefreshListener;
 import com.androidpi.literefresh.OnScrollListener;

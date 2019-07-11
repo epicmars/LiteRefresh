@@ -15,8 +15,9 @@
  */
 package com.androidpi.literefresh;
 
-import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 /**
  * Implementing this interface and register it with a behavior, then you can observe the scrolling

@@ -15,7 +15,7 @@ android {
         applicationId "com.androidpi.literefresh.sample"
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -44,28 +44,28 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
     // support
-    implementation "com.android.support:appcompat-v7:$android_support_version"
-    implementation "com.android.support:design:$android_support_version"
-    implementation "com.android.support:support-vector-drawable:$android_support_version"
-    implementation "com.android.support:recyclerview-v7:$android_support_version"
-    implementation "com.android.support:cardview-v7:$android_support_version"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
     // room
-    testImplementation "android.arch.persistence.room:testing:$arch_room_test_version"
-    androidTestImplementation "android.arch.persistence.room:testing:$arch_room_test_version"
-    implementation "android.arch.persistence.room:runtime:$arch_room_version"
-    kapt "android.arch.persistence.room:compiler:$arch_room_compiler_version"
-    implementation "android.arch.persistence.room:rxjava2:$arch_room_version"
+    testImplementation 'androidx.room:room-testing:2.0.0'
+    androidTestImplementation 'androidx.room:room-testing:2.0.0'
+    implementation 'androidx.room:room-runtime:2.0.0'
+    kapt 'androidx.room:room-compiler:2.0.0'
+    implementation 'androidx.room:room-rxjava2:2.0.0'
 
     // lifecycle
-    implementation "android.arch.lifecycle:runtime:$arch_lifecycle_version"
-    implementation "android.arch.lifecycle:extensions:$arch_lifecycle_ext_version"
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 
     // timber
     implementation "com.jakewharton.timber:timber:$timber_version"

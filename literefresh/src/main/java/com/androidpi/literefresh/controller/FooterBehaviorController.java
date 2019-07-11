@@ -15,8 +15,9 @@
  */
 package com.androidpi.literefresh.controller;
 
-import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.androidpi.literefresh.behavior.ScrollingContentBehavior;
 import com.androidpi.literefresh.behavior.VerticalIndicatorBehavior;

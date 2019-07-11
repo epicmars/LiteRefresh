@@ -16,10 +16,11 @@
 package com.androidpi.literefresh.sample.ui.widget;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.androidpi.literefresh.sample.R;
 

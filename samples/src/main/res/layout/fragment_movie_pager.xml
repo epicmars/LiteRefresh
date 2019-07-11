@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,7 +24,7 @@
                 app:lr_circle_color="@color/colorPrimary" />
         </FrameLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/view_header"
             android:layout_width="match_parent"
             android:layout_height="208dp"
@@ -42,14 +42,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!--<com.androidpi.literefresh.sample.ui.widget.SampleToolbar-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content">-->
         <!--</com.androidpi.literefresh.sample.ui.widget.SampleToolbar>-->
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -61,13 +61,13 @@
             app:layout_anchor="@id/view_pager"
             app:layout_anchorGravity="top">
 
-            <android.support.design.widget.AppBarLayout
+            <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.NoActionBar.AppBarOverlay"
                 android:layout_marginBottom="24dp">
 
-                <android.support.v7.widget.Toolbar
+                <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
@@ -76,7 +76,7 @@
                     app:contentInsetStart="0dp"
                     app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay">
 
-                    <android.support.design.widget.TabLayout
+                    <com.google.android.material.tabs.TabLayout
                         android:id="@+id/pager_tabs"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -85,8 +85,8 @@
                         app:tabMode="scrollable"
                         app:tabSelectedTextColor="@color/colorPrimary"
                         app:tabTextColor="@android:color/black" />
-                </android.support.v7.widget.Toolbar>
-            </android.support.design.widget.AppBarLayout>
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.AppBarLayout>
         </FrameLayout>
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

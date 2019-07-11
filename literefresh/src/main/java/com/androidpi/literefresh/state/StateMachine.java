@@ -15,9 +15,10 @@
  */
 package com.androidpi.literefresh.state;
 
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.androidpi.literefresh.Refresher;
 import com.androidpi.literefresh.behavior.AnimationOffsetBehavior;

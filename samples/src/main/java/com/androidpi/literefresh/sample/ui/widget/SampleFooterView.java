@@ -16,8 +16,9 @@
 package com.androidpi.literefresh.sample.ui.widget;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.androidpi.literefresh.sample.R;
 

@@ -16,8 +16,9 @@
 
 package com.androidpi.literefresh.utils;
 
-import android.support.v4.view.ViewCompat;
 import android.view.View;
+
+import androidx.core.view.ViewCompat;
 
 /**
  * Utility helper for moving a {@link View} around using
@@ -27,7 +28,7 @@ import android.view.View;
  * Also the setting of absolute offsets (similar to translationX/Y), rather than additive
  * offsets.
  *
- * @see android.support.design.widget.ViewOffsetHelper
+ * @see android.support.design.widget.ViewOffsetHelpr
  */
 public class ViewOffsetHelper {
 

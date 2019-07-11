@@ -15,11 +15,12 @@
  */
 package com.androidpi.literefresh.controller;
 
-import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 
-import com.androidpi.literefresh.behavior.VerticalIndicatorBehavior;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.androidpi.literefresh.behavior.ScrollingContentBehavior;
+import com.androidpi.literefresh.behavior.VerticalIndicatorBehavior;
 
 /**
  * The header behavior's controller, it controls header behavior how to consume the offset changes.

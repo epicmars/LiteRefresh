@@ -19,28 +19,29 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.math.MathUtils;
-import android.support.v4.view.AbsSavedState;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.math.MathUtils;
+import androidx.core.view.ViewCompat;
+import androidx.customview.view.AbsSavedState;
 
 import com.androidpi.literefresh.R;
 import com.androidpi.literefresh.controller.ContentBehaviorController;
 
-import static android.support.v4.view.ViewCompat.TYPE_NON_TOUCH;
-import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
+import static androidx.core.view.ViewCompat.TYPE_NON_TOUCH;
+import static androidx.core.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * A behavior for nested scrollable child of {@link CoordinatorLayout}.
  * <p>
  * It's attach to the nested scrolling target view, such as
- * {@link android.support.v4.widget.NestedScrollView},
- * {@link android.support.v7.widget.RecyclerView}
- * which implement {@link android.support.v4.view.NestedScrollingChild}.
+ * {@link androidx.core.widget.NestedScrollView},
+ * {@link androidx.recyclerview.widget.RecyclerView}
+ * which implement {@link androidx.core.view.NestedScrollingChild}.
  * <p>
  * View with this behavior must be a direct child of {@link CoordinatorLayout}.
  * <p>

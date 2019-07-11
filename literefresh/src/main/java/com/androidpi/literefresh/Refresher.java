@@ -15,7 +15,8 @@
  */
 package com.androidpi.literefresh;
 
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 /**
  * Refreshing controller of header behavior.

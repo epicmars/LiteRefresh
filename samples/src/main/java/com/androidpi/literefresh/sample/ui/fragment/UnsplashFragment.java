@@ -15,18 +15,20 @@
  */
 package com.androidpi.literefresh.sample.ui.fragment;
 
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.math.MathUtils;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.math.MathUtils;
+import androidx.lifecycle.Observer;
 
 import com.androidpi.literefresh.LiteRefreshHelper;
 import com.androidpi.literefresh.OnRefreshListener;
 import com.androidpi.literefresh.OnScrollListener;
 import com.androidpi.literefresh.behavior.RefreshHeaderBehavior;
+import com.androidpi.literefresh.sample.R;
 import com.androidpi.literefresh.sample.base.model.Resource;
 import com.androidpi.literefresh.sample.base.ui.BaseFragment;
 import com.androidpi.literefresh.sample.base.ui.BindLayout;
@@ -34,8 +36,6 @@ import com.androidpi.literefresh.sample.data.remote.dto.ResUnsplashPhoto;
 import com.androidpi.literefresh.sample.databinding.FragmentUnsplashBinding;
 import com.androidpi.literefresh.sample.model.UnsplashPhotoPage;
 import com.androidpi.literefresh.sample.vm.UnsplashViewModel;
-import com.androidpi.literefresh.sample.R;
-
 
 import java.util.List;
 

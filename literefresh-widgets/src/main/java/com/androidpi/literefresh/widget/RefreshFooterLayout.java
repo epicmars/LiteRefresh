@@ -16,10 +16,11 @@
 package com.androidpi.literefresh.widget;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.androidpi.literefresh.behavior.RefreshFooterBehavior;
 

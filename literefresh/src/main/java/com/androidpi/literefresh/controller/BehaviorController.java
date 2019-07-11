@@ -15,15 +15,16 @@
  */
 package com.androidpi.literefresh.controller;
 
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.androidpi.literefresh.Loader;
-import com.androidpi.literefresh.OnScrollListener;
-import com.androidpi.literefresh.Refresher;
 import com.androidpi.literefresh.OnLoadListener;
 import com.androidpi.literefresh.OnRefreshListener;
+import com.androidpi.literefresh.OnScrollListener;
+import com.androidpi.literefresh.Refresher;
 import com.androidpi.literefresh.behavior.AnimationOffsetBehavior;
 
 import java.util.ArrayList;

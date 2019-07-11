@@ -15,14 +15,15 @@
  */
 package com.androidpi.literefresh.sample.ui.fragment;
 
-import android.arch.lifecycle.Observer;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.lifecycle.Observer;
 
 import com.androidpi.literefresh.LiteRefreshHelper;
 import com.androidpi.literefresh.OnRefreshListener;

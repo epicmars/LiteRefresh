@@ -17,9 +17,10 @@
 package com.androidpi.literefresh.behavior;
 
 import android.content.Context;
-import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.androidpi.literefresh.utils.ViewOffsetHelper;
 

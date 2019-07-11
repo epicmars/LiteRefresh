@@ -16,17 +16,18 @@
 package com.androidpi.literefresh.sample.ui.widget;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.androidpi.literefresh.behavior.RefreshHeaderBehavior;
 import com.androidpi.literefresh.sample.R;
 import com.androidpi.literefresh.sample.common.image.GlideApp;
 
 
-public class SampleHeaderView extends ConstraintLayout{
+public class SampleHeaderView extends ConstraintLayout {
     RefreshHeaderBehavior behavior;
 
     public SampleHeaderView(Context context) {

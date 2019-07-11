@@ -15,15 +15,15 @@
  */
 package com.androidpi.literefresh.sample.ui.fragment
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.androidpi.literefresh.OnLoadListener
 import com.androidpi.literefresh.OnRefreshListener
 import com.androidpi.literefresh.OnScrollListener

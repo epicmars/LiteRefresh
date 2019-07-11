@@ -15,14 +15,15 @@
  */
 package com.androidpi.literefresh.sample.ui.fragment;
 
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.TypedValue;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.androidpi.literefresh.LiteRefreshHelper;
 import com.androidpi.literefresh.OnRefreshListener;
@@ -43,7 +44,7 @@ import com.androidpi.literefresh.sample.ui.viewholder.UnsplashPhotoHeaderViewHol
 import com.androidpi.literefresh.sample.ui.viewholder.UnsplashPhotoListViewHolder;
 import com.androidpi.literefresh.sample.vm.UnsplashViewModel;
 
-import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
+import static androidx.core.view.ViewCompat.TYPE_TOUCH;
 
 @BindLayout(R.layout.fragment_partial_visible_list)
 public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisibleListBinding> {

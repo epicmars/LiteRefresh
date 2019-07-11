@@ -54,20 +54,20 @@ Just make your nested scrollable view a direct child of `CoordinatorLayout`, and
 the `layout_behavior` attribute to `@string/lr_refresh_content_behavior`.
 
 ```xml
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/lr_refresh_content_behavior">
-        </android.support.v7.widget.RecyclerView>
-    </android.support.design.widget.CoordinatorLayout>
+        </androidx.recyclerview.widget.RecyclerView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 ```
 
 #### Work with header and footer view 
@@ -76,7 +76,7 @@ Below is an example from the sample application, notice that there is an anchore
 that is a feature of CoordinatorLayout which make the behaviors more powerful.
 
 ```xml
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/coordinator_layout"
@@ -112,7 +112,7 @@ that is a feature of CoordinatorLayout which make the behaviors more powerful.
             android:layout_height="wrap_content"
             app:layout_anchor="@id/view_content"
             app:layout_anchorGravity="top|center_horizontal" />
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 ```
 
 ### Attach behaviors from code

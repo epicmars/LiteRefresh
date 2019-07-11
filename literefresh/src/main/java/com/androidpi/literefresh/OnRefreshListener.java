@@ -15,7 +15,8 @@
  */
 package com.androidpi.literefresh;
 
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 /**
  * Implementing this interface to listener to the refreshing state of header behavior or content

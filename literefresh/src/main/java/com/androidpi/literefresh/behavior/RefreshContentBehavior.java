@@ -16,7 +16,6 @@
 package com.androidpi.literefresh.behavior;
 
 import android.content.Context;
-import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Interpolator;
@@ -35,17 +34,17 @@ import com.androidpi.literefresh.controller.ContentBehaviorController;
  * This behavior is the pivot of header and footer behavior, without it the other behaviors can not
  * work. All the offset and state changes come from it, so it can be used standalone.
  * <p>
- * For now, the nested scrolling view supported by {@link CoordinatorLayout} are
- * {@link android.support.v4.widget.NestedScrollView},
- * {@link android.support.v7.widget.RecyclerView}
- * which implement {@link android.support.v4.view.NestedScrollingChild}.
+ * For now, the nested scrolling view supported by {@link androidx.coordinatorlayout.widget.CoordinatorLayout} are
+ * {@link androidx.core.widget.NestedScrollView},
+ * {@link androidx.recyclerview.widget.RecyclerView}
+ * which implement {@link androidx.core.view.NestedScrollingChild}.
  * <p>
  * Use other parent view to wrap these scrollable child is OK, cause the {@link android.view.ViewGroup}
  * and {@link View} already implement the nested scrolling event dispatch contract, but the nested
  * scrolling child itself must exist in the view hierarchy.
  * <p>
  * <strong>
- * The view to which this behavior is attached must be a direct child of {@link CoordinatorLayout}.
+ * The view to which this behavior is attached must be a direct child of {@link androidx.coordinatorlayout.widget.CoordinatorLayout}.
  * </strong>
  */
 

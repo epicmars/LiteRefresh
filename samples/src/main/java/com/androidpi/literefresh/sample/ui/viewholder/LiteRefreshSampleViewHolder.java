@@ -15,8 +15,9 @@
  */
 package com.androidpi.literefresh.sample.ui.viewholder;
 
-import android.support.v4.app.Fragment;
 import android.view.View;
+
+import androidx.fragment.app.Fragment;
 
 import com.androidpi.literefresh.sample.R;
 import com.androidpi.literefresh.sample.base.ui.BaseViewHolder;

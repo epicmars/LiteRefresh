@@ -16,11 +16,12 @@
 package com.androidpi.literefresh.widget;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.androidpi.literefresh.LiteRefreshHelper;
 import com.androidpi.literefresh.OnLoadListener;

@@ -15,8 +15,8 @@
  */
 package com.androidpi.literefresh.sample.vm
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.androidpi.literefresh.sample.base.model.Resource
 import com.androidpi.literefresh.sample.common.http.RetrofitClientFactory
 import com.androidpi.literefresh.sample.data.remote.NewsApi

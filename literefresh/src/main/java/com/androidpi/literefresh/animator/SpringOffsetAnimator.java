@@ -15,10 +15,11 @@
  */
 package com.androidpi.literefresh.animator;
 
-import android.support.animation.DynamicAnimation;
-import android.support.animation.FloatValueHolder;
-import android.support.animation.SpringAnimation;
-import android.support.animation.SpringForce;
+
+import androidx.dynamicanimation.animation.DynamicAnimation;
+import androidx.dynamicanimation.animation.FloatValueHolder;
+import androidx.dynamicanimation.animation.SpringAnimation;
+import androidx.dynamicanimation.animation.SpringForce;
 
 /**
  * A animator can make offset changes like spring.
