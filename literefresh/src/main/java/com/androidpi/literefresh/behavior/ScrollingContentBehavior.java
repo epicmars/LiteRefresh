@@ -99,6 +99,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                                   int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
         boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed,
                 parentHeightMeasureSpec, heightUsed);
+        // If parent doesn't has a initial height yet.
+        if (parent.getMeasuredHeight() == 0) {
+            return handled;
+        }
         // The minimum offset is used to limit the content view's scrolling offset.
         // Besides, the minimum offset and header's visible height are used together to reset
         // content's position.
