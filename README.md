@@ -2,12 +2,6 @@ LiteRefresh
 =============
 [ ![Download](https://api.bintray.com/packages/jastrelax/maven/com.androidpi%3Aliterefresh/images/download.svg) ](https://bintray.com/jastrelax/maven/com.androidpi%3Aliterefresh/_latestVersion)
 
-When the right behaviors are attached to the right and direct child views of CoordinatorLayout
-and when the content view to which the content behavior is attached is scrolling, 
-the header and footer views can react to that scrolling, the content behavior also has internal 
-state machines that trace it's scrolling states, so the pull-to-refresh and pull-to-load features are 
-well supported.
-
 ## Behaviors
 There are three type of behaviors can be used to attached to direct children of CoordinatorLayout.
 
@@ -165,8 +159,8 @@ The supported nested scrolling view for content are list below.
 
 ```gradle
 dependencies {
-    implementation 'com.androidpi:literefresh:0.9.1-alpha'
-    implementation 'com.androidpi:literefresh-widgets:0.9.1-alpha'
+    implementation 'com.androidpi:literefresh:0.10.0-alpha'
+    implementation 'com.androidpi:literefresh-widgets:0.10.0-alpha'
 }
 ```
 
