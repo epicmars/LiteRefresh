@@ -1,0 +1,1 @@
+android.injected.testOnly=false

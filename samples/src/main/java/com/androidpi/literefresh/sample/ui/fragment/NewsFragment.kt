@@ -128,6 +128,11 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
+        container?.postDelayed(
+                {
+                    binding.testStub.viewStub?.inflate()
+                }, 5000
+        )
         // If retainInstance is set to be true, on configuration change,
         // View state will be restored,
         // thus the referenced obsolete activity context should not be used any more,

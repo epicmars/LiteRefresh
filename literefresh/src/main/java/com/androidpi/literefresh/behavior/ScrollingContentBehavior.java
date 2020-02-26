@@ -99,8 +99,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                                   int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
         boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed,
                 parentHeightMeasureSpec, heightUsed);
-        // If parent doesn't has a initial height yet.
-        if (parent.getMeasuredHeight() == 0) {
+        int heightSize = View.MeasureSpec.getSize(parentHeightMeasureSpec);
+        int heightMode = View.MeasureSpec.getMode(parentHeightMeasureSpec);
+        // If required height is zero.
+        if (heightSize == 0) {
             return handled;
         }
         // The minimum offset is used to limit the content view's scrolling offset.
@@ -109,9 +111,11 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         // We must make sure after resetting, either it's top reaches the minimum offset or
         // header visible height, it depends on which one is larger. When do the layout, we set
         // minimum offset to be always less than or equal to header visible height.
-        int height = parent.getMeasuredHeight() - getConfiguration().getMinOffset();
+        int height = heightSize - getConfiguration().getMinOffset();
         int heightSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
-        parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, heightSpec, heightUsed);
+        if (height >= 0) {
+            parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, heightSpec, heightUsed);
+        }
         return handled;
     }
 
