@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <literefresh.widget.ScalableHeaderLayout
+            android:id="@+id/scaleableHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <literefresh.sample.ui.widget.NestedHorizonView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <literefresh.sample.ui.widget.ImagePagerHeaderView
+                    android:id="@+id/image_pager_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </literefresh.sample.ui.widget.NestedHorizonView>
+        </literefresh.widget.ScalableHeaderLayout>
+
+        <fragment
+            android:id="@+id/fragment"
+            android:name="literefresh.sample.ui.fragment.UnsplashPhotoListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/lr_refresh_content_behavior" />
+
+        <View
+            android:id="@+id/view_footer"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            app:layout_behavior="@string/lr_refresh_footer_behavior" />
+
+
+        <literefresh.widget.LoadingView
+            android:id="@+id/loading_view"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="-24dp"
+            app:lr_color="@android:color/white" />
+
+        <literefresh.sample.ui.widget.SampleToolbar
+            android:id="@+id/sample_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:theme="@style/AppTheme.NoActionBar.AppBarOverlay"
+            app:elevation="0dp" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

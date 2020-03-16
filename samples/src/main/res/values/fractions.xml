@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <fraction name="percent_100p">100%p</fraction>
+    <fraction name="percent_50">50%</fraction>
+    <fraction name="percent_100">100%</fraction>
+</resources>

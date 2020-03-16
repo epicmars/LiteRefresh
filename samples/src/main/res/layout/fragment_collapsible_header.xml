@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_container">
+
+        <FrameLayout
+            android:id="@+id/view_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:layout_anchor="@id/view_content"
+            app:layout_anchorGravity="top|center_horizontal">
+            <literefresh.sample.ui.widget.CircularLoadingView
+                android:id="@+id/circle_progress"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="24dp"/>
+        </FrameLayout>
+
+        <literefresh.sample.ui.widget.NestedHorizonView
+            android:id="@+id/view_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:layout_behavior="@string/lr_refresh_header_behavior"
+            app:lr_mode="follow_up"
+            app:lr_maxOffsetRatio="100%p"
+            app:lr_visibleHeightRatio="100%">
+
+            <literefresh.sample.ui.widget.ImagePagerHeaderView
+                android:id="@+id/image_pager_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </literefresh.sample.ui.widget.NestedHorizonView>
+
+        <FrameLayout
+            android:id="@+id/view_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/lr_refresh_content_behavior"
+            app:lr_minOffset="72dp">
+
+            <fragment
+                android:id="@+id/fragment"
+                android:name="literefresh.sample.ui.fragment.UnsplashPhotoGridFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <View
+            android:id="@+id/view_footer"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            app:layout_behavior="@string/lr_refresh_footer_behavior" />
+
+        <literefresh.sample.ui.widget.SampleToolbar
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginTop="-72dp"
+            android:paddingTop="16dp"
+            app:toolbar_background="@color/colorPrimary"
+            app:toolbar_title="Photos on Unsplash"
+            android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
+        </literefresh.sample.ui.widget.SampleToolbar>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

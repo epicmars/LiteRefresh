@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <literefresh.sample.ui.widget.SampleHeaderView
+            android:id="@+id/view_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/lr_refresh_header_behavior"
+            app:lr_visibleHeightRatio="50%"
+            app:lr_maxOffsetRatio="100%p"
+            app:lr_mode="follow" />
+
+        <literefresh.sample.ui.widget.SampleFooterView
+            android:id="@+id/view_footer"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            app:layout_behavior="@string/lr_refresh_footer_behavior"
+            app:lr_maxOffsetRatio="100%p" />
+
+        <literefresh.sample.ui.widget.SampleContentView
+            android:id="@+id/view_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lr_minOffset="64dp"
+            app:layout_behavior="@string/lr_refresh_content_behavior"/>
+
+        <literefresh.sample.ui.widget.SampleAnchoredView
+            android:id="@+id/view_anchored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/view_content"
+            app:layout_anchorGravity="top|center_horizontal" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

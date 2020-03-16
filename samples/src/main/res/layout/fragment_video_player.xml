@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/lr_refresh_content_behavior" />
+
+<!--        <literefresh.widget.RefreshingHeaderView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="240dp"
+            android:background="@android:color/black"
+            app:layout_behavior="literefresh.behavior.RefreshHeaderBehavior"
+            app:lr_visibleHeightRatio="100%"
+            app:lr_mode="follow_up"
+            android:visibility="visible">
+
+            <literefresh.sample.ui.widget.ijkplayer.IjkVideoView
+                android:id="@+id/video_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:background="@android:color/black"
+                app:layout_constraintBottom_toTopOf="@id/fl_tabs"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TableLayout
+                android:id="@+id/hud_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#77000000"
+                android:padding="8dp"
+                app:layout_constraintBottom_toBottomOf="@id/video_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"/>
+
+            <FrameLayout
+                android:id="@+id/fl_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_anchorGravity="top"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.appbar.AppBarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:elevation="4dp"
+                    android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
+
+                    <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:background="@android:color/white"
+                        app:contentInsetStart="0dp"
+                        app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay">
+
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/pager_tabs"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:tabGravity="fill"
+                            app:tabIndicatorFullWidth="false"
+                            app:tabTextAppearance="@style/text_tab_indicator"
+                            app:tabIndicatorColor="@color/colorPrimary"
+                            app:tabIndicator="@drawable/tab_indicator"
+                            app:tabMode="scrollable"
+                            app:tabSelectedTextColor="@color/colorPrimary"
+                            app:tabTextColor="@android:color/black" />
+                    </androidx.appcompat.widget.Toolbar>
+                </com.google.android.material.appbar.AppBarLayout>
+            </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
