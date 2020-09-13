@@ -1,0 +1,52 @@
+ext {
+
+    // android
+    android = [
+            compile_sdk_version : 28,
+            target_sdk_version : 28,
+            min_sdk_version: 16
+    ]
+
+    androidx = [
+            appcompat_version : '1.1.0'
+    ]
+
+    // android support library
+    android_support_version = '28.0.0'
+    // lifecycle architecture
+    arch_lifecycle_version = '1.1.1'
+    arch_lifecycle_ext_version = '1.1.1'
+    // room
+    arch_room_version = '2.2.5'
+    arch_room_compiler_version = '1.1.1'
+    arch_room_test_version = '1.1.1'
+    // dagger2
+    dagger2_version = '2.15'
+    // retrofit
+    retrofit_version = '2.6.1'
+    // okhttp3
+    okhttp_version = '3.12.0'
+    // gson
+    gson_version = '2.8.2'
+    // rxjava2
+    rxjava2_version = '2.2.12'
+    adapter_rxjava2_version = '2.3.0'
+    // rxandroid
+    rxandroid_version = '2.1.1'
+    // timber
+    timber_version = '4.7.1'
+    // zxing
+    zxing_version = '3.3.0'
+    // guava
+    guava_version = '22.0-android'
+    // leakcanary
+    leakcanary_version = '1.5.1'
+    // glide
+    glide_version = '4.11.0'
+    // glide compile
+    glide_compiler_version = '4.11.0'
+    // ExoPlayer version
+    exoplayer_version = '2.8.1'
+    // Anko version
+    anko_version = '0.10.4'
+}

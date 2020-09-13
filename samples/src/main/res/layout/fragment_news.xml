@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.androidpi.literefresh.sample.ui.widget.SampleToolbar
+            android:id="@+id/sample_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:theme="@style/AppTheme.NoActionBar.AppBarOverlay"
+            app:toolbar_background="@color/colorPrimary"
+            app:toolbar_title="News"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ProgressBar
+            android:id="@+id/header_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            android:visibility="gone"
+            android:background="@color/lr_color_gray"/>
+
+        <ProgressBar
+            android:id="@+id/content_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            android:visibility="gone"
+            android:background="@color/lr_color_gray"/>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/pager_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sample_toolbar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_news"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                tools:listitem="@layout/view_holder_news" />
+
+            <com.androidpi.literefresh.widget.RefreshingHeaderView
+                android:id="@+id/scroll_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.androidpi.literefresh.widget.LoadingFooterView
+                android:id="@+id/scroll_footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <ViewStub
+            android:id="@+id/test_stub"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout="@layout/view_stub_news"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sample_toolbar"
+            android:visibility="gone"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
