@@ -27,7 +27,7 @@ There are three type of behaviors can be used to attached to direct children of 
 
 Follow | Follow Up | Follow Down | Still
 ----|----|-----|-----
-![img](/docs/draft/images/follow.gif) | ![img](/docs/draft/images/follow_up.gif) | ![img](/docs/draft/images/follow_down.gif) | ![img](/docs/draft/images/still.gif)
+![img](https://raw.githubusercontent.com/jastrelax/LiteRefreshGuide/master/images/follow.gif) | ![img](https://raw.githubusercontent.com/jastrelax/LiteRefreshGuide/master/images/follow_up.gif) | ![img](https://raw.githubusercontent.com/jastrelax/LiteRefreshGuide/master/images/follow_down.gif) | ![img](https://raw.githubusercontent.com/jastrelax/LiteRefreshGuide/master/images/still.gif)
 
 When the content view is scrolling, the header and footer can decide whether to follow or not. 
 Four modes are defined:

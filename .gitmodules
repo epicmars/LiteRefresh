@@ -1,0 +1,3 @@
+[submodule "docs/guide"]
+	path = docs/guide
+	url = git@github.com:jastrelax/LiteRefreshGuide.git
