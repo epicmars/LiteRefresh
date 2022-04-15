@@ -32,6 +32,7 @@ import literefresh.sample.databinding.FragmentUnsplashBinding
 import literefresh.sample.model.UnsplashPhotoPage
 import literefresh.sample.vm.UnsplashViewModel
 import layoutbinder.annotations.BindLayout
+import literefresh.behavior.Configuration
 
 class UnsplashFragment : BaseFragment() {
 
@@ -82,15 +83,31 @@ class UnsplashFragment : BaseFragment() {
             }
         })
         headerBehavior?.addOnScrollListener(object : OnScrollListener {
-            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onStartScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
                 triggerOffset = trigger - initial
             }
 
-            override fun onPreScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onPreScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
 
             }
 
-            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                delta: Int,
+                type: Int
+            ) {
                 val offset = current - initial.toFloat()
                 val triggerRange = trigger - initial.toFloat()
                 val progress = offset / (trigger - initial)
@@ -98,7 +115,12 @@ class UnsplashFragment : BaseFragment() {
                 binding!!.loadingView.translationY = MathUtils.clamp(offset, 0f, triggerRange)
             }
 
-            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
+            override fun onStopScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {}
         })
         headerBehavior.addOnRefreshListener(object : OnRefreshListener {
             override fun onRefreshStart() {

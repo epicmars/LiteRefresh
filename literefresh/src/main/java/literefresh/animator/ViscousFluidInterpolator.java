@@ -21,7 +21,7 @@ import android.view.animation.Interpolator;
  * An interpolator from {@link android.widget.Scroller}.
  */
 
-public class ViscousFluidInterpolator implements Interpolator{
+public class ViscousFluidInterpolator implements Interpolator {
 
     /** Controls the viscous fluid effect (how much of it). */
     private static final float VISCOUS_FLUID_SCALE = 2.0f;

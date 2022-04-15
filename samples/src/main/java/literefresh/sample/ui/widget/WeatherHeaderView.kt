@@ -22,6 +22,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import literefresh.LiteRefresh
 import literefresh.OnRefreshListener
 import literefresh.OnScrollListener
+import literefresh.behavior.Configuration
 import literefresh.behavior.RefreshHeaderBehavior
 import literefresh.sample.R
 import literefresh.sample.utils.UiUtils
@@ -40,12 +41,28 @@ class WeatherHeaderView @JvmOverloads constructor(context: Context, attrs: Attri
         }
     }
 
-    override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
-    override fun onPreScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+    override fun onStartScroll(
+        parent: CoordinatorLayout,
+        view: View,
+        config: Configuration,
+        type: Int
+    ) {}
+    override fun onPreScroll(
+        parent: CoordinatorLayout,
+        view: View,
+        config: Configuration,
+        type: Int
+    ) {
 
     }
 
-    override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+    override fun onScroll(
+        parent: CoordinatorLayout,
+        view: View,
+        config: Configuration,
+        delta: Int,
+        type: Int
+    ) {
         val height = height.toFloat()
         if (current > offset) {
             val progress = (current - offset) / height
@@ -53,7 +70,12 @@ class WeatherHeaderView @JvmOverloads constructor(context: Context, attrs: Attri
         }
     }
 
-    override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
+    override fun onStopScroll(
+        parent: CoordinatorLayout,
+        view: View,
+        config: Configuration,
+        type: Int
+    ) {}
     override fun onRefreshStart() {
         loadingView.startProgress()
     }

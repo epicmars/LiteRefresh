@@ -33,6 +33,7 @@ import literefresh.sample.data.remote.dto.ResTrendingPage
 import literefresh.sample.databinding.FragmentMoviePagerBinding
 import literefresh.sample.vm.TheMovieDbViewModel
 import layoutbinder.annotations.BindLayout
+import literefresh.behavior.Configuration
 import java.util.*
 
 class MoviePagerFragment : BaseFragment() {
@@ -64,16 +65,37 @@ class MoviePagerFragment : BaseFragment() {
             }
         })
         headerBehavior.addOnScrollListener(object : OnScrollListener {
-            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
-            override fun onPreScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onStartScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {}
+            override fun onPreScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
             }
 
-            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                delta: Int,
+                type: Int
+            ) {
                 val percent = (current - initial) / (trigger - initial).toFloat()
                 binding!!.circleProgress.setProgress(percent)
             }
 
-            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
+            override fun onStopScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {}
         })
         headerBehavior.addOnRefreshListener(object : OnRefreshListener {
             override fun onRefreshStart() {

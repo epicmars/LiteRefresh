@@ -27,6 +27,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import literefresh.LiteRefresh;
 import literefresh.OnLoadListener;
 import literefresh.OnScrollListener;
+import literefresh.behavior.Configuration;
 import literefresh.behavior.RefreshFooterBehavior;
 
 public class LoadingFooterView extends RefreshFooterLayout implements OnScrollListener, OnLoadListener {
@@ -60,21 +61,21 @@ public class LoadingFooterView extends RefreshFooterLayout implements OnScrollLi
     }
 
     @Override
-    public void onStartScroll(CoordinatorLayout parent, View view, int initial, int trigger, int min, int max, int type) {
+    public void onStartScroll(CoordinatorLayout parent, View view, Configuration config, int type) {
 
     }
 
     @Override
-    public void onPreScroll(@NonNull CoordinatorLayout parent, @NonNull View view, int current, int initial, int trigger, int min, int max, int type) {
+    public void onPreScroll(@NonNull CoordinatorLayout parent, @NonNull View view, Configuration config, int type) {
     }
 
     @Override
-    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
+    public void onScroll(CoordinatorLayout parent, View view, Configuration config, int delta, int type) {
 
     }
 
     @Override
-    public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int trigger, int min, int max, int type) {
+    public void onStopScroll(CoordinatorLayout parent, View view, Configuration config, int type) {
 
     }
 
@@ -95,7 +96,7 @@ public class LoadingFooterView extends RefreshFooterLayout implements OnScrollLi
     }
 
     @Override
-    public void onLoadEnd(@Nullable Throwable throwable) {
+    public void onLoadComplete(@Nullable Throwable throwable) {
         loadingView.setVisibility(View.GONE);
         tvMessage.setVisibility(View.VISIBLE);
         if (throwable != null) {

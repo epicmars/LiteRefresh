@@ -45,5 +45,5 @@ public interface OnRefreshListener {
      * The end of refreshing.
      * @param throwable the exception that was reported by a refresher.
      */
-    void onRefreshEnd(@Nullable Throwable throwable);
+    void onRefreshComplete(@Nullable Throwable throwable);
 }

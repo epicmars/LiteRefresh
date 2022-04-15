@@ -41,6 +41,7 @@ import literefresh.sample.ui.viewholder.UnsplashPhotoHeaderViewHolder
 import literefresh.sample.ui.viewholder.UnsplashPhotoListViewHolder
 import literefresh.sample.vm.UnsplashViewModel
 import layoutbinder.annotations.BindLayout
+import literefresh.behavior.Configuration
 
 
 class PartialVisibleListFragment : BaseFragment() {
@@ -89,13 +90,34 @@ class PartialVisibleListFragment : BaseFragment() {
         binding!!.circleProgress.translationY = -translationDistance
         if (behavior != null) {
             behavior.addOnScrollListener(object : OnScrollListener {
-                override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
-                override fun onPreScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+                override fun onStartScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {}
+                override fun onPreScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {
 
                 }
 
-                override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
-                override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+                override fun onScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    delta: Int,
+                    type: Int
+                ) {}
+                override fun onStopScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {
                     if (type == ViewCompat.TYPE_TOUCH && !behavior.controller.isRefreshing) {
                         binding!!.circleProgress.setProgress(1f)
                         binding!!.circleProgress.animate().translationY(-translationDistance)

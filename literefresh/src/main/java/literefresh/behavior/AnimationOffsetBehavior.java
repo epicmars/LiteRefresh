@@ -25,15 +25,15 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import literefresh.R;
-import literefresh.animator.OffsetAnimator;
-import literefresh.animator.SpringOffsetAnimator;
-import literefresh.controller.BehaviorController;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import literefresh.R;
+import literefresh.animator.OffsetAnimator;
+import literefresh.animator.SpringOffsetAnimator;
+import literefresh.controller.BehaviorController;
 
 /**
  * A behavior that with offset animation feature.
@@ -48,17 +48,6 @@ public abstract class AnimationOffsetBehavior<V extends View>
     static final long SHOW_DURATION = 300L;
     static final long RESET_DURATION = 300L;
 
-    public interface ScrollingListener {
-
-        void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int initial, int trigger, int min, int max, int type);
-
-        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int initial, int trigger, int min, int max, int type);
-
-        void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int initial, int trigger, int min, int max, int type);
-
-        void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int initial, int trigger, int min, int max, int type);
-    }
-
     private static final int MSG_VIEW_INITIATED = 1;
 
     public static final float GOLDEN_RATIO = 0.618F;
@@ -66,7 +55,7 @@ public abstract class AnimationOffsetBehavior<V extends View>
     private OffsetAnimator offsetAnimator;
     protected V mChild;
     protected CoordinatorLayout mParent;
-    protected List<ScrollingListener> mListeners = new ArrayList<>();
+    protected List<NestedScrollingListener> mListeners = new ArrayList<>();
     protected Handler handler = new Handler(this);
     private Queue<Runnable> pendingActions = new LinkedList<>();
     protected BehaviorController controller;
@@ -83,20 +72,20 @@ public abstract class AnimationOffsetBehavior<V extends View>
         }
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.OffsetBehavior,
                 0, 0);
-        boolean hasMaxOffsetRatioOfParent = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffsetRatioOfParent);
-        boolean hasMaxOffset = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffset);
-        if (hasMaxOffsetRatioOfParent) {
-            config.setMaxOffsetRatioOfParent(a.getFraction(
-                    R.styleable.OffsetBehavior_lr_maxOffsetRatioOfParent, 1, 2, 0f));
-        }
-        if (hasMaxOffset) {
-            config.setMaxOffset(a.getDimensionPixelOffset(
-                    R.styleable.OffsetBehavior_lr_maxOffset, 0));
-        }
-        // If maxOffset and maxOffsetRatio is not set then use default.
-        config.setUseDefaultMaxOffset(!hasMaxOffsetRatioOfParent && !hasMaxOffset);
-        config.setDefaultTriggerOffset(context.getResources().getDimensionPixelOffset(
-                R.dimen.lr_default_trigger_offset));
+//        boolean hasMaxOffsetRatioOfParent = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffsetRatioOfParent);
+//        boolean hasMaxOffset = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffset);
+//        if (hasMaxOffsetRatioOfParent) {
+//            config.setMaxDownOffsetRatioOfParent(a.getFraction(
+//                    R.styleable.OffsetBehavior_lr_maxOffsetRatioOfParent, 1, 2, 0f));
+//        }
+//        if (hasMaxOffset) {
+//            config.setMaxDownOffset(a.getDimensionPixelOffset(
+//                    R.styleable.OffsetBehavior_lr_maxOffset, 0));
+//        }
+//        // If maxOffset and maxOffsetRatio is not set then use default.
+//        config.setUseDefaultMaxDownOffset(!hasMaxOffsetRatioOfParent && !hasMaxOffset);
+//        config.setDefaultTriggerOffset(context.getResources().getDimensionPixelOffset(
+//                R.dimen.lr_default_trigger_offset));
         a.recycle();
     }
 
@@ -158,19 +147,19 @@ public abstract class AnimationOffsetBehavior<V extends View>
         }
     }
 
-    protected void animateOffsetDeltaWithDuration(CoordinatorLayout parent, View child,
-                                                  int offsetDelta, int initialOffset,
-                                                  int triggerOffset, int minOffset, int maxOffset,
-                                                  long duration, int type) {
-        animateOffsetWithDuration(parent, child, getTopAndBottomOffset() + offsetDelta,
-                initialOffset, triggerOffset, minOffset, maxOffset, duration, type);
+    protected void animateOffsetDeltaWithDuration(CoordinatorLayout parent,
+                                                  V child,
+                                                  ScrollableConfiguration config,
+                                                  int offsetDelta,
+                                                  long duration,
+                                                  int type) {
+        animateOffsetWithDuration(parent, child, offsetDelta, duration, type);
     }
 
-    protected void animateOffsetWithDuration(final CoordinatorLayout parent, final View child,
-                                             int destOffset, final int initialOffset,
-                                             final int triggerOffset, final int minOffset,
-                                             final int maxOffset, long duration, final int type) {
+    protected void animateOffsetWithDuration(final CoordinatorLayout parent, final V child,
+                                             int offsetDelta, long duration, final int type) {
         final int current = getTopAndBottomOffset();
+        int destOffset = current + offsetDelta;
         // No need to change offset.
         if (destOffset == current) {
             if (offsetAnimator != null && offsetAnimator.isRunning()) {
@@ -193,10 +182,7 @@ public abstract class AnimationOffsetBehavior<V extends View>
                         if (!offsetChanged) {
                             parent.dispatchDependentViewsChanged(child);
                         }
-                        for (ScrollingListener l : mListeners) {
-                            l.onScroll(getParent(), getChild(), value,
-                                    value - last, initialOffset, triggerOffset, minOffset, maxOffset, type);
-                        }
+                        dispatchOnScroll(parent, child, value, type, offsetDelta);
                         last = value;
                     }
 
@@ -215,13 +201,13 @@ public abstract class AnimationOffsetBehavior<V extends View>
         return mChild;
     }
 
-    protected void addScrollListener(ScrollingListener listener) {
+    protected void addScrollListener(NestedScrollingListener listener) {
         if (null == listener)
             return;
         mListeners.add(listener);
     }
 
-    protected void removeScrollListener(ScrollingListener listener) {
+    protected void removeScrollListener(NestedScrollingListener listener) {
         if (null == listener) {
             return;
         }
@@ -285,6 +271,30 @@ public abstract class AnimationOffsetBehavior<V extends View>
         if (!config.isSettled()) {
             this.config = config;
             requestLayout();
+        }
+    }
+
+    protected void dispatchOnStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int type) {
+        for (NestedScrollingListener l : mListeners) {
+            l.onStartScroll(coordinatorLayout, child, getConfig(), type);
+        }
+    }
+
+    protected void dispatchOnPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int currentOffset, int type) {
+        for (NestedScrollingListener l : mListeners) {
+            l.onPreScroll(coordinatorLayout, child, getConfig(), currentOffset, type);
+        }
+    }
+
+    protected void dispatchOnScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int currentOffset, int offsetDelta, int type) {
+        for (NestedScrollingListener l : mListeners) {
+            l.onScroll(coordinatorLayout, child, getConfig(), currentOffset, offsetDelta, type);
+        }
+    }
+
+    protected void dispatchOnStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int currentOffset, int type) {
+        for (NestedScrollingListener l : mListeners) {
+            l.onStopScroll(coordinatorLayout, child, getConfig(), currentOffset, type);
         }
     }
 

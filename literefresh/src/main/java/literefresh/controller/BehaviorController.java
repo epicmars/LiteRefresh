@@ -20,23 +20,25 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import literefresh.Loader;
 import literefresh.OnLoadListener;
 import literefresh.OnRefreshListener;
 import literefresh.OnScrollListener;
 import literefresh.Refresher;
 import literefresh.behavior.AnimationOffsetBehavior;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import literefresh.behavior.Configuration;
+import literefresh.behavior.NestedScrollingListener;
 
 /**
  * Rather than change view's offset, the primary responsibility of behavior controller is to control
  * how behavior react to offset changes and provide API to control the behavior's states.
  */
 public class BehaviorController<B extends AnimationOffsetBehavior>
-        implements AnimationOffsetBehavior.ScrollingListener, Refresher, Loader {
+        implements NestedScrollingListener, Refresher, Loader {
 
     protected BehaviorController proxy;
     protected B behavior;
@@ -50,44 +52,43 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
 
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                              int initial, int trigger, int min, int max, int type) {
+                              Configuration config, int type) {
         if (mScrollListeners == null) {
             return;
         }
         for (OnScrollListener l : mScrollListeners) {
-            l.onStartScroll(coordinatorLayout, child, initial, trigger, min, max, type);
+            l.onStartScroll(coordinatorLayout, child, config, type);
         }
     }
 
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                            int current, int initial, int trigger, int min, int max, int type) {
+                            Configuration config, int currentOffset, int type) {
         if (mScrollListeners == null)
             return;
         for (OnScrollListener l : mScrollListeners) {
-            l.onPreScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);
+            l.onPreScroll(coordinatorLayout, child, config, type);
         }
     }
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                         int current, int delta, int initial, int trigger, int min, int max,
-                         int type) {
-        if (mScrollListeners == null)
+                         Configuration config, int currentOffset, int delta, int type) {
+        if (mScrollListeners  == null)
             return;
         for (OnScrollListener l : mScrollListeners) {
-            l.onScroll(coordinatorLayout, child, current, delta, initial, trigger, min, max, type);
+            l.onScroll(coordinatorLayout, child, config, delta, type);
         }
     }
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                             int current, int initial, int trigger, int min, int max, int type) {
+                             Configuration config, int currentOffset, int type) {
         if (mScrollListeners == null) {
             return;
         }
         for (OnScrollListener l : mScrollListeners) {
-            l.onStopScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);
+            l.onStopScroll(coordinatorLayout, child, config, type);
         }
     }
 
@@ -219,6 +220,10 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
 
     public void setBehavior(B behavior) {
         this.behavior = behavior;
+    }
+
+    public Configuration getConfig() {
+        return behavior.getConfig();
     }
 
     public void addOnScrollListener(OnScrollListener listener) {

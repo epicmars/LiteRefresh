@@ -38,6 +38,7 @@ import literefresh.sample.model.UnsplashPhotoPage
 import literefresh.sample.ui.TemplateActivity.Companion.startWith
 import literefresh.sample.vm.UnsplashViewModel
 import layoutbinder.annotations.BindLayout
+import literefresh.behavior.Configuration
 
 class PartialVisibleHeaderFragment : BaseFragment() {
 
@@ -77,16 +78,32 @@ class PartialVisibleHeaderFragment : BaseFragment() {
         })
         if (headerBehavior != null) {
             headerBehavior?.addOnScrollListener(object : OnScrollListener {
-                override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+                override fun onStartScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {
 //                    binding.circleProgress.setVisibility(View.VISIBLE);
 //                    circularProgressDrawable.start();
                 }
 
-                override fun onPreScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+                override fun onPreScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {
 
                 }
 
-                override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+                override fun onScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    delta: Int,
+                    type: Int
+                ) {
                     if (current >= view.height * 0.8f) {
                         if (!isLaunched) {
                             isLaunched = true
@@ -111,7 +128,12 @@ class PartialVisibleHeaderFragment : BaseFragment() {
                     }
                 }
 
-                override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
+                override fun onStopScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {}
             })
             headerBehavior?.addOnRefreshListener(object : OnRefreshListener {
                 override fun onRefreshStart() {
@@ -140,16 +162,37 @@ class PartialVisibleHeaderFragment : BaseFragment() {
         }
         if (footerBehavior != null) {
             footerBehavior?.addOnScrollListener(object : OnScrollListener {
-                override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
-                override fun onPreScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+                override fun onStartScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {}
+                override fun onPreScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {
 
                 }
 
-                override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+                override fun onScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    delta: Int,
+                    type: Int
+                ) {
                     binding.footerCircleProgress.setProgress(Math.max(0f, current.toFloat() / trigger))
                 }
 
-                override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
+                override fun onStopScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {}
             })
             footerBehavior?.addOnLoadListener(object : OnLoadListener {
                 override fun onLoadStart() {
@@ -167,7 +210,7 @@ class PartialVisibleHeaderFragment : BaseFragment() {
                     binding.footerCircleProgress.postDelayed({ footerBehavior?.loadComplete() }, 2000L)
                 }
 
-                override fun onLoadEnd(throwable: Throwable?) {
+                override fun onLoadComplete(throwable: Throwable?) {
                     binding.footerCircleProgress.stopLoading()
                     binding.footerCircleProgress.visibility = View.GONE
                     binding.footerTvMessage.visibility = View.VISIBLE

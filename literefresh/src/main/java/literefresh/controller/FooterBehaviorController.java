@@ -19,7 +19,7 @@ import android.view.View;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import literefresh.behavior.ScrollingContentBehavior;
+import literefresh.behavior.ScrollableBehavior;
 import literefresh.behavior.VerticalIndicatorBehavior;
 
 import static literefresh.behavior.IndicatorConfiguration.MODE_FOLLOW;
@@ -40,7 +40,7 @@ public class FooterBehaviorController extends VerticalIndicatorBehaviorControlle
     public int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent, View child,
                                                         View dependency,
                                                         VerticalIndicatorBehavior behavior,
-                                                        ScrollingContentBehavior contentBehavior) {
+                                                        ScrollableBehavior contentBehavior) {
         CoordinatorLayout.LayoutParams lpDependency = ((CoordinatorLayout.LayoutParams) dependency.getLayoutParams());
         CoordinatorLayout.LayoutParams lp = ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
         return dependency.getBottom() + lpDependency.bottomMargin - (child.getTop() - lp.topMargin);
@@ -49,34 +49,34 @@ public class FooterBehaviorController extends VerticalIndicatorBehaviorControlle
     @Override
     public float consumeOffsetOnDependentViewChanged(CoordinatorLayout parent, View child,
                                                      VerticalIndicatorBehavior behavior,
-                                                     ScrollingContentBehavior contentBehavior,
+                                                     ScrollableBehavior contentBehavior,
                                                      int currentOffset, int offsetDelta) {
         switch (behavior.getConfig().getFollowMode()) {
-            case MODE_STILL:
-                if (child.getTop() - behavior.getConfig().getTopMargin() ==
-                        -behavior.getConfig().getInitialVisibleHeight() + parent.getHeight()) {
-                    return 0;
-                } else {
-                    return offsetDelta;
-                }
-            case MODE_FOLLOW_DOWN:
-                // If scrolling up and current offset has reach the initial visible height, don't follow.
-                if (offsetDelta < 0
-                        && child.getTop() - behavior.getConfig().getTopMargin()
-                        <= -behavior.getConfig().getInitialVisibleHeight() + parent.getHeight()) {
-                    return 0;
-                } else {
-                    return offsetDelta;
-                }
-            case MODE_FOLLOW_UP:
-                // If scrolling down and current offset has reach the initial visible height, don't follow..
-                if (offsetDelta > 0
-                        && child.getTop() - behavior.getConfig().getTopMargin()
-                        >= -behavior.getConfig().getInitialVisibleHeight() + parent.getHeight()) {
-                    return 0;
-                } else {
-                    return offsetDelta;
-                }
+//            case MODE_STILL:
+//                if (child.getTop() - behavior.getConfig().getTopMargin() ==
+//                        -behavior.getConfig().getInitialVisibleHeight() + parent.getHeight()) {
+//                    return 0;
+//                } else {
+//                    return offsetDelta;
+//                }
+//            case MODE_FOLLOW_DOWN:
+//                // If scrolling up and current offset has reach the initial visible height, don't follow.
+//                if (offsetDelta < 0
+//                        && child.getTop() - behavior.getConfig().getTopMargin()
+//                        <= -behavior.getConfig().getInitialVisibleHeight() + parent.getHeight()) {
+//                    return 0;
+//                } else {
+//                    return offsetDelta;
+//                }
+//            case MODE_FOLLOW_UP:
+//                // If scrolling down and current offset has reach the initial visible height, don't follow..
+//                if (offsetDelta > 0
+//                        && child.getTop() - behavior.getConfig().getTopMargin()
+//                        >= -behavior.getConfig().getInitialVisibleHeight() + parent.getHeight()) {
+//                    return 0;
+//                } else {
+//                    return offsetDelta;
+//                }
             case MODE_FOLLOW:
             default:
                 return offsetDelta;
@@ -94,7 +94,8 @@ public class FooterBehaviorController extends VerticalIndicatorBehaviorControlle
     @Override
     public boolean isHiddenPartVisible(CoordinatorLayout parent, View child,
                                        VerticalIndicatorBehavior behavior) {
-        return -(child.getTop() - behavior.getConfig().getTopMargin()) + behavior.getParent().getHeight()
-                > behavior.getConfig().getInitialVisibleHeight();
+//        return -(child.getTop() - behavior.getConfig().getTopMargin()) + behavior.getParent().getHeight()
+//                > behavior.getConfig().getInitialVisibleHeight();
+        return false;
     }
 }

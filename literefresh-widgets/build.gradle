@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion rootProject.ext.android.compile_sdk_version
@@ -6,8 +7,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.android.min_sdk_version
         targetSdkVersion rootProject.ext.android.target_sdk_version
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -19,6 +18,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'literefresh.widget'
 
 }
 
@@ -34,6 +34,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
     implementation project(':literefresh')
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 archivesBaseName = 'literefresh-widgets'
@@ -44,3 +46,6 @@ ext {
 }
 
 apply from: rootProject.file('publish.gradle')
+repositories {
+//    mavenCentral()
+}

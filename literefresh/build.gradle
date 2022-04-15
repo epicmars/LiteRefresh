@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion rootProject.ext.android.compile_sdk_version
@@ -6,8 +7,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.android.min_sdk_version
         targetSdkVersion rootProject.ext.android.target_sdk_version
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -19,20 +18,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'literefresh'
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_9
+//        targetCompatibility JavaVersion.VERSION_1_9
+//    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
     implementation "androidx.appcompat:appcompat:${androidx.appcompat_version}"
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
 
-    compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
+    compileOnly 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 archivesBaseName = 'literefresh'
@@ -43,3 +49,6 @@ ext {
 }
 
 apply from: rootProject.file('publish.gradle')
+repositories {
+//    mavenCentral()
+}

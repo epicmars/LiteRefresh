@@ -34,6 +34,7 @@ import literefresh.sample.databinding.FragmentCollapsibleHeaderBinding
 import literefresh.sample.model.UnsplashPhotoPage
 import literefresh.sample.vm.UnsplashViewModel
 import layoutbinder.annotations.BindLayout
+import literefresh.behavior.Configuration
 
 class CollapsibleHeaderFragment : BaseFragment() {
     val unsplashViewModel: UnsplashViewModel by activityViewModels()
@@ -83,12 +84,28 @@ class CollapsibleHeaderFragment : BaseFragment() {
         if (headerBehavior != null) {
             contentBehavior.addOnScrollListener(object : OnScrollListener {
                 var drawable = ColorDrawable(Color.BLACK)
-                override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
-                override fun onPreScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+                override fun onStartScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {}
+                override fun onPreScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {
 
                 }
 
-                override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+                override fun onScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    delta: Int,
+                    type: Int
+                ) {
                     // set header's translation
                     if (current <= initial) {
                         val y = initial - current.toFloat()
@@ -111,7 +128,12 @@ class CollapsibleHeaderFragment : BaseFragment() {
                     }
                 }
 
-                override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {}
+                override fun onStopScroll(
+                    parent: CoordinatorLayout,
+                    view: View,
+                    config: Configuration,
+                    type: Int
+                ) {}
             })
             headerBehavior.addOnRefreshListener(object : OnRefreshListener {
                 override fun onRefreshStart() {

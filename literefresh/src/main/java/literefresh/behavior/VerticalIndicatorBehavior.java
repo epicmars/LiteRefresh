@@ -15,21 +15,22 @@
  */
 package literefresh.behavior;
 
+import static androidx.core.view.ViewCompat.TYPE_TOUCH;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 
-import literefresh.R;
-import literefresh.controller.VerticalIndicatorBehaviorController;
-
 import java.util.List;
 
-import static androidx.core.view.ViewCompat.TYPE_TOUCH;
+import literefresh.R;
+import literefresh.controller.VerticalIndicatorBehaviorController;
 
 /**
  * Super class of header and footer behavior.
@@ -66,7 +67,7 @@ public abstract class VerticalIndicatorBehavior<V extends View>
         extends IndicatorBehavior<V> {
     private final String TAG = "VerticalIndicator";
     private final int defaultMinTriggerOffset;
-    private ScrollingContentBehavior scrollingContentBehavior;
+    private ScrollableBehavior scrollableBehavior;
     private View dependency;
 
     public VerticalIndicatorBehavior(Context context) {
@@ -77,25 +78,25 @@ public abstract class VerticalIndicatorBehavior<V extends View>
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.OffsetBehavior, 0, 0);
-        if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeight)) {
-            getConfig().setVisibleHeight(Math.round(a.getDimension(
-                    R.styleable.OffsetBehavior_lr_visibleHeight, 0)));
-        }
-        if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeightRatio)) {
-            getConfig().setVisibleHeightRatio(a.getFraction(
-                    R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 1, 0f));
-            getConfig().setVisibleHeightRatioOfParent(a.getFraction(
-                    R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 2, 0f));
-        }
-        if (a.hasValue(R.styleable.OffsetBehavior_lr_showUpWhenRefresh)) {
-            getConfig().setShowUpWhenRefresh(a.getBoolean(
-                    R.styleable.OffsetBehavior_lr_showUpWhenRefresh, false));
-        }
-
-        getConfig().setUseDefinedTriggerOffset(a.hasValue(
-                R.styleable.OffsetBehavior_lr_triggerOffset));
-        getConfig().setTriggerOffset(a.getDimensionPixelOffset(
-                R.styleable.OffsetBehavior_lr_triggerOffset, 0));
+//        if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeight)) {
+//            getConfig().setVisibleHeight(Math.round(a.getDimension(
+//                    R.styleable.OffsetBehavior_lr_visibleHeight, 0)));
+//        }
+//        if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeightRatio)) {
+//            getConfig().setVisibleHeightRatio(a.getFraction(
+//                    R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 1, 0f));
+//            getConfig().setVisibleHeightRatioOfParent(a.getFraction(
+//                    R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 2, 0f));
+//        }
+//        if (a.hasValue(R.styleable.OffsetBehavior_lr_showUpWhenRefresh)) {
+//            getConfig().setShowUpWhenRefresh(a.getBoolean(
+//                    R.styleable.OffsetBehavior_lr_showUpWhenRefresh, false));
+//        }
+//
+//        getConfig().setUseDefinedTriggerOffset(a.hasValue(
+//                R.styleable.OffsetBehavior_lr_triggerOffset));
+//        getConfig().setTriggerOffset(a.getDimensionPixelOffset(
+//                R.styleable.OffsetBehavior_lr_triggerOffset, 0));
         a.recycle();
         defaultMinTriggerOffset = context.getResources().getDimensionPixelOffset(
                 R.dimen.lr_default_min_trigger_offset);
@@ -113,32 +114,32 @@ public abstract class VerticalIndicatorBehavior<V extends View>
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         // Compute visible height of child.
-        final int visibleHeight = (int) Math.max((float) getConfig().getVisibleHeight(),
-                getConfig().getVisibleHeightRatioOfParent()
-                        > getConfig().getVisibleHeightRatio()
-                        ? getConfig().getVisibleHeightRatio() * parent.getHeight()
-                        : getConfig().getVisibleHeightRatio() * child.getHeight());
-        final int invisibleHeight = child.getHeight() - visibleHeight;
-        getConfig().setVisibleHeight(visibleHeight);
-        getConfig().setInvisibleHeight(invisibleHeight);
-
-        // Compute refresh trigger offset.
-        if (getConfig().getTriggerOffset() < 0) {
-            // User define a invalid trigger offset, use the default.
-            getConfig().setTriggerOffset(getConfig().getDefaultTriggerOffset());
-        } else if (!getConfig().isUseDefinedTriggerOffset()) {
-            // User doesn't predefined one, we need to ensure the refreshing is triggered when
-            // indicator is totally visible, no matter whether child height is zero or not.
-            // If child is already visible, the invisible height will be non-positive, in this
-            // case we use the default .
-            if (defaultMinTriggerOffset > 0 && invisibleHeight >= defaultMinTriggerOffset
-                    && invisibleHeight <= getConfig().getDefaultTriggerOffset()) {
-                getConfig().setTriggerOffset(invisibleHeight);
-            } else {
-                getConfig().setTriggerOffset(Math.max(invisibleHeight,
-                        getConfig().getDefaultTriggerOffset()));
-            }
-        } // Otherwise we use predefined trigger offset.
+//        final int visibleHeight = (int) Math.max((float) getConfig().getVisibleHeight(),
+//                getConfig().getVisibleHeightRatioOfParent()
+//                        > getConfig().getVisibleHeightRatio()
+//                        ? getConfig().getVisibleHeightRatio() * parent.getHeight()
+//                        : getConfig().getVisibleHeightRatio() * child.getHeight());
+//        final int invisibleHeight = child.getHeight() - visibleHeight;
+//        getConfig().setVisibleHeight(visibleHeight);
+//        getConfig().setInvisibleHeight(invisibleHeight);
+//
+//        // Compute refresh trigger offset.
+//        if (getConfig().getTriggerOffset() < 0) {
+//            // User define a invalid trigger offset, use the default.
+//            getConfig().setTriggerOffset(getConfig().getDefaultTriggerOffset());
+//        } else if (!getConfig().isUseDefinedTriggerOffset()) {
+//            // User doesn't predefined one, we need to ensure the refreshing is triggered when
+//            // indicator is totally visible, no matter whether child height is zero or not.
+//            // If child is already visible, the invisible height will be non-positive, in this
+//            // case we use the default .
+//            if (defaultMinTriggerOffset > 0 && invisibleHeight >= defaultMinTriggerOffset
+//                    && invisibleHeight <= getConfig().getDefaultTriggerOffset()) {
+//                getConfig().setTriggerOffset(invisibleHeight);
+//            } else {
+//                getConfig().setTriggerOffset(Math.max(invisibleHeight,
+//                        getConfig().getDefaultTriggerOffset()));
+//            }
+//        } // Otherwise we use predefined trigger offset.
         return handled;
     }
 
@@ -148,12 +149,7 @@ public abstract class VerticalIndicatorBehavior<V extends View>
                                        @NonNull View target, int axes, int type) {
         boolean start = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         if (start) {
-            for (ScrollingListener l : mListeners) {
-                l.onStartScroll(coordinatorLayout, child,
-                        getInitialOffset(coordinatorLayout, child),
-                        getRefreshTriggerOffset(coordinatorLayout, child),
-                        getMinOffset(coordinatorLayout, child), getMaxOffset(coordinatorLayout, child), type);
-            }
+            dispatchOnStartScroll(coordinatorLayout, child, type);
         }
         return start;
     }
@@ -161,13 +157,7 @@ public abstract class VerticalIndicatorBehavior<V extends View>
     @Override
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                    @NonNull View target, int type) {
-        for (ScrollingListener l : mListeners) {
-            l.onStopScroll(coordinatorLayout, child, getController().transformOffsetCoordinate(
-                    coordinatorLayout, child, this, getTopAndBottomOffset()),
-                    getInitialOffset(coordinatorLayout, child),
-                    getRefreshTriggerOffset(coordinatorLayout, child),
-                    getMinOffset(coordinatorLayout, child), getMaxOffset(coordinatorLayout, child), type);
-        }
+        dispatchOnStopScroll(coordinatorLayout, child, getTopAndBottomOffset(), type);
     }
 
     @Override
@@ -176,7 +166,7 @@ public abstract class VerticalIndicatorBehavior<V extends View>
                 (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
         if (null != lp) {
             CoordinatorLayout.Behavior behavior = lp.getBehavior();
-            return behavior instanceof ScrollingContentBehavior;
+            return behavior instanceof ScrollableBehavior;
         }
         return false;
     }
@@ -186,8 +176,8 @@ public abstract class VerticalIndicatorBehavior<V extends View>
         CoordinatorLayout.LayoutParams lp =
                 (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
         CoordinatorLayout.Behavior behavior = lp.getBehavior();
-        if (behavior instanceof ScrollingContentBehavior) {
-            final ScrollingContentBehavior contentBehavior = (ScrollingContentBehavior) behavior;
+        if (behavior instanceof ScrollableBehavior) {
+            final ScrollableBehavior contentBehavior = (ScrollableBehavior) behavior;
             if (isLayedOut()) {
                 return onDependenceOffsetChanged(parent, child, dependency, contentBehavior,
                         this);
@@ -209,7 +199,7 @@ public abstract class VerticalIndicatorBehavior<V extends View>
     }
 
     private boolean onDependenceOffsetChanged(CoordinatorLayout parent, V child, View dependency,
-                                              ScrollingContentBehavior contentBehavior,
+                                              ScrollableBehavior contentBehavior,
                                               VerticalIndicatorBehavior behavior) {
         final int offsetDelta = getController().computeOffsetDeltaOnDependentViewChanged(parent, child,
                 dependency, this, contentBehavior);
@@ -222,35 +212,36 @@ public abstract class VerticalIndicatorBehavior<V extends View>
     }
 
     private void consumeOffsetOnDependentViewChanged(CoordinatorLayout coordinatorLayout,
-                                                     View child,
-                                                     ScrollingContentBehavior contentBehavior,
+                                                     V child,
+                                                     ScrollableBehavior contentBehavior,
                                                      int offsetDelta, int type) {
         int currentOffset = getTopAndBottomOffset();
         int height = child.getHeight();
         // Before child consume the offset.
-        for (ScrollingListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child, getController().transformOffsetCoordinate(
-                    coordinatorLayout, child, this, currentOffset
-                    ),
-                    getInitialOffset(coordinatorLayout, child),
-                    getRefreshTriggerOffset(coordinatorLayout, child),
-                    getMinOffset(coordinatorLayout, child), height, type);
-        }
+//        for (ScrollingListener l : mListeners) {
+//            l.onPreScroll(coordinatorLayout, child, , getController().transformOffsetCoordinate(
+//                    coordinatorLayout, child, this, currentOffset
+//                    ),
+//                    type);
+//        }
+        dispatchOnPreScroll(coordinatorLayout, child, currentOffset, type);
         float consumed = getController().consumeOffsetOnDependentViewChanged(coordinatorLayout, child,
                 this, contentBehavior, currentOffset, offsetDelta);
-        currentOffset = Math.round(currentOffset + consumed);
+        int consumedInt = Math.round(consumed);
+        currentOffset = currentOffset + consumedInt;
         // If the offset is already at the top don't reset it again.
         setTopAndBottomOffset(currentOffset);
-        for (ScrollingListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, getController().transformOffsetCoordinate(
-                    coordinatorLayout, child, this, currentOffset
-                    ),
-                    offsetDelta, getInitialOffset(coordinatorLayout, child),
-                    getRefreshTriggerOffset(coordinatorLayout, child),
-                    getMinOffset(coordinatorLayout, child),
-                    getMaxOffset(coordinatorLayout, child),
-                    type);
-        }
+        dispatchOnScroll(coordinatorLayout, child, currentOffset, consumedInt, type);
+    }
+
+    public View getDependency() {
+        return dependency;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(@NonNull CoordinatorLayout parent, @NonNull V child, @NonNull MotionEvent ev) {
+        return super.onInterceptTouchEvent(parent, child, ev);
+
     }
 
     private View findDependencyChild(CoordinatorLayout parent, View child) {
@@ -261,14 +252,14 @@ public abstract class VerticalIndicatorBehavior<V extends View>
             return null;
         for (View v : dependencies) {
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) v.getLayoutParams();
-            if (p.getBehavior() instanceof ScrollingContentBehavior) {
+            if (p.getBehavior() instanceof ScrollableBehavior) {
                 return v;
             }
         }
         return null;
     }
 
-    private ScrollingContentBehavior findDependencyBehavior(CoordinatorLayout parent, View child) {
+    private ScrollableBehavior findDependencyBehavior(CoordinatorLayout parent, View child) {
         if (parent == null || child == null)
             return null;
         List<View> dependencies = parent.getDependencies(child);
@@ -276,14 +267,14 @@ public abstract class VerticalIndicatorBehavior<V extends View>
             return null;
         for (View v : dependencies) {
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) v.getLayoutParams();
-            if (p.getBehavior() instanceof ScrollingContentBehavior) {
-                return (ScrollingContentBehavior) p.getBehavior();
+            if (p.getBehavior() instanceof ScrollableBehavior) {
+                return (ScrollableBehavior) p.getBehavior();
             }
         }
         return null;
     }
 
-    protected ScrollingContentBehavior getContentBehavior(CoordinatorLayout parent, View child) {
+    protected ScrollableBehavior getContentBehavior(CoordinatorLayout parent, View child) {
         return findDependencyBehavior(parent, child);
     }
 
@@ -310,7 +301,7 @@ public abstract class VerticalIndicatorBehavior<V extends View>
     @Override
     public int getCurrentTopBottomOffset() {
         if (ensureScrollingContentBehavior()) {
-            return scrollingContentBehavior.getTopAndBottomOffset();
+            return scrollableBehavior.getTopAndBottomOffset();
         }
         return 0;
     }
@@ -318,7 +309,7 @@ public abstract class VerticalIndicatorBehavior<V extends View>
     @Override
     public int getMinTopBottomOffset() {
         if (ensureScrollingContentBehavior()) {
-            return scrollingContentBehavior.getConfig().getMinOffset();
+            return scrollableBehavior.getConfig().getTopEdgeConfig().getMinOffset();
         }
         return 0;
     }
@@ -326,49 +317,49 @@ public abstract class VerticalIndicatorBehavior<V extends View>
     @Override
     public int getMaxTopBottomOffset() {
         if (ensureScrollingContentBehavior()) {
-            return scrollingContentBehavior.getConfig().getMaxOffset();
+            return scrollableBehavior.getConfig().getTopEdgeConfig().getMaxOffset();
         }
         return 0;
     }
 
     @Override
     public void updateTopBottomOffset(CoordinatorLayout parent, View child, int offset, int delta) {
-        scrollingContentBehavior.updateTopAndBottomOffset(offset, delta, TYPE_TOUCH);
+        scrollableBehavior.updateTopAndBottomOffset(offset, delta, TYPE_TOUCH);
     }
 
     @Override
     public void onScrollStart(CoordinatorLayout parent, V layout) {
         if (ensureScrollingContentBehavior() && ensureDependencyView()) {
-            scrollingContentBehavior.dispatchStartScroll(parent, dependency, TYPE_TOUCH);
+            scrollableBehavior.dispatchOnStartScroll(parent, dependency, TYPE_TOUCH);
         }
     }
 
     @Override
     public void onScrollStop(CoordinatorLayout parent, V layout) {
         if (ensureScrollingContentBehavior() && ensureDependencyView()) {
-            scrollingContentBehavior.dispatchStopScroll(parent, dependency, TYPE_TOUCH);
+            scrollableBehavior.dispatchOnStopScroll(parent, dependency, getCurrentTopBottomOffset(), TYPE_TOUCH);
         }
     }
 
     @Override
     public void onFlingStart(CoordinatorLayout parent, V layout) {
         if (ensureScrollingContentBehavior() && ensureDependencyView()) {
-            scrollingContentBehavior.dispatchStartScroll(parent, dependency, TYPE_TOUCH);
+            scrollableBehavior.dispatchOnStartScroll(parent, dependency, TYPE_TOUCH);
         }
     }
 
     @Override
     public void onFlingFinished(CoordinatorLayout parent, V layout) {
         if (ensureScrollingContentBehavior() && ensureDependencyView()) {
-            scrollingContentBehavior.dispatchStopScroll(parent, dependency, TYPE_TOUCH);
+            scrollableBehavior.dispatchOnStopScroll(parent, dependency, getTopAndBottomOffset(), TYPE_TOUCH);
         }
     }
 
     public boolean ensureScrollingContentBehavior() {
-        if (scrollingContentBehavior == null) {
-            scrollingContentBehavior = findDependencyBehavior(getParent(), getChild());
+        if (scrollableBehavior == null) {
+            scrollableBehavior = findDependencyBehavior(getParent(), getChild());
         }
-        return scrollingContentBehavior != null;
+        return scrollableBehavior != null;
     }
 
     public boolean ensureDependencyView() {

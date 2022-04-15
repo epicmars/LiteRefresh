@@ -19,7 +19,7 @@ import android.view.View;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import literefresh.behavior.ScrollingContentBehavior;
+import literefresh.behavior.ScrollableBehavior;
 import literefresh.behavior.VerticalIndicatorBehavior;
 
 /**
@@ -42,11 +42,11 @@ public abstract class VerticalIndicatorBehaviorController<B extends VerticalIndi
                                                                  View child,
                                                                  View dependency,
                                                                  VerticalIndicatorBehavior behavior,
-                                                                 ScrollingContentBehavior contentBehavior);
+                                                                 ScrollableBehavior contentBehavior);
 
     public abstract float consumeOffsetOnDependentViewChanged(CoordinatorLayout parent, View child,
                                                               VerticalIndicatorBehavior behavior,
-                                                              ScrollingContentBehavior contentBehavior,
+                                                              ScrollableBehavior contentBehavior,
                                                               int currentOffset, int offsetDelta);
 
     public abstract int transformOffsetCoordinate(CoordinatorLayout parent, View child,

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <declare-styleable name="OffsetBehavior">-->
-<!--        <attr name="lr_maxOffset" format="reference|dimension"/>-->
-<!--        <attr name="lr_maxOffsetRatioOfParent" format="reference|fraction"/>-->
-<!--        <attr name="lr_visibleHeight" format="reference|dimension"/>-->
-<!--        <attr name="lr_visibleHeightRatio" format="reference|fraction"/>-->
-<!--        <attr name="lr_triggerOffset" format="reference|dimension"/>-->
-<!--        <attr name="lr_showUpWhenRefresh" format="reference|boolean"/>-->
-<!--    </declare-styleable>-->
+    <declare-styleable name="OffsetBehavior">
+        <attr name="lr_maxOffset" format="reference|dimension"/>
+        <attr name="lr_maxOffsetRatioOfParent" format="reference|fraction"/>
+        <attr name="lr_visibleHeight" format="reference|dimension"/>
+        <attr name="lr_visibleHeightRatio" format="reference|fraction"/>
+        <attr name="lr_triggerOffset" format="reference|dimension"/>
+        <attr name="lr_showUpWhenRefresh" format="reference|boolean"/>
+    </declare-styleable>
 
     <declare-styleable name="IndicatorBehavior">
         <attr name="lr_mode" format="enum">
@@ -18,10 +18,10 @@
         </attr>
     </declare-styleable>
     
-<!--    <declare-styleable name="ContentBehavior">-->
-<!--        <attr name="lr_headerVisibleHeight" format="reference|dimension"/>-->
-<!--        <attr name="lr_minOffset" format="reference|dimension"/>-->
-<!--        <attr name="lr_minOffsetRatio" format="reference|fraction"/>-->
-<!--    </declare-styleable>-->
+    <declare-styleable name="ContentBehavior">
+        <attr name="lr_headerVisibleHeight" format="reference|dimension"/>
+        <attr name="lr_minOffset" format="reference|dimension"/>
+        <attr name="lr_minOffsetRatio" format="reference|fraction"/>
+    </declare-styleable>
 
 </resources>

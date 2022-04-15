@@ -31,6 +31,7 @@ import androidx.core.widget.ImageViewCompat;
 import literefresh.LiteRefresh;
 import literefresh.OnRefreshListener;
 import literefresh.OnScrollListener;
+import literefresh.behavior.Configuration;
 import literefresh.behavior.RefreshHeaderBehavior;
 
 public class RefreshingHeaderView extends RefreshHeaderLayout implements OnScrollListener, OnRefreshListener {
@@ -71,35 +72,22 @@ public class RefreshingHeaderView extends RefreshHeaderLayout implements OnScrol
     }
 
     @Override
-    public void onStartScroll(CoordinatorLayout parent, View view, int initial, int trigger, int min, int max, int type) {
+    public void onStartScroll(CoordinatorLayout parent, View view, Configuration config, int type) {
 
     }
 
     @Override
-    public void onPreScroll(@NonNull CoordinatorLayout parent, @NonNull View view, int current, int initial, int trigger, int min, int max, int type) {
+    public void onPreScroll(@NonNull CoordinatorLayout parent, @NonNull View view, Configuration config, int type) {
 
     }
 
     @Override
-    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
-        float height = getHeight();
-        if (current <= height) return;
-        float scale = Math.max(current / height, 1);
-        switch (gravity) {
-            case Gravity.CENTER:
-                setTranslationY(-(current - height) / 2);
-                break;
-            case Gravity.TOP:
-                setTranslationY(-(current - height));
-                break;
-            case Gravity.BOTTOM:
-            default:
-                break;
-        }
+    public void onScroll(CoordinatorLayout parent, View view, Configuration config, int delta, int type) {
+
     }
 
     @Override
-    public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int trigger, int min, int max, int type) {
+    public void onStopScroll(CoordinatorLayout parent, View view, Configuration config, int type) {
 
     }
 
@@ -127,7 +115,7 @@ public class RefreshingHeaderView extends RefreshHeaderLayout implements OnScrol
     }
 
     @Override
-    public void onRefreshEnd(Throwable throwable) {
+    public void onRefreshComplete(Throwable throwable) {
         tvState.setText(R.string.refresh_complete);
     }
 

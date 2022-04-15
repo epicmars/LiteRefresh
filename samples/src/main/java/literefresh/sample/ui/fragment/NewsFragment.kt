@@ -44,7 +44,7 @@ import literefresh.sample.ui.viewholder.ErrorViewHolder
 import literefresh.sample.ui.viewholder.NewsViewHolder
 import literefresh.sample.vm.NewsViewModel
 import layoutbinder.annotations.BindLayout
-
+import literefresh.behavior.Configuration
 
 
 class NewsFragment : BaseFragment() {
@@ -145,19 +145,40 @@ class NewsFragment : BaseFragment() {
         headerBehavior = RefreshHeaderBehavior<View>(context)
         headerBehavior.addOnScrollListener(object : OnScrollListener {
 
-            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onStartScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
                 binding.headerProgress.max = max
             }
 
-            override fun onPreScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onPreScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
 
             }
 
-            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                delta: Int,
+                type: Int
+            ) {
                 binding.headerProgress.progress = current
             }
 
-            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onStopScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
                 binding.headerProgress.progress = current
             }
 
@@ -198,24 +219,45 @@ class NewsFragment : BaseFragment() {
                 loadNextPage()
             }
 
-            override fun onLoadEnd(throwable: Throwable?) {
+            override fun onLoadComplete(throwable: Throwable?) {
             }
         })
 
 
         footerBehavior.addOnScrollListener(object : OnScrollListener {
-            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                delta: Int,
+                type: Int
+            ) {
             }
 
-            override fun onPreScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onPreScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
 
             }
 
-            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onStartScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
 
             }
 
-            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onStopScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
             }
         })
 
@@ -228,19 +270,40 @@ class NewsFragment : BaseFragment() {
         contentParams.behavior = contentBehavior
 
         contentBehavior.addOnScrollListener(object : OnScrollListener {
-            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onStartScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
                 binding.contentProgress.max = max
             }
 
-            override fun onPreScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onPreScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
 
             }
 
-            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                delta: Int,
+                type: Int
+            ) {
                 binding.contentProgress.progress = current
             }
 
-            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onStopScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
                 binding.contentProgress.progress = current
             }
         })

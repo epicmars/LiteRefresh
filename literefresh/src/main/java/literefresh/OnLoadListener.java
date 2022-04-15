@@ -45,5 +45,5 @@ public interface OnLoadListener {
      *
      * @param throwable the exception that was reported by a loader.
      */
-    void onLoadEnd(@Nullable Throwable throwable);
+    void onLoadComplete(@Nullable Throwable throwable);
 }

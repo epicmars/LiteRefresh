@@ -21,13 +21,14 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import literefresh.Refresher;
-import literefresh.behavior.AnimationOffsetBehavior;
+import literefresh.behavior.Configuration;
+import literefresh.behavior.NestedScrollingListener;
 
 /**
  * The content behavior's refreshing or loading state machine, it update states based on the
  * behavior's offset changes.
  */
-public class StateMachine implements AnimationOffsetBehavior.ScrollingListener, Refresher {
+public class StateMachine implements NestedScrollingListener, Refresher {
 
     public interface StateHandler {
 
@@ -96,7 +97,7 @@ public class StateMachine implements AnimationOffsetBehavior.ScrollingListener, 
 
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                              int initial, int trigger, int min, int max, int type) {
+                              Configuration config, int type) {
         // If current state is ready, when touch event is MotionEvent.ACTION_UP, may be followed a
         // fling that start another scroll immediately.
         moveToState(STATE_IDLE);
@@ -104,7 +105,7 @@ public class StateMachine implements AnimationOffsetBehavior.ScrollingListener, 
 
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                            int current, int initial, int trigger, int min, int max, int type) {
+                            Configuration config, int currentOffset, int type) {
         // Only allow STATE_IDLE to translate to STATE_START here.
         if (mState == STATE_IDLE) {
             moveToState(STATE_START);
@@ -113,46 +114,48 @@ public class StateMachine implements AnimationOffsetBehavior.ScrollingListener, 
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                         int current, int delta, int initial, int trigger, int min, int max, int type) {
-        if (!mStateHandler.hasRefreshStateListeners() || !mStateHandler.isValidOffset(current)) {
-            return;
-        }
-        if (mStateHandler.transform(current) >= mStateHandler.readyRefreshOffset()) {
-            moveToState(STATE_READY);
-        } else {
-            moveToState(STATE_START);
-        }
+                         Configuration config, int currentOffset, int delta, int type) {
+
+
+//        if (!mStateHandler.hasRefreshStateListeners() || !mStateHandler.isValidOffset(current)) {
+//            return;
+//        }
+//        if (mStateHandler.transform(current) >= mStateHandler.readyRefreshOffset()) {
+//            moveToState(STATE_READY);
+//        } else {
+//            moveToState(STATE_START);
+//        }
     }
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                             int current, int initial, int trigger, int min, int max, int type) {
-        // When child start dispatching touch events, the MotionEvent.DOWN event may cause
-        // a defensive clean up for new gesture.
-        if (!mStateHandler.isValidOffset(current)) {
-            return;
-        }
-        if (!mStateHandler.hasRefreshStateListeners()) {
-            moveToState(STATE_CANCELLED);
-            return;
-        }
-        if (mStateHandler.transform(current) >= mStateHandler.readyRefreshOffset()) {
-            // For the sake of we get a STATE_COMPLETE here.
-            // It may happen when the next scroll started before the refresh complete.
-            // So it will miss the onStartScroll() callback and the STATE_COMPLETE can
-            // not be set to STATE_IDLE.
-            if (!moveToState(STATE_REFRESH)) {
-                // Another case is that we are still refreshing, no need to change the state.
-                // But need to reset the refreshing indicator's offset.
-                if (mState == STATE_REFRESH) {
-                    mStateHandler.resetRefreshOffset();
-                } else {
-                    moveToState(STATE_CANCELLED);
-                }
-            }
-        } else {
-            moveToState(STATE_CANCELLED);
-        }
+                             Configuration config, int currentOffset, int type) {
+//        // When child start dispatching touch events, the MotionEvent.DOWN event may cause
+//        // a defensive clean up for new gesture.
+//        if (!mStateHandler.isValidOffset(current)) {
+//            return;
+//        }
+//        if (!mStateHandler.hasRefreshStateListeners()) {
+//            moveToState(STATE_CANCELLED);
+//            return;
+//        }
+//        if (mStateHandler.transform(current) >= mStateHandler.readyRefreshOffset()) {
+//            // For the sake of we get a STATE_COMPLETE here.
+//            // It may happen when the next scroll started before the refresh complete.
+//            // So it will miss the onStartScroll() callback and the STATE_COMPLETE can
+//            // not be set to STATE_IDLE.
+//            if (!moveToState(STATE_REFRESH)) {
+//                // Another case is that we are still refreshing, no need to change the state.
+//                // But need to reset the refreshing indicator's offset.
+//                if (mState == STATE_REFRESH) {
+//                    mStateHandler.resetRefreshOffset();
+//                } else {
+//                    moveToState(STATE_CANCELLED);
+//                }
+//            }
+//        } else {
+//            moveToState(STATE_CANCELLED);
+//        }
     }
 
     protected boolean moveToState(int state, Throwable throwable) {

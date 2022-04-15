@@ -18,6 +18,7 @@ import literefresh.sample.ui.widget.ijkplayer.IMediaController
 import literefresh.sample.utils.StatusBarUtils
 import kotlinx.coroutines.*
 import layoutbinder.annotations.BindLayout
+import literefresh.behavior.Configuration
 import tv.danmaku.ijk.media.player.IMediaPlayer
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
@@ -73,18 +74,39 @@ class VideoPlayerFragment : BaseFragment(), CoroutineScope by MainScope() {
 
         contentBehavior = LiteRefresh.getContentBehavior(binding.viewPager)
         contentBehavior.addOnScrollListener(object : OnScrollListener {
-            override fun onStartScroll(parent: CoordinatorLayout?, view: View?, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onStartScroll(
+                parent: CoordinatorLayout?,
+                view: View?,
+                config: Configuration,
+                type: Int
+            ) {
             }
 
-            override fun onPreScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onPreScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                type: Int
+            ) {
                 updateHeaderHeight(current)
             }
 
-            override fun onScroll(parent: CoordinatorLayout?, view: View?, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onScroll(
+                parent: CoordinatorLayout,
+                view: View,
+                config: Configuration,
+                delta: Int,
+                type: Int
+            ) {
                 updateHeaderHeight(current)
             }
 
-            override fun onStopScroll(parent: CoordinatorLayout?, view: View?, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
+            override fun onStopScroll(
+                parent: CoordinatorLayout?,
+                view: View?,
+                config: Configuration,
+                type: Int
+            ) {
 
             }
         })
