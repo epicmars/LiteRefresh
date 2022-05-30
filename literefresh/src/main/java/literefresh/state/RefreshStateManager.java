@@ -21,7 +21,6 @@ import androidx.annotation.IntDef;
 
 import literefresh.behavior.Checkpoint;
 import literefresh.behavior.CheckpointRange;
-import literefresh.controller.ScrollableBehaviorController;
 
 public class RefreshStateManager implements ScrollableStateManager.ScrollableStateListener {
 
@@ -38,7 +37,7 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
 
     @IntDef({REFRESH_STATE_IDLE, REFRESH_STATE_START, REFRESH_STATE_READY,
             REFRESH_STATE_REFRESH, REFRESH_STATE_COMPLETE, REFRESH_STATE_CANCELLED})
-    public @interface RefreshStateInt {
+    public @interface RefreshStateFlag {
     }
 
     private RefreshStateListener refreshStateListener;
@@ -69,11 +68,11 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
     }
 
     @Override
-    public void onScrollableStateChanged(@ScrollableBehaviorController.EdgeFlag int edgeFlag, @ScrollableStateManager.ScrollableState int scrollableState, Checkpoint front, Checkpoint back) {
+    public void onScrollableStateChanged(ScrollableState scrollableState, Checkpoint front, Checkpoint back) {
         CheckpointRange range = new CheckpointRange(front, back);
         final boolean isRangeChanged = isCurrentRangeChanged(range);
         Log.d(TAG, "scrollableState:" + scrollableState + " mState: " + mState);
-        switch (scrollableState) {
+        switch (scrollableState.getState()) {
             case ScrollableStateManager.STATE_START:
                 moveToRefreshState(REFRESH_STATE_START);
                 break;
@@ -81,7 +80,7 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
             case ScrollableStateManager.STATE_SCROLL:
                 if (isRangeChanged) {
                     // Checkpoint range has changed.
-                    if (edgeFlag == ScrollableBehaviorController.FLAG_EDGE_TOP_LEFT) {
+                    if (scrollableState.isTopLeftEdge()) {
                         if (front.isTriggerPoint()) {
                             triggerPoint = front;
                             moveToRefreshState(REFRESH_STATE_READY);
@@ -89,7 +88,7 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
                             triggerPoint = null;
                             moveToRefreshState(REFRESH_STATE_START);
                         }
-                    } else if (edgeFlag == ScrollableBehaviorController.FLAG_EDGE_BOTTOM_RIGHT) {
+                    } else if (scrollableState.isBottomRightEdge()) {
                         if (back.isTriggerPoint()) {
                             triggerPoint = back;
                             moveToRefreshState(REFRESH_STATE_READY);
@@ -106,8 +105,11 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
                 // It may happen when the next scroll started before the refresh complete.
                 // So it will miss the onStartScroll() callback and the STATE_COMPLETE can
                 // not be set to STATE_IDLE.
-                if (edgeFlag == ScrollableBehaviorController.FLAG_EDGE_TOP_LEFT) {
+                if (scrollableState.isTopLeftEdge()) {
                     Checkpoint closestAnchor = back;
+                    if (Math.abs(scrollableState.getOffset() - front.offset()) <= Math.abs(back.offset() - scrollableState.getOffset())) {
+                        closestAnchor = front;
+                    }
                     while (closestAnchor != null && !closestAnchor.isAnchorPoint()) {
                         closestAnchor = closestAnchor.getMPrevious();
                         if (closestAnchor != null && closestAnchor.isAnchorPoint()) {
@@ -118,8 +120,11 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
                     if (closestAnchor != null && closestAnchor.isAnchorPoint()) {
                         anchorPoint = closestAnchor;
                     }
-                } else if (edgeFlag == ScrollableBehaviorController.FLAG_EDGE_BOTTOM_RIGHT) {
+                } else if (scrollableState.isBottomRightEdge()) {
                     Checkpoint closestAnchor = front;
+                    if (Math.abs(scrollableState.getOffset() - back.offset()) <= Math.abs(front.offset() - scrollableState.getOffset())) {
+                        closestAnchor = back;
+                    }
                     while (closestAnchor != null && !closestAnchor.isAnchorPoint()) {
                         closestAnchor = closestAnchor.getMNext();
                         if (closestAnchor != null && closestAnchor.isAnchorPoint()) {
@@ -258,5 +263,17 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
 
     private void refreshCompleted(Throwable throwable) {
         moveToRefreshState(REFRESH_STATE_COMPLETE, throwable);
+    }
+
+    public CheckpointRange getCurrentRange() {
+        return currentRange;
+    }
+
+    public Checkpoint getAnchorPoint() {
+        return anchorPoint;
+    }
+
+    public Checkpoint getTriggerPoint() {
+        return triggerPoint;
     }
 }

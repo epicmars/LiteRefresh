@@ -45,7 +45,7 @@ public abstract class AnimationOffsetBehavior<V extends View>
     public static final int TYPE_UNKNOWN = 2;
 
     static final long HOLD_ON_DURATION = 500L;
-    static final long SHOW_DURATION = 300L;
+    static final long DEFAULT_ANIM_DURATION = 300L;
     static final long RESET_DURATION = 300L;
 
     private static final int MSG_VIEW_INITIATED = 1;

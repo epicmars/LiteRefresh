@@ -36,50 +36,53 @@ public class ScrollableStateManager implements CheckpointListener {
     private ScrollableStateListener scrollableStateListener;
 
     @IntDef({STATE_IDLE, STATE_START, STATE_SCROLL, STATE_STOP})
-    public @interface ScrollableState {
+    public @interface ScrollableStateFlag {
     }
 
     public interface ScrollableStateListener {
-        void onScrollableStateChanged(@ScrollableBehaviorController.EdgeFlag int edgeFlag, @ScrollableState int state, Checkpoint front, Checkpoint back);
+        void onScrollableStateChanged(ScrollableState scrollableState, Checkpoint front, Checkpoint back);
     }
 
     @Override
     public void onStart(@ScrollableBehaviorController.EdgeFlag int edgeFlag) {
-        moveToState(edgeFlag, STATE_START, null, null);
+        moveToState(edgeFlag, STATE_START, Integer.MIN_VALUE, null, null);
     }
 
 
     @Override
-    public void onScroll(int edgeFlag, int currentOffset, Checkpoint front, Checkpoint back) {
-        moveToState(edgeFlag, STATE_SCROLL, front, back);
+    public void onScroll(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int currentOffset,
+                         Checkpoint front, Checkpoint back) {
+        moveToState(edgeFlag, STATE_SCROLL, currentOffset, front, back);
     }
 
     @Override
-    public void onStop(int edgeFlag, int currentOffset, Checkpoint front, Checkpoint back) {
-        moveToState(edgeFlag, STATE_STOP, front, back);
+    public void onStop(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int currentOffset,
+                       Checkpoint front, Checkpoint back) {
+        moveToState(edgeFlag, STATE_STOP, currentOffset, front, back);
         setState(STATE_IDLE);
     }
 
-    private void moveToState(int edgeFlag, int state, Checkpoint front, Checkpoint back) {
+    private void moveToState(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int state,
+                             int offset, Checkpoint front, Checkpoint back) {
         switch (state) {
             case STATE_START:
                 if (mState == STATE_IDLE) {
                     setState(state);
-                    dispatchStateChanged(edgeFlag, front, back);
+                    dispatchStateChanged(edgeFlag, offset, front, back);
                 }
                 break;
 
             case STATE_SCROLL:
                 if (mState == STATE_START || mState == STATE_SCROLL) {
                     setState(state);
-                    dispatchStateChanged(edgeFlag, front, back);
+                    dispatchStateChanged(edgeFlag, offset, front, back);
                 }
                 break;
 
             case STATE_STOP:
                 if (mState == STATE_SCROLL) {
                     setState(state);
-                    dispatchStateChanged(edgeFlag, front, back);
+                    dispatchStateChanged(edgeFlag, offset, front, back);
                 }
                 break;
             default:
@@ -87,9 +90,10 @@ public class ScrollableStateManager implements CheckpointListener {
         }
     }
 
-    private void dispatchStateChanged(int edgeFlag, Checkpoint front, Checkpoint back) {
+    private void dispatchStateChanged(@ScrollableBehaviorController.EdgeFlag int edgeFlag,
+                                      int offset, Checkpoint front, Checkpoint back) {
         if (scrollableStateListener != null) {
-            scrollableStateListener.onScrollableStateChanged(edgeFlag, mState, front, back);
+            scrollableStateListener.onScrollableStateChanged(new ScrollableState(edgeFlag, mState, offset), front, back);
         }
     }
 

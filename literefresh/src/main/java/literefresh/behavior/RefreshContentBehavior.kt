@@ -92,20 +92,20 @@ class RefreshContentBehavior<V : View?> @JvmOverloads constructor(
     private val scrollDownInterpolator: Interpolator = ViscousFluidInterpolator()
     override fun onConsumeOffset(current: Int, delta: Int): Float {
         var consumed = delta.toFloat()
-        if (current >= 0 && delta > 0) {
-            val y = scrollDownInterpolator.getInterpolation(
-                current / config.topEdgeConfig.getMaxOffset()!!
-                    .toFloat()
-            )
-            consumed = (1f - y) * delta
-            if (consumed < 0.5) {
-                accumulator += 0.2.toFloat()
-                if (accumulator >= 1) {
-                    consumed += 1f
-                    accumulator = 0f
-                }
-            }
-        }
+//        if (current >= 0 && delta > 0) {
+//            val y = scrollDownInterpolator.getInterpolation(
+//                current / config.topEdgeConfig.getMaxOffset()!!
+//                    .toFloat()
+//            )
+//            consumed = (1f - y) * delta
+//            if (consumed < 0.5) {
+//                accumulator += 0.2.toFloat()
+//                if (accumulator >= 1) {
+//                    consumed += 1f
+//                    accumulator = 0f
+//                }
+//            }
+//        }
         return consumed
     }
 

@@ -7,10 +7,10 @@ public class RefreshState {
     private CheckpointRange currentRange;
     private Checkpoint anchorPoint;
     private Checkpoint triggerPoint;
-    private @RefreshStateManager.RefreshStateInt
+    private @RefreshStateManager.RefreshStateFlag
     int refreshState;
 
-    public RefreshState(@RefreshStateManager.RefreshStateInt int refreshState,
+    public RefreshState(@RefreshStateManager.RefreshStateFlag int refreshState,
                         CheckpointRange currentRange, Checkpoint anchorPoint,
                         Checkpoint triggerPoint) {
         this.refreshState = refreshState;

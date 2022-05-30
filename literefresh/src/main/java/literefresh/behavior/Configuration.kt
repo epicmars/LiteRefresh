@@ -44,6 +44,13 @@ abstract class Configuration(builder: Builder) {
     open fun onLayout(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
         height = child.height
         parentHeight = parent.height
+
+        topEdgeConfig.onLayout(parent, child, layoutDirection)
+        bottomEdgeConfig.onLayout(parent, child, layoutDirection)
+    }
+
+    fun addTopCheckpoint(config: OffsetConfig, vararg types: Checkpoint.Type) {
+        topEdgeConfig.addCheckpoint(config, *types)
     }
 
     abstract class Builder {

@@ -319,8 +319,6 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         }
     }
 
-
-
     /**
      * @param coordinatorLayout
      * @param child
@@ -362,9 +360,6 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         dispatchOnScroll(coordinatorLayout, child, offset, offsetDelta, type);
     }
 
-
-
-
     private Runnable offsetCallback;
 
     /**
@@ -392,6 +387,27 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
                 }
             };
             handler.postDelayed(offsetCallback, holdOn ? HOLD_ON_DURATION : 0L);
+        }
+    }
+
+    public void stopAtOffset(int offset) {
+        // There is an issue that when a refresh complete immediately, the header or footer
+        // showing animation may be just started, need to be cancelled.
+        cancelAnimation();
+        // If content offset is larger than header's visible height or smaller than minimum offset,
+        // which means content has scrolled to a insignificant or invalid position.
+        // We need to reset it.
+        if (null == getChild() || getParent() == null) return;
+        if (offset != getTopAndBottomOffset()) {
+            // Remove previous pending callback.
+            handler.removeCallbacks(offsetCallback);
+            offsetCallback = new Runnable() {
+                @Override
+                public void run() {
+                    animateOffsetDelta(DEFAULT_ANIM_DURATION, offset - getTopAndBottomOffset());
+                }
+            };
+            handler.post(offsetCallback);
         }
     }
 
@@ -425,10 +441,10 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         } else {
             offset = getConfig().getTopEdgeConfig().getMinOffset() - top;
         }
-        animateOffset(animateDuration, offset);
+        animateOffsetDelta(animateDuration, offset);
     }
 
-    private void animateOffset(long animateDuration, int offset) {
+    private void animateOffsetDelta(long animateDuration, int offset) {
         animateOffsetDeltaWithDuration(getParent(), getChild(), getConfig(),
                 offset,
                 animateDuration,
@@ -452,7 +468,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     public void showHeader(long animateDuration, int headerHeight) {
         if (null == getChild() || null == getParent()) return;
         int offset = headerHeight - getChild().getTop();
-        animateOffset(animateDuration, offset);
+        animateOffsetDelta(animateDuration, offset);
     }
 
     /**
@@ -465,7 +481,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         CoordinatorLayout.LayoutParams lp = ((CoordinatorLayout.LayoutParams) getChild().getLayoutParams());
         int bottom = getChild().getBottom() + lp.bottomMargin;
         int offset = getParent().getHeight() - footerHeight - bottom;
-        animateOffset(animationDuration, offset);
+        animateOffsetDelta(animationDuration, offset);
     }
 
     public void refreshFooter(long animationDuration) {
@@ -484,11 +500,8 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
 //                offset = -footerConfig.getInitialVisibleHeight() + getParent().getHeight() - bottom;
 //            }
 //        }
-        animateOffset(animationDuration, offset);
+        animateOffsetDelta(animationDuration, offset);
     }
-
-
-
 
     public boolean isMinOffsetReached() {
 //        int top = getChild().getTop() - getConfig().getTopMargin();

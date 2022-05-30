@@ -15,38 +15,63 @@
  */
 package literefresh.behavior
 
+import android.util.Log
 import android.util.SparseArray
 import android.view.View
-import androidx.annotation.NonNull
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.util.containsKey
 import java.lang.Math.abs
 
 class EdgeConfig {
+    val TAG = EdgeConfig::class.simpleName
     var mHead: Checkpoint? = null
-    var mMap: SparseArray<Checkpoint> = SparseArray()
-    var mMinOffset = Int.MAX_VALUE
-    var mMaxOffset = Int.MIN_VALUE
+    var mCheckpoints = mutableSetOf<Checkpoint>()
+    var mDeactived = mutableSetOf<Checkpoint>()
+    // todo add checkpoint deactivation
+    // var mDeactiveMap =
+    var mMap: SparseArray<Checkpoint> = SparseArray<Checkpoint>()
+    var mMinOffset: Int? = null
+    var mMaxOffset: Int? = null
+    var shouldRebuildCheckpoint = false
 
-    fun getMinOffset() : Int? {
-        return mHead?.offsetConfig?.offset
-    }
+    fun onLayout(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
+        rebuildCheckpoints(parent, child, layoutDirection)
 
-    fun getMaxOffset() : Int? {
         var current = mHead
+        var minStopPoint: Checkpoint? = null
+        var maxStopPoint: Checkpoint? = null
         while (current != null) {
-            if (current.mNext == null) {
-                break
+            // fixme 如果只有一个停止点的情况下，如何区分最小与最大停止点
+            if (minStopPoint == null && current.isActive(Checkpoint.Type.STOP_POINT)) {
+                minStopPoint = current
+                current = current.mNext
+                continue
+            }
+            if (current.isActive(Checkpoint.Type.STOP_POINT)) {
+                if (maxStopPoint == null || current.offset() > maxStopPoint.offset()) {
+                    maxStopPoint = current
+                }
             }
             current = current.mNext
         }
-        return current?.offsetConfig?.offset
+
+        mMinOffset = minStopPoint?.offset()
+        mMaxOffset = maxStopPoint?.offset()
+    }
+
+    fun getMinOffset(): Int {
+        return mMinOffset ?: 0
+    }
+
+    fun getMaxOffset(): Int {
+        return mMaxOffset ?: 0
     }
 
     /**
      * Find closest checkpoint near given offset.
      * @param offset Given offset.
      */
-    fun findClosestCheckpoint(offset: Int) : Checkpoint? {
+    fun findClosestCheckpoint(offset: Int): Checkpoint? {
         var current = mHead
         while (current != null && offset > current.offsetConfig.offset) {
             if (current.mNext == null) {
@@ -66,52 +91,71 @@ class EdgeConfig {
         return current
     }
 
+    fun deactiveCheckpoint(config: OffsetConfig, vararg types: Checkpoint.Type) {
+        mDeactived.add(Checkpoint(config, *types))
+    }
+
     fun addCheckpoint(config: OffsetConfig, vararg types: Checkpoint.Type) {
-        if (mMap.contains(config.offset)) {
-            mMap.get(config.offset).types.addAll(types)
+        mCheckpoints.add(Checkpoint(config, *types))
+        shouldRebuildCheckpoint = true
+    }
+
+    // fixme stop point is special for now
+    fun removeCheckpoint(config: OffsetConfig) {
+        val ite = mCheckpoints.iterator()
+        while (ite.hasNext()) {
+            val next = ite.next()
+            if (next.offset() == config.offset) {
+                ite.remove()
+            }
+        }
+        shouldRebuildCheckpoint = true;
+    }
+
+    private fun rebuildCheckpoints(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
+        if (parent.height == 0) {
+            shouldRebuildCheckpoint = true
+        }
+        if (!shouldRebuildCheckpoint) {
+            return
+        }
+        Log.d(TAG, "rebuildCheckpoints")
+        mMap.clear()
+        mCheckpoints.forEach {
+            it.offsetConfig.updateOffset(parent.height, child.height)
+            if (mDeactived.contains(it.offset() as Integer)) {
+                mDeactived.get(it.offset() as Integer)?.forEach { type ->
+                    it.deactive(type)
+                }
+            }
+            insertCheckpoint(it)
+        }
+        shouldRebuildCheckpoint = false
+    }
+
+
+    private fun insertCheckpoint(checkpoint: Checkpoint) {
+        val offset = checkpoint.offsetConfig.offset
+        val types = checkpoint.types
+        if (mMap.containsKey(offset)) {
+            mMap.get(offset).types.putAll(types)
             return
         }
         if (mHead == null) {
-            mHead = createCheckpoint(config, *types)
+            mHead = checkpoint
             return
         }
         var current = mHead
         while (current != null) {
             // (config.offset == cp.offsetConfig.offset) is excluded already
-            if (config.offset < current.offsetConfig.offset) {
-                // cp is head
-                val isHead = current.mPrevious == null
-                if (types.contains(Checkpoint.Type.STOP_POINT)) {
-                    if (isHead) {
-                        val checkpoint = createCheckpoint(config, *types)
-                        insertBefore(current, checkpoint)
-                        current.types.remove(Checkpoint.Type.STOP_POINT)
-                        break
-                    } else {
-                        throw IllegalArgumentException("Stop point must have minimum or maximum offset of all the checkpoints.")
-                    }
-                } else {
-                    if (isHead) {
-                        throw IllegalArgumentException("Only minimum stop point can insert before head.")
-                    } else {
-                        val checkpoint = createCheckpoint(config, *types)
-                        insertBefore(current, checkpoint)
-                        break
-                    }
-                }
-            } else if ((current.mNext == null || config.offset < current.mNext!!.offsetConfig.offset)) {
-                val checkpoint = createCheckpoint(config, *types)
+            if (offset < current.offsetConfig.offset) {
+                insertBefore(current, checkpoint)
+            } else if ((current.mNext == null || offset < current.mNext!!.offsetConfig.offset)) {
+                // if current has no next or offset is within range of current and next
                 insertAfter(current, checkpoint)
                 break
             }
             current = current.mNext
-        }
-    }
-
-    fun onLayout(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
-        var current = mHead
-        while (current != null) {
-            current.offsetConfig.updateOffset(parent.height, child.height)
         }
     }
 
@@ -128,6 +172,7 @@ class EdgeConfig {
 
     private fun insertAfter(
         current: Checkpoint,
+
         checkpoint: Checkpoint
     ) {
         checkpoint.mPrevious = current
@@ -137,8 +182,8 @@ class EdgeConfig {
         mMap.put(checkpoint.offsetConfig.offset, checkpoint)
     }
 
-    fun removeCheckpoint(config: OffsetConfig) {
-        if (!mMap.contains(config.offset)) {
+    fun deleteCheckpoint(config: OffsetConfig) {
+        if (!mMap.containsKey(config.offset)) {
             return
         }
         var cp = mHead
@@ -153,19 +198,6 @@ class EdgeConfig {
             }
             cp = cp.mNext
         }
-    }
-
-    @NonNull
-    private fun createStopPoint(config: OffsetConfig): Checkpoint {
-        return createCheckpoint(config, Checkpoint.Type.STOP_POINT)
-    }
-
-    @NonNull
-    private fun createCheckpoint(config: OffsetConfig, vararg types: Checkpoint.Type): Checkpoint {
-        var checkpoint = Checkpoint()
-        checkpoint.types.addAll(types)
-        checkpoint.offsetConfig = config
-        return checkpoint
     }
 
 

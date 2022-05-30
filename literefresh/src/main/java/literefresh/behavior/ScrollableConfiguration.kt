@@ -26,46 +26,38 @@ class ScrollableConfiguration(builder: Builder) : Configuration(builder), IScrol
         val TAG = ScrollableConfiguration.javaClass.name
     }
 
-    override fun onLayout(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
-        super.onLayout(parent, child, layoutDirection)
-        Log.d(TAG, "onLayout")
-        val parentHeight = parent.height
-        val childHeight = child.height
-        val parentWidth = parent.width
-        val childWidth = child.width
+    init {
+
         // Compute max offset, it will not exceed parent height.
         topEdgeConfig.addCheckpoint(
             OffsetConfig.Builder()
-                .setParentSize(parentHeight)
-                .setChildSize(childHeight)
                 .setOffset(0).build(),
-                Checkpoint.Type.STOP_POINT,
-                Checkpoint.Type.ANCHOR_POINT
+            Checkpoint.Type.STOP_POINT,
+            Checkpoint.Type.ANCHOR_POINT
         )
         topEdgeConfig.addCheckpoint(
             OffsetConfig.Builder()
-                .setParentSize(parentHeight)
-                .setChildSize(childHeight)
                 .setOffsetRatioOfParent(1.0f).build(),
             Checkpoint.Type.STOP_POINT
         )
         // Compute content view's minimum offset.
         bottomEdgeConfig.addCheckpoint(
             OffsetConfig.Builder()
-                .setParentSize(parentHeight)
-                .setChildSize(childHeight)
                 .setOffset(0)
                 .build(),
             Checkpoint.Type.STOP_POINT
         )
         bottomEdgeConfig.addCheckpoint(
             OffsetConfig.Builder()
-                .setParentSize(parentHeight)
-                .setChildSize(childHeight)
                 .setOffsetRatioOfParent(1.0f).build(),
             Checkpoint.Type.STOP_POINT,
             Checkpoint.Type.ANCHOR_POINT
         )
+    }
+
+    override fun onLayout(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
+        super.onLayout(parent, child, layoutDirection)
+        Log.d(TAG, "onLayout")
     }
 
 
