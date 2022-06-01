@@ -216,7 +216,24 @@ public abstract class VerticalIndicatorBehavior<V extends View>
                                                      ScrollableBehavior contentBehavior,
                                                      int offsetDelta, int type) {
         int currentOffset = getTopAndBottomOffset();
-        int height = child.getHeight();
+        int resultOffset = currentOffset + offsetDelta;
+        if (offsetDelta < 0) {
+            // scroll up
+            if (resultOffset < getConfig().getTopEdgeConfig().getMinOffset()) {
+                offsetDelta = getConfig().getTopEdgeConfig().getMinOffset() - currentOffset;
+            }
+        } else if (offsetDelta > 0) {
+            // scroll down
+            if (resultOffset > getConfig().getTopEdgeConfig().getMaxOffset()) {
+                offsetDelta = getConfig().getTopEdgeConfig().getMaxOffset() - currentOffset;
+            }
+        }
+
+        if (offsetDelta == 0) {
+            return;
+        }
+
+            int height = child.getHeight();
         // Before child consume the offset.
 //        for (ScrollingListener l : mListeners) {
 //            l.onPreScroll(coordinatorLayout, child, , getController().transformOffsetCoordinate(
@@ -228,7 +245,7 @@ public abstract class VerticalIndicatorBehavior<V extends View>
         float consumed = getController().consumeOffsetOnDependentViewChanged(coordinatorLayout, child,
                 this, contentBehavior, currentOffset, offsetDelta);
         int consumedInt = Math.round(consumed);
-        currentOffset = currentOffset + consumedInt;
+        currentOffset += consumedInt;
         // If the offset is already at the top don't reset it again.
         setTopAndBottomOffset(currentOffset);
         dispatchOnScroll(coordinatorLayout, child, currentOffset, consumedInt, type);

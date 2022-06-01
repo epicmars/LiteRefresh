@@ -114,6 +114,7 @@ public abstract class AnimationOffsetBehavior<V extends View>
         }
         // Execute pending actions which need view to be initialized.
         handler.sendEmptyMessage(MSG_VIEW_INITIATED);
+        getConfig().onLayout(parent, child, layoutDirection);
         return handled;
     }
 

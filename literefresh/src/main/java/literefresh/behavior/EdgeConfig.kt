@@ -27,8 +27,6 @@ class EdgeConfig {
     var mHead: Checkpoint? = null
     var mCheckpoints = mutableSetOf<Checkpoint>()
     var mDeactived = mutableSetOf<Checkpoint>()
-    // todo add checkpoint deactivation
-    // var mDeactiveMap =
     var mMap: SparseArray<Checkpoint> = SparseArray<Checkpoint>()
     var mMinOffset: Int? = null
     var mMaxOffset: Int? = null
@@ -41,14 +39,13 @@ class EdgeConfig {
         var minStopPoint: Checkpoint? = null
         var maxStopPoint: Checkpoint? = null
         while (current != null) {
-            // fixme 如果只有一个停止点的情况下，如何区分最小与最大停止点
             if (minStopPoint == null && current.isActive(Checkpoint.Type.STOP_POINT)) {
                 minStopPoint = current
                 current = current.mNext
                 continue
             }
             if (current.isActive(Checkpoint.Type.STOP_POINT)) {
-                if (maxStopPoint == null || current.offset() > maxStopPoint.offset()) {
+                if (maxStopPoint == null || current.offset() >= maxStopPoint.offset()) {
                     maxStopPoint = current
                 }
             }
@@ -56,7 +53,11 @@ class EdgeConfig {
         }
 
         mMinOffset = minStopPoint?.offset()
-        mMaxOffset = maxStopPoint?.offset()
+        if (maxStopPoint == null) {
+            mMaxOffset = mMinOffset
+        } else {
+            mMaxOffset = maxStopPoint.offset()
+        }
     }
 
     fun getMinOffset(): Int {
@@ -121,11 +122,14 @@ class EdgeConfig {
         }
         Log.d(TAG, "rebuildCheckpoints")
         mMap.clear()
+        mDeactived.forEach {
+            it.offsetConfig.updateOffset(parent.height, child.height)
+        }
         mCheckpoints.forEach {
             it.offsetConfig.updateOffset(parent.height, child.height)
-            if (mDeactived.contains(it.offset() as Integer)) {
-                mDeactived.get(it.offset() as Integer)?.forEach { type ->
-                    it.deactive(type)
+            mDeactived.forEach { deactive ->
+                if (it.offset() == deactive.offset()) {
+                    it.deactive(deactive.types.keys.toTypedArray())
                 }
             }
             insertCheckpoint(it)

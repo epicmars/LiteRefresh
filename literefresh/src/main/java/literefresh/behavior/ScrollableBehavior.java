@@ -125,7 +125,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         // Header and footer's configurations must be performed before the content's,
         // and header's configuration before footer.
 
-        getConfig().onLayout(parent, child, layoutDirection);
+
 
         if (!getConfig().isSettled()) {
             getConfig().setSettled(true);

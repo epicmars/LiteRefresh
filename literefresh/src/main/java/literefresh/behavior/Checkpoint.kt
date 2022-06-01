@@ -24,15 +24,19 @@ class Checkpoint {
         }
     }
 
-    fun active(type: Type) {
-        if (types.contains(type)) {
-            types.put(type, true)
+    fun active(types: Array<out Type>) {
+        types.forEach {
+            if (this.types.containsKey(it)) {
+                this.types.put(it, true)
+            }
         }
     }
 
-    fun deactive(type: Type) {
-        if (types.contains(type)) {
-            types.put(type, false)
+    fun deactive(types: Array<out Type>) {
+        types.forEach {
+            if (this.types.containsKey(it)) {
+                this.types.put(it, false)
+            }
         }
     }
 

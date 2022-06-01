@@ -31,6 +31,20 @@ class IndicatorConfiguration(builder: Builder) : Configuration(builder) {
     @FollowMode
     var followMode: Int
 
+    init {
+        // Compute max offset, it will not exceed parent height.
+        topEdgeConfig.addCheckpoint(
+            OffsetConfig.Builder()
+                .setOffset(0).build(),
+            Checkpoint.Type.STOP_POINT,
+        )
+        topEdgeConfig.addCheckpoint(
+            OffsetConfig.Builder()
+                .setOffsetRatioOfParent(1.0f).build(),
+            Checkpoint.Type.STOP_POINT
+        )
+    }
+
     class Builder : Configuration.Builder {
         var showUpWhenRefresh: Boolean? = null
 
