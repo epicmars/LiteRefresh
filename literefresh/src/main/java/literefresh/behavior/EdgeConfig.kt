@@ -32,32 +32,16 @@ class EdgeConfig {
     var mMaxOffset: Int? = null
     var shouldRebuildCheckpoint = false
 
+    fun onMeasure(
+        parent: CoordinatorLayout, child: View
+    ) {
+        rebuildCheckpoints(parent.measuredHeight, 0)
+        updateOffsetRange()
+    }
+
     fun onLayout(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
-        rebuildCheckpoints(parent, child, layoutDirection)
-
-        var current = mHead
-        var minStopPoint: Checkpoint? = null
-        var maxStopPoint: Checkpoint? = null
-        while (current != null) {
-            if (minStopPoint == null && current.isActive(Checkpoint.Type.STOP_POINT)) {
-                minStopPoint = current
-                current = current.mNext
-                continue
-            }
-            if (current.isActive(Checkpoint.Type.STOP_POINT)) {
-                if (maxStopPoint == null || current.offset() >= maxStopPoint.offset()) {
-                    maxStopPoint = current
-                }
-            }
-            current = current.mNext
-        }
-
-        mMinOffset = minStopPoint?.offset()
-        if (maxStopPoint == null) {
-            mMaxOffset = mMinOffset
-        } else {
-            mMaxOffset = maxStopPoint.offset()
-        }
+        rebuildCheckpoints(parent.height, layoutDirection)
+        updateOffsetRange()
     }
 
     fun getMinOffset(): Int {
@@ -113,9 +97,10 @@ class EdgeConfig {
         shouldRebuildCheckpoint = true;
     }
 
-    private fun rebuildCheckpoints(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
-        if (parent.height == 0) {
+    private fun rebuildCheckpoints(parentSize: Int, layoutDirection: Int) {
+        if (parentSize == 0) {
             shouldRebuildCheckpoint = true
+            return
         }
         if (!shouldRebuildCheckpoint) {
             return
@@ -123,10 +108,10 @@ class EdgeConfig {
         Log.d(TAG, "rebuildCheckpoints")
         mMap.clear()
         mDeactived.forEach {
-            it.offsetConfig.updateOffset(parent.height, child.height)
+            it.offsetConfig.updateOffset(parentSize)
         }
         mCheckpoints.forEach {
-            it.offsetConfig.updateOffset(parent.height, child.height)
+            it.offsetConfig.updateOffset(parentSize)
             mDeactived.forEach { deactive ->
                 if (it.offset() == deactive.offset()) {
                     it.deactive(deactive.types.keys.toTypedArray())
@@ -135,6 +120,32 @@ class EdgeConfig {
             insertCheckpoint(it)
         }
         shouldRebuildCheckpoint = false
+    }
+
+    private fun updateOffsetRange() {
+        var current = mHead
+        var minStopPoint: Checkpoint? = null
+        var maxStopPoint: Checkpoint? = null
+        while (current != null) {
+            if (minStopPoint == null && current.isActive(Checkpoint.Type.STOP_POINT)) {
+                minStopPoint = current
+                current = current.mNext
+                continue
+            }
+            if (current.isActive(Checkpoint.Type.STOP_POINT)) {
+                if (maxStopPoint == null || current.offset() >= maxStopPoint.offset()) {
+                    maxStopPoint = current
+                }
+            }
+            current = current.mNext
+        }
+
+        mMinOffset = minStopPoint?.offset()
+        if (maxStopPoint == null) {
+            mMaxOffset = mMinOffset
+        } else {
+            mMaxOffset = maxStopPoint.offset()
+        }
     }
 
 
@@ -203,6 +214,4 @@ class EdgeConfig {
             cp = cp.mNext
         }
     }
-
-
 }

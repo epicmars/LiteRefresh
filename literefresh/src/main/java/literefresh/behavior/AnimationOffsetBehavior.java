@@ -194,6 +194,16 @@ public abstract class AnimationOffsetBehavior<V extends View>
                 });
     }
 
+    public int getBottomPosition() {
+//        return getChild().getBottom() + getConfig().getBottomMargin();
+        return getChild().getBottom();
+    }
+
+    public int getTopPosition() {
+//        return getChild().getTop() - getConfig().getTopMargin();
+        return getChild().getTop();
+    }
+
     public CoordinatorLayout getParent() {
         return mParent;
     }

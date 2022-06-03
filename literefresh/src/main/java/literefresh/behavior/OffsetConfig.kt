@@ -20,15 +20,13 @@ class OffsetConfig {
     var initialOffset = 0
     var defaultOffset = 0
     var cachedOffset = 0
-    var offsetRatioOfSelf = 0f
     var offsetRatioOfParent = 0f
     var isUseDefaultOffset = false
     var parentSize = 0
-    var childSize = 0
 
     constructor() {}
     constructor(
-        initialOffset: Int, defaultOffset: Int, cachedOffset: Int, offsetRatioOfSelf: Float,
+        initialOffset: Int, defaultOffset: Int, cachedOffset: Int,
         offsetRatioOfParent: Float, isUseDefaultOffset: Boolean,
         parentSizePx: Int, childSizePx: Int
     ) {
@@ -36,27 +34,21 @@ class OffsetConfig {
         this.initialOffset = initialOffset
         this.defaultOffset = defaultOffset
         this.cachedOffset = cachedOffset
-        this.offsetRatioOfSelf = offsetRatioOfSelf
         this.offsetRatioOfParent = offsetRatioOfParent
         this.isUseDefaultOffset = isUseDefaultOffset
         this.parentSize = parentSize;
-        this.childSize = childSize;
     }
 
     /**
      * Must call this method when the view layout.
      */
-    fun updateOffset(parentSizePx: Int, childSizePx: Int) : Int {
+    fun updateOffset(parentSizePx: Int) : Int {
         this.parentSize = parentSizePx;
-        this.childSize = childSizePx;
         if (isUseDefaultOffset) {
             offset = defaultOffset;
         }
         if (offsetRatioOfParent > 0) {
             offset = (offsetRatioOfParent * parentSize).toInt()
-        }
-        if (offsetRatioOfSelf > 0) {
-            offset = (offsetRatioOfSelf * childSize).toInt()
         }
         return offset;
     }
@@ -70,7 +62,6 @@ class OffsetConfig {
         var offsetRatioOfParent = 0f
         var isUseDefaultOffset = false
         var parentSize = 0
-        var childSize = 0
 
         constructor() {}
         constructor(config: OffsetConfig?) {
@@ -80,7 +71,6 @@ class OffsetConfig {
         private fun init(config: OffsetConfig?) {
             if (config == null) return
             offset = config.offset
-            offsetRatioOfSelf = config.offsetRatioOfSelf
             offsetRatioOfParent = config.offsetRatioOfParent
             defaultOffset = config.defaultOffset
             cachedOffset = config.cachedOffset
@@ -123,22 +113,15 @@ class OffsetConfig {
             return this;
         }
 
-        fun setChildSize(childSizePx: Int): Builder {
-            this.childSize = childSizePx;
-            return this;
-        }
-
         fun build(): OffsetConfig {
             val config = OffsetConfig()
             config.offset = offset
             config.cachedOffset = cachedOffset
             config.defaultOffset = defaultOffset
-            config.offsetRatioOfSelf = offsetRatioOfSelf
             config.offsetRatioOfParent = offsetRatioOfParent
             config.isUseDefaultOffset = isUseDefaultOffset
             config.parentSize = parentSize
-            config.childSize = childSize;
-            config.updateOffset(parentSize, childSize)
+            config.updateOffset(parentSize)
             return config
         }
     }

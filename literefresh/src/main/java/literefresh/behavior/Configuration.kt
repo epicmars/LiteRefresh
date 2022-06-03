@@ -108,6 +108,4 @@ abstract class Configuration(builder: Builder) {
         abstract fun build(): Configuration?
         abstract fun <B : AnimationOffsetBehavior<*>?> config(): B
     }
-
-
 }

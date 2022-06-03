@@ -23,6 +23,7 @@ import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -51,6 +52,7 @@ import literefresh.controller.ScrollableBehaviorController;
  */
 public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
+    private static final String TAG = ScrollableBehavior.class.getName();
     private static final int INVALID_OFFSET = Integer.MIN_VALUE;
     private int savedOffset = INVALID_OFFSET;
 
@@ -98,24 +100,6 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
                                   int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
         boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed,
                 parentHeightMeasureSpec, heightUsed);
-        int heightSize = View.MeasureSpec.getSize(parentHeightMeasureSpec);
-        int heightMode = View.MeasureSpec.getMode(parentHeightMeasureSpec);
-        // If required height is zero.
-        if (heightSize == 0) {
-            return handled;
-        }
-        // The minimum offset is used to limit the content view's scrolling offset.
-        // Besides, the minimum offset and header's visible height are used together to reset
-        // content's position.
-        //
-        // We must make sure after resetting, either it's top reaches the minimum offset or
-        // header visible height, it depends on which one is larger. When do the layout, we set
-        // minimum offset to be always less than or equal to header visible height.
-//        int height = heightSize - getConfig().getMinOffset();
-//        int heightSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
-//        if (height >= 0) {
-//            parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, heightSpec, heightUsed);
-//        }
         return handled;
     }
 
@@ -124,9 +108,6 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         // Header and footer's configurations must be performed before the content's,
         // and header's configuration before footer.
-
-
-
         if (!getConfig().isSettled()) {
             getConfig().setSettled(true);
             cancelAnimation();
@@ -137,10 +118,10 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
                 //        initialOffset = MathUtils.clamp(initialOffset, getConfiguration().getMinOffset(),
                 //        headerConfig.getInitialVisibleHeight());
                 //}
-
                 restoreTopAndBottomOffset(parent, child, savedOffset, TYPE_NON_TOUCH);
             } else {
-                setTopAndBottomOffset(getConfig().getTopEdgeConfig().getMinOffset());
+                int offset = getConfig().getTopEdgeConfig().getMinOffset() - getViewOffsetHelper().getLayoutTop();
+                setTopAndBottomOffset(offset);
             }
         }
         return handled;
@@ -220,8 +201,8 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     @Override
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                     @NonNull View target, float velocityX, float velocityY) {
-//        int top = child.getTop() - getConfiguration().getTopMargin();
-//        int bottom = child.getBottom() + getConfiguration().getBottomMargin();
+//        int top = getTopOffset(child);
+//        int bottom = getBottomOffset(child);
 //        // todo: to make fling more nature when header can scroll up or footer can scroll down
 //        if (top > getConfiguration().getMinOffset()) {
 //            return true;
@@ -239,7 +220,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
 
 
     private void onNestedPreScrollDown(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int dy, @NonNull int [] consumed, int type) {
-        int bottom = child.getBottom() + getConfig().getBottomMargin();
+        int bottom = getBottomPosition();
         // If already reach the bottom of parent view.
         if (bottom >= coordinatorLayout.getHeight()) {
             return;
@@ -254,7 +235,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
 
     private void onNestedPreScrollUp(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int dy, @NonNull int[] consumed, int type) {
         // When scrolling up, compute the top offset which content can reach.
-        int top = child.getTop() - getConfig().getTopMargin();
+        int top = getTopPosition();
         // If already reach minimum offset.
         if (top <= getConfig().getTopEdgeConfig().getMinOffset())
             return;
@@ -268,8 +249,9 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
 
     public void onNestedScrollDown(CoordinatorLayout coordinatorLayout, V child, int offsetDelta, int type) {
         // Scrolling down.
-        final int top = child.getTop() - getConfig().getTopMargin();
+        final int top = getTopPosition();
         final int maxOffset = getConfig().getTopEdgeConfig().getMaxOffset();
+        Log.d(TAG, "top: " + top + " maxOffset: " + maxOffset);
         // Top position of child can not scroll exceed maximum offset.
         if (top >= maxOffset) {
             return;
@@ -295,7 +277,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     }
 
     public void onNestedScrollUp(CoordinatorLayout coordinatorLayout, V child, int offsetDelta, int type) {
-        final int bottom = child.getBottom() + getConfig().getBottomMargin();
+        final int bottom = getBottomPosition();
         final int bottomMinOffset = getConfig().getBottomEdgeConfig().getMinOffset();
         // Can not scroll up exceed bottom offset.
         if (bottom <= bottomMinOffset) {
@@ -375,9 +357,9 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         // which means content has scrolled to a insignificant or invalid position.
         // We need to reset it.
         if (null == getChild() || getParent() == null) return;
-        if (getChild().getTop() - getConfig().getTopMargin() > getConfig().getTopEdgeConfig().getMinOffset()
-                || getChild().getTop() - getConfig().getTopMargin() < getConfig().getTopEdgeConfig().getMinOffset()
-                || getChild().getBottom() + getConfig().getBottomMargin() < getParent().getHeight()) {
+        if (getTopPosition() > getConfig().getTopEdgeConfig().getMinOffset()
+                || getTopPosition() < getConfig().getTopEdgeConfig().getMinOffset()
+                || getBottomPosition() < getParent().getHeight()) {
             // Remove previous pending callback.
             handler.removeCallbacks(offsetCallback);
             offsetCallback = new Runnable() {
@@ -390,7 +372,8 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         }
     }
 
-    public void stopAtOffset(int offset) {
+    public void stopAtPosition(int offset) {
+        Log.d(TAG, "stopAtOffset: " + offset);
         // There is an issue that when a refresh complete immediately, the header or footer
         // showing animation may be just started, need to be cancelled.
         cancelAnimation();
@@ -404,7 +387,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
             offsetCallback = new Runnable() {
                 @Override
                 public void run() {
-                    animateOffsetDelta(DEFAULT_ANIM_DURATION, offset - getTopAndBottomOffset());
+                    animateOffsetDelta(DEFAULT_ANIM_DURATION, offset - getTopPosition());
                 }
             };
             handler.post(offsetCallback);
@@ -453,7 +436,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
 
     public void refreshHeader(long animateDuration) {
 //        if (null == getChild() || null == getParent()) return;
-//        int top = getChild().getTop() - getConfig().getTopMargin();
+//        int topOffset = getTopOffset(getChild());
 //        int offset = 0;
 //        // Show up to the trigger range.
 //        offset = getConfig().getMinOffset() + getConfig().getTriggerOffset() - top;
@@ -504,9 +487,8 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     }
 
     public boolean isMinOffsetReached() {
-//        int top = getChild().getTop() - getConfig().getTopMargin();
-//        return top <= getConfig().getMinOffset();
-        return false;
+        int topOffset = getTopPosition();
+        return topOffset <= getConfig().getTopEdgeConfig().getMinOffset();
     }
 
     @Override

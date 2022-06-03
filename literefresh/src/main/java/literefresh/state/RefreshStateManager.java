@@ -49,7 +49,8 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
     public interface RefreshStateListener {
         /**
          * A callback method when refresh state has changed.
-         *  @param state     current state
+         *
+         * @param state     current state
          * @param throwable throwable when a state has changed if exists
          */
         void onRefreshStateChanged(RefreshState state, Throwable throwable);

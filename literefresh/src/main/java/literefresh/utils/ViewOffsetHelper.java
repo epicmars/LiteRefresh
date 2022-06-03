@@ -36,6 +36,7 @@ public class ViewOffsetHelper {
 
     private int mLayoutTop;
     private int mLayoutLeft;
+    // offset relative to original layout top
     private int mOffsetTop;
     private int mOffsetLeft;
 

@@ -95,4 +95,8 @@ public class ViewOffsetBehavior<V extends View> extends CoordinatorLayout.Behavi
     public int getLeftAndRightOffset() {
         return mViewOffsetHelper != null ? mViewOffsetHelper.getLeftAndRightOffset() : 0;
     }
+
+    public ViewOffsetHelper getViewOffsetHelper() {
+        return mViewOffsetHelper;
+    }
 }
