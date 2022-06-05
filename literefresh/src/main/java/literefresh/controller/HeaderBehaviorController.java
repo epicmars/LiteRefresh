@@ -42,14 +42,11 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
         // For now we don't care about invisible changes.
         // And when content has reached minimum offset, we should not changed with it.
         // If content has reach it's minimum offset, header may have not changed yet.
-        if (contentBehavior.isMinOffsetReached()
+        if (contentBehavior.isTopMinOffsetReached()
                 && behavior.getBottomPosition()
                 <= contentBehavior.getConfig().getTopEdgeConfig().getMinOffset()) {
             return 0;
         }
-        CoordinatorLayout.LayoutParams dependencyLp = ((CoordinatorLayout.LayoutParams) dependency.getLayoutParams());
-        CoordinatorLayout.LayoutParams lp = ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
-        int result = dependency.getTop() - dependencyLp.topMargin - (child.getBottom() + lp.bottomMargin);
         return contentBehavior.getTopPosition() - behavior.getBottomPosition();
     }
 

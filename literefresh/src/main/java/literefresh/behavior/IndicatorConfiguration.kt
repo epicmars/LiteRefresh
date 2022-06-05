@@ -35,12 +35,23 @@ class IndicatorConfiguration(builder: Builder) : Configuration(builder) {
         // Compute max offset, it will not exceed parent height.
         topEdgeConfig.addCheckpoint(
             OffsetConfig.Builder()
-                .setOffset(0).build(),
+                .setOffset(Integer.MIN_VALUE).build(),
             Checkpoint.Type.STOP_POINT,
         )
         topEdgeConfig.addCheckpoint(
             OffsetConfig.Builder()
-                .setOffsetRatioOfParent(1.0f).build(),
+                .setOffset(Integer.MAX_VALUE).build(),
+            Checkpoint.Type.STOP_POINT
+        )
+
+        bottomEdgeConfig.addCheckpoint(
+            OffsetConfig.Builder()
+                .setOffset(Integer.MIN_VALUE).build(),
+            Checkpoint.Type.STOP_POINT,
+        )
+        bottomEdgeConfig.addCheckpoint(
+            OffsetConfig.Builder()
+                .setOffset(Integer.MAX_VALUE).build(),
             Checkpoint.Type.STOP_POINT
         )
     }

@@ -15,17 +15,14 @@
  */
 package literefresh.controller;
 
+import static literefresh.behavior.IndicatorConfiguration.MODE_FOLLOW;
+
 import android.view.View;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import literefresh.behavior.ScrollableBehavior;
 import literefresh.behavior.VerticalIndicatorBehavior;
-
-import static literefresh.behavior.IndicatorConfiguration.MODE_FOLLOW;
-import static literefresh.behavior.IndicatorConfiguration.MODE_FOLLOW_DOWN;
-import static literefresh.behavior.IndicatorConfiguration.MODE_FOLLOW_UP;
-import static literefresh.behavior.IndicatorConfiguration.MODE_STILL;
 
 /**
  * The footer behavior's controller, it controls footer behavior how to consume the offset changes.
@@ -41,9 +38,12 @@ public class FooterBehaviorController extends VerticalIndicatorBehaviorControlle
                                                         View dependency,
                                                         VerticalIndicatorBehavior behavior,
                                                         ScrollableBehavior contentBehavior) {
-        CoordinatorLayout.LayoutParams lpDependency = ((CoordinatorLayout.LayoutParams) dependency.getLayoutParams());
-        CoordinatorLayout.LayoutParams lp = ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
-        return dependency.getBottom() + lpDependency.bottomMargin - (child.getTop() - lp.topMargin);
+        if (contentBehavior.isBottomMinOffsetReached()
+                && behavior.getTopPosition()
+                <= contentBehavior.getConfig().getBottomEdgeConfig().getMinOffset()) {
+            return 0;
+        }
+        return contentBehavior.getBottomPosition() - behavior.getTopPosition();
     }
 
     @Override

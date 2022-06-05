@@ -215,7 +215,7 @@ public abstract class VerticalIndicatorBehavior<V extends View>
                                                      V child,
                                                      ScrollableBehavior contentBehavior,
                                                      int offsetDelta, int type) {
-        int currentOffset = getTopAndBottomOffset();
+        int currentOffset = getTopPosition();
         int resultOffset = currentOffset + offsetDelta;
         if (offsetDelta < 0) {
             // scroll up

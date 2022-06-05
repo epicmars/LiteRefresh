@@ -201,15 +201,12 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     @Override
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                     @NonNull View target, float velocityX, float velocityY) {
-//        int top = getTopOffset(child);
-//        int bottom = getBottomOffset(child);
+//        int top = getTopPosition();
+//        int bottom = getBottomPosition();
 //        // todo: to make fling more nature when header can scroll up or footer can scroll down
-//        if (top > getConfiguration().getMinOffset()) {
+//        if (top > getConfig().getTopEdgeConfig().getMinOffset() || bottom > getConfig().getBottomEdgeConfig().getMinOffset()) {
 //            return true;
 //        }
-//        if (top > headerConfig.getInitialVisibleHeight()
-//                || (-bottom + getParent().getHeight()) > footerConfig.getInitialVisibleHeight())
-//            return true;
         return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
     }
 
@@ -486,9 +483,12 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         animateOffsetDelta(animationDuration, offset);
     }
 
-    public boolean isMinOffsetReached() {
-        int topOffset = getTopPosition();
-        return topOffset <= getConfig().getTopEdgeConfig().getMinOffset();
+    public boolean isTopMinOffsetReached() {
+        return getTopPosition() <= getConfig().getTopEdgeConfig().getMinOffset();
+    }
+
+    public boolean isBottomMinOffsetReached() {
+        return getBottomPosition() <= getConfig().getBottomEdgeConfig().getMinOffset();
     }
 
     @Override
