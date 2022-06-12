@@ -60,10 +60,12 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     private static final int ORIENTATION_HORIZON = 2;
     private static final int ORIENTATION_VERTICAL_HORIZON = 3;
 
-    private @ScrollingContentOrientation int orientation = ORIENTATION_VERTICAL;
+    private @ScrollingContentOrientation
+    int orientation = ORIENTATION_VERTICAL;
 
     @IntDef({ORIENTATION_VERTICAL, ORIENTATION_HORIZON, ORIENTATION_VERTICAL_HORIZON})
-    public @interface ScrollingContentOrientation {}
+    public @interface ScrollingContentOrientation {
+    }
 
     public ScrollableBehavior(Context context) {
         this(context, null);
@@ -146,6 +148,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout,
                                        @NonNull V child, @NonNull View directTargetChild,
                                        @NonNull View target, int axes, int type) {
+        Log.d(TAG, "onStartNestedScroll: axes " + axes + " type: " + type);
         // If scrolling started by touch event we need to invalidate restored initial offset.
         if (savedOffset != INVALID_OFFSET && type == TYPE_TOUCH) {
             savedOffset = INVALID_OFFSET;
@@ -154,6 +157,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         if (start) {
             dispatchOnStartScroll(coordinatorLayout, child, type);
         }
+        Log.d(TAG, "onStartNestedScroll: start " + start);
         return start;
     }
 
@@ -161,6 +165,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                   @NonNull View target, int dx, int dy, @NonNull int[] consumed,
                                   int type) {
+        Log.d(TAG, "onNestedPreScroll");
         if (dy > 0) {
             onNestedPreScrollUp(coordinatorLayout, child, dy, consumed, type);
         } else if (dy < 0) {
@@ -181,6 +186,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                @NonNull View target, int dxConsumed, int dyConsumed,
                                int dxUnconsumed, int dyUnconsumed, int type) {
+        Log.d(TAG, "onNestedScroll");
         // If there is unconsumed pixels.
         if (dyUnconsumed < 0) {
             onNestedScrollDown(coordinatorLayout, child, -dyUnconsumed, type);
@@ -191,20 +197,22 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     }
 
 
-
     @Override
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                    @NonNull View target, int type) {
-        dispatchOnStopScroll(coordinatorLayout, child, getTopAndBottomOffset(), type);
+        Log.d(TAG, "onStopNestedScroll");
+        dispatchOnStopScroll(coordinatorLayout, child, getTopPosition(), type);
     }
 
     @Override
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                     @NonNull View target, float velocityX, float velocityY) {
+        Log.d(TAG, "onNestedPreFling");
 //        int top = getTopPosition();
 //        int bottom = getBottomPosition();
 //        // todo: to make fling more nature when header can scroll up or footer can scroll down
-//        if (top > getConfig().getTopEdgeConfig().getMinOffset() || bottom > getConfig().getBottomEdgeConfig().getMinOffset()) {
+//        if (top > getConfig().getTopEdgeConfig().getMinOffset()
+//                || bottom > getConfig().getBottomEdgeConfig().getMinOffset()) {
 //            return true;
 //        }
         return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
@@ -212,11 +220,12 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
 
     @Override
     public boolean onNestedFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY, boolean consumed) {
+        Log.d(TAG, "onNestedFling");
         return super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
     }
 
 
-    private void onNestedPreScrollDown(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int dy, @NonNull int [] consumed, int type) {
+    private void onNestedPreScrollDown(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int dy, @NonNull int[] consumed, int type) {
         int bottom = getBottomPosition();
         // If already reach the bottom of parent view.
         if (bottom >= coordinatorLayout.getHeight()) {
@@ -250,7 +259,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         final int maxOffset = getConfig().getTopEdgeConfig().getMaxOffset();
         Log.d(TAG, "top: " + top + " maxOffset: " + maxOffset);
         // Top position of child can not scroll exceed maximum offset.
-        if (top >= maxOffset) {
+        if (top >= maxOffset || getController().isRefreshing()) {
             return;
         }
         int offset = MathUtils.clamp(offsetDelta, 0, maxOffset - top);
@@ -277,7 +286,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         final int bottom = getBottomPosition();
         final int bottomMinOffset = getConfig().getBottomEdgeConfig().getMinOffset();
         // Can not scroll up exceed bottom offset.
-        if (bottom <= bottomMinOffset) {
+        if (bottom <= bottomMinOffset || getController().isLoading()) {
             return;
         }
         int offset = MathUtils.clamp(offsetDelta, bottomMinOffset - bottom, 0);
@@ -369,22 +378,36 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         }
     }
 
-    public void stopAtPosition(int offset) {
-        Log.d(TAG, "stopAtOffset: " + offset);
+    public void animateToPositionIfLarger(int position) {
+        Log.d(TAG, "animateToPosition: " + position);
+        if (getTopPosition() > position) {
+            animateToPosition(position);
+        }
+    }
+
+    public void animateToPositionIfSmaller(int position) {
+        Log.d(TAG, "animateToPosition: " + position);
+        if (getTopPosition() < position) {
+            animateToPosition(position);
+        }
+    }
+
+    public void animateToPosition(int position) {
+        Log.d(TAG, "animateToPosition: " + position);
         // There is an issue that when a refresh complete immediately, the header or footer
         // showing animation may be just started, need to be cancelled.
         cancelAnimation();
-        // If content offset is larger than header's visible height or smaller than minimum offset,
+        // If content position is larger than header's visible height or smaller than minimum position,
         // which means content has scrolled to a insignificant or invalid position.
         // We need to reset it.
         if (null == getChild() || getParent() == null) return;
-        if (offset != getTopAndBottomOffset()) {
+        if (position != getTopPosition()) {
             // Remove previous pending callback.
             handler.removeCallbacks(offsetCallback);
             offsetCallback = new Runnable() {
                 @Override
                 public void run() {
-                    animateOffsetDelta(DEFAULT_ANIM_DURATION, offset - getTopPosition());
+                    animateOffsetDelta(DEFAULT_ANIM_DURATION, position - getTopPosition());
                 }
             };
             handler.post(offsetCallback);
@@ -393,6 +416,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
 
     /**
      * todo delegated to onNestedScroll
+     *
      * @param offset
      * @param delta
      * @param type
@@ -439,7 +463,6 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
 //        offset = getConfig().getMinOffset() + getConfig().getTriggerOffset() - top;
 //        animateOffset(animateDuration, offset);
     }
-
 
 
     /**
@@ -508,7 +531,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
 
     @Override
     public ScrollableConfiguration.Builder with(@NonNull Context context) {
-        return new ScrollableConfiguration.Builder(context, this,  getConfig());
+        return new ScrollableConfiguration.Builder(context, this, getConfig());
     }
 
     @Override

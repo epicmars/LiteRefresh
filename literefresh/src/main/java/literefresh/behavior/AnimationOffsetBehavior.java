@@ -142,7 +142,7 @@ public abstract class AnimationOffsetBehavior<V extends View>
         cancelAnimation();
     }
 
-    protected void cancelAnimation() {
+    public void cancelAnimation() {
         if (offsetAnimator != null && offsetAnimator.isRunning()) {
             offsetAnimator.cancel();
         }

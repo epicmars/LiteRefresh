@@ -72,7 +72,7 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
     public void onScrollableStateChanged(ScrollableState scrollableState, Checkpoint front, Checkpoint back) {
         CheckpointRange range = new CheckpointRange(front, back);
         final boolean isRangeChanged = isCurrentRangeChanged(range);
-        Log.d(TAG, "scrollableState:" + scrollableState + " mState: " + mState);
+        Log.d(TAG, "scrollable State:" + scrollableState.getState() + " refresh State: " + mState);
         switch (scrollableState.getState()) {
             case ScrollableStateManager.STATE_START:
                 moveToRefreshState(REFRESH_STATE_START);

@@ -213,7 +213,7 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
                     break;
                 case RefreshStateManager.REFRESH_STATE_CANCELLED:
                     // fixme Attempt java.lang.NullPointerException: to invoke virtual method 'int literefresh.behavior.Checkpoint.offset()' on a null object reference
-                    behavior.stopAtPosition(topEdgeRefreshStateManager.getAnchorPoint().offset());
+                    behavior.animateToPosition(topEdgeRefreshStateManager.getAnchorPoint().offset());
 //                    stopScroll(false);
                     break;
                 case RefreshStateManager.REFRESH_STATE_REFRESH:
