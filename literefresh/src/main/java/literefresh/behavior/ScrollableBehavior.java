@@ -165,7 +165,11 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                   @NonNull View target, int dx, int dy, @NonNull int[] consumed,
                                   int type) {
-        Log.d(TAG, "onNestedPreScroll");
+        Log.d(TAG, "onNestedPreScroll dy: " + dy);
+        // Before child consume the offset.
+        if (dy != 0) {
+            dispatchOnPreScroll(coordinatorLayout, child, getTopAndBottomOffset(), type);
+        }
         if (dy > 0) {
             onNestedPreScrollUp(coordinatorLayout, child, dy, consumed, type);
         } else if (dy < 0) {
@@ -186,7 +190,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                @NonNull View target, int dxConsumed, int dyConsumed,
                                int dxUnconsumed, int dyUnconsumed, int type) {
-        Log.d(TAG, "onNestedScroll");
+        Log.d(TAG, "onNestedScroll dyUnconsumed: " + dyUnconsumed + " type: " + type);
         // If there is unconsumed pixels.
         if (dyUnconsumed < 0) {
             onNestedScrollDown(coordinatorLayout, child, -dyUnconsumed, type);
@@ -196,18 +200,22 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         }
     }
 
+//    FlingStateManager flingStateManager = new FlingStateManager();
 
     @Override
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                    @NonNull View target, int type) {
-        Log.d(TAG, "onStopNestedScroll");
+        Log.d(TAG, "onStopNestedScroll type " + type);
+//        if (type == TYPE_NON_TOUCH) {
+//            flingStateManager.moveToState(FlingStateManager.FLING_STATE_STOP);
+//        }
         dispatchOnStopScroll(coordinatorLayout, child, getTopPosition(), type);
     }
 
     @Override
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                     @NonNull View target, float velocityX, float velocityY) {
-        Log.d(TAG, "onNestedPreFling");
+        Log.d(TAG, "onNestedPreFling velocityX: " + velocityX + " velocityY: " + velocityY);
 //        int top = getTopPosition();
 //        int bottom = getBottomPosition();
 //        // todo: to make fling more nature when header can scroll up or footer can scroll down
@@ -215,12 +223,16 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
 //                || bottom > getConfig().getBottomEdgeConfig().getMinOffset()) {
 //            return true;
 //        }
+//        flingStateManager.moveToState(FlingStateManager.FLING_STATE_START);
+        dispatchOnPreFling(coordinatorLayout, child, getTopAndBottomOffset(), velocityX, velocityY);
         return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
+//        return true;
     }
 
     @Override
     public boolean onNestedFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY, boolean consumed) {
-        Log.d(TAG, "onNestedFling");
+        Log.d(TAG, "onNestedFling consumed: " + consumed);
+        dispatchOnFling(coordinatorLayout, child, getTopAndBottomOffset(), velocityX, velocityY);
         return super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
     }
 
@@ -293,7 +305,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         if (offset != 0) {
             if (bottom <= getConfig().getBottomEdgeConfig().getMaxOffset()) {
                 // If footer's hidden part is visible, ignore fling too.
-                if (type != TYPE_TOUCH)
+                if (type != TYPE_TOUCH) // TODO 如何处理fling引起的滑动
                     return;
                 consumeOffsetDelta(coordinatorLayout, child, offset, type, false);
             } else {
@@ -319,8 +331,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     private int consumeOffsetDelta(CoordinatorLayout coordinatorLayout, V child, int offsetDelta,
                                    int type, boolean consumeRawOffset) {
         int currentOffset = getTopAndBottomOffset();
-        // Before child consume the offset.
-        dispatchOnPreScroll(coordinatorLayout, child, currentOffset, type);
+
         float consumed = consumeRawOffset
                 ? offsetDelta
                 : onConsumeOffset(currentOffset, offsetDelta);

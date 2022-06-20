@@ -15,10 +15,17 @@
  */
 package literefresh.behavior;
 
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ViewCompat;
+
 import literefresh.controller.ScrollableBehaviorController;
 
 public interface CheckpointListener {
-    void onStart(@ScrollableBehaviorController.EdgeFlag int edgeFlag);
-    void onScroll(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int currentOffset, Checkpoint front, Checkpoint back);
-    void onStop(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int currentOffset, Checkpoint front, Checkpoint back);
+    void onFling(@ScrollableBehaviorController.EdgeFlag int edgeFlag, @NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, Configuration config, int currentOffset, float velocityX, float velocityY);
+    void onStart(@ScrollableBehaviorController.EdgeFlag int edgeFlag, @ViewCompat.NestedScrollType int type);
+    void onScroll(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int currentOffset, Checkpoint front, Checkpoint back, @ViewCompat.NestedScrollType int type);
+    void onStop(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int currentOffset, Checkpoint front, Checkpoint back, @ViewCompat.NestedScrollType int type);
 }

@@ -29,6 +29,7 @@ import android.view.View;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,8 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
     public static final int FLAG_EDGE_BOTTOM_RIGHT = 2;
 
     @IntDef({FLAG_EDGE_UNKNOWN, FLAG_EDGE_TOP_LEFT, FLAG_EDGE_BOTTOM_RIGHT})
-    public @interface EdgeFlag {}
+    public @interface EdgeFlag {
+    }
 
     private final StateHandler footerStateHandler = new StateHandler() {
         @Override
@@ -298,17 +300,17 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
 
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                              Configuration config, int type) {
+                              Configuration config, @ViewCompat.NestedScrollType int type) {
 //        for (StateMachine stateMachine : stateMachines) {
 //            stateMachine.onStartScroll(coordinatorLayout, child, config, type);
 //        }
         super.onStartScroll(coordinatorLayout, child, config, type);
-        dispatchStart();
+        dispatchStart(type);
     }
 
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                            Configuration config, int currentOffset, int type) {
+                            Configuration config, int currentOffset, @ViewCompat.NestedScrollType int type) {
 //        for (StateMachine stateMachine : stateMachines) {
 //            stateMachine.onPreScroll(coordinatorLayout, child, config, currentOffset, type);
 //        }
@@ -316,8 +318,29 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
     }
 
     @Override
+    public void onPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, Configuration config, int currentOffset, float velocityX, float velocityY) {
+        super.onPreFling(coordinatorLayout, child, config, currentOffset, velocityX, velocityY);
+    }
+
+    @Override
+    public void onFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, Configuration config, int currentOffset, float velocityX, float velocityY) {
+        super.onFling(coordinatorLayout, child, config, currentOffset, velocityX, velocityY);
+//        dispatchFling();
+        // Scroll down
+        if (velocityY < 0) {
+            if (getBehavior().getTopPosition() <= getConfig().getTopEdgeConfig().getMinOffset()) {
+                topScrollableStateManager.onFling(FLAG_EDGE_TOP_LEFT, coordinatorLayout, child, config, currentOffset, velocityX, velocityY);
+            }
+        } else if (velocityX > 0) {
+            if (getBehavior().getBottomPosition() >= getConfig().getBottomEdgeConfig().getMinOffset()) {
+                bottomScrollableStateManager.onFling(FLAG_EDGE_BOTTOM_RIGHT, coordinatorLayout, child, config, currentOffset, velocityX, velocityY);
+            }
+        }
+    }
+
+    @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                         Configuration config, int currentOffset, int delta, int type) {
+                         Configuration config, int currentOffset, int delta, @ViewCompat.NestedScrollType int type) {
         ScrollableConfiguration cfg = getBehavior().getConfig();
 
         // The original StateMachine implements pull to refresh and pull to load more.
@@ -341,7 +364,7 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
                 return;
             }
 
-                topScrollableStateManager.onScroll(FLAG_EDGE_TOP_LEFT, currentOffset, front, back);
+            topScrollableStateManager.onScroll(FLAG_EDGE_TOP_LEFT, currentOffset, front, back, type);
         } else {
             int bottomOffset = currentOffset + child.getHeight();
             Checkpoint closest = config.getBottomEdgeConfig().findClosestCheckpoint(bottomOffset);
@@ -357,13 +380,13 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
                 return;
             }
 
-            bottomScrollableStateManager.onScroll(FLAG_EDGE_BOTTOM_RIGHT, currentOffset, front, back);
+            bottomScrollableStateManager.onScroll(FLAG_EDGE_BOTTOM_RIGHT, currentOffset, front, back, type);
         }
     }
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                             Configuration config, int currentOffset, int type) {
+                             Configuration config, int currentOffset, @ViewCompat.NestedScrollType int type) {
 //        for (StateMachine stateMachine : stateMachines) {
 //            stateMachine.onStopScroll(coordinatorLayout, child, config, currentOffset, type);
 //        }
@@ -384,7 +407,7 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
                 return;
             }
 
-            topScrollableStateManager.onStop(FLAG_EDGE_TOP_LEFT, currentOffset, front, back);
+            topScrollableStateManager.onStop(FLAG_EDGE_TOP_LEFT, currentOffset, front, back, type);
         } else {
             int bottomOffset = currentOffset + child.getHeight();
             Checkpoint closest = config.getBottomEdgeConfig().findClosestCheckpoint(bottomOffset);
@@ -400,16 +423,22 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
                 return;
             }
 
-            bottomScrollableStateManager.onStop(FLAG_EDGE_BOTTOM_RIGHT, currentOffset, front, back);
+            bottomScrollableStateManager.onStop(FLAG_EDGE_BOTTOM_RIGHT, currentOffset, front, back, type);
         }
 
     }
 
-    private void dispatchStart() {
+    private void dispatchStart(int type) {
         for (CheckpointListener listener : checkpointListeners) {
-            listener.onStart(FLAG_EDGE_UNKNOWN);
+            listener.onStart(FLAG_EDGE_UNKNOWN, type);
         }
     }
+//
+//    private void dispatchFling() {
+//        for (CheckpointListener listener : checkpointListeners) {
+//            listener.onFling(FLAG_EDGE_UNKNOWN);
+//        }
+//    }
 
     @Override
     public void onLoadStart() {

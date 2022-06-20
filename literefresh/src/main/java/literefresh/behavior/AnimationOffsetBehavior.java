@@ -20,6 +20,7 @@ import android.content.res.TypedArray;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -297,7 +298,20 @@ public abstract class AnimationOffsetBehavior<V extends View>
         }
     }
 
+    protected void dispatchOnPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int currentOffset, float velocityX, float velocityY) {
+        for (NestedScrollingListener l : mListeners) {
+            l.onPreFling(coordinatorLayout, child, getConfig(), currentOffset, velocityX, velocityY);
+        }
+    }
+
+    protected void dispatchOnFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int currentOffset, float velocityX, float velocityY) {
+        for (NestedScrollingListener l : mListeners) {
+            l.onFling(coordinatorLayout, child, getConfig(), currentOffset, velocityX, velocityY);
+        }
+    }
+
     protected void dispatchOnScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int currentOffset, int offsetDelta, int type) {
+        Log.d("ScrollableBehavior", "dispatchOnScroll currentOffset: " + currentOffset + " offsetDelta: " + offsetDelta);
         for (NestedScrollingListener l : mListeners) {
             l.onScroll(coordinatorLayout, child, getConfig(), currentOffset, offsetDelta, type);
         }

@@ -113,6 +113,16 @@ public class StateMachine implements NestedScrollingListener, Refresher {
     }
 
     @Override
+    public void onPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, Configuration config, int currentOffset, float velocityX, float velocityY) {
+
+    }
+
+    @Override
+    public void onFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, Configuration config, int currentOffset, float velocityX, float velocityY) {
+
+    }
+
+    @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                          Configuration config, int currentOffset, int delta, int type) {
 

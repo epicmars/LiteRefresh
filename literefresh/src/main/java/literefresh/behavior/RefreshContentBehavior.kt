@@ -64,6 +64,10 @@ class RefreshContentBehavior<V : View?> @JvmOverloads constructor(
         controller.addOnLoadListener(listener)
     }
 
+    fun recycle() {
+        controller.recycle()
+    }
+
     override fun refresh() {
         controller.refresh()
     }

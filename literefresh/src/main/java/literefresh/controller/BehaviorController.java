@@ -72,6 +72,24 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
     }
 
     @Override
+    public void onPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, Configuration config, int currentOffset, float velocityX, float velocityY) {
+        if (mScrollListeners == null)
+            return;
+        for (OnScrollListener l : mScrollListeners) {
+            //
+        }
+    }
+
+    @Override
+    public void onFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, Configuration config, int currentOffset, float velocityX, float velocityY) {
+        if (mScrollListeners == null)
+            return;
+        for (OnScrollListener l : mScrollListeners) {
+            //
+        }
+    }
+
+    @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                          Configuration config, int currentOffset, int delta, int type) {
         if (mScrollListeners  == null)
@@ -259,6 +277,30 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
                 }
             }
         });
+    }
+
+    public void removeOnRefreshListeners() {
+        if (mRefreshListeners != null) {
+            mRefreshListeners.clear();
+        }
+    }
+
+    public void removeOnLoadListeners() {
+        if (mLoadListeners != null) {
+            mLoadListeners.clear();
+        }
+    }
+
+    public void removeOnScrollListeners() {
+        if (mScrollListeners != null) {
+            mScrollListeners.clear();
+        }
+    }
+
+    public void recycle() {
+        removeOnScrollListeners();
+        removeOnRefreshListeners();
+        removeOnLoadListeners();
     }
 
     public void addOnLoadListener(final OnLoadListener listener) {
