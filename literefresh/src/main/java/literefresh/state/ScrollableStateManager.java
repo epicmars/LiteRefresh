@@ -40,7 +40,8 @@ public class ScrollableStateManager implements CheckpointListener {
     public static final int STATE_FLING = 4;
     public static final int STATE_FLING_START = 5;
     public static final int STATE_FLING_SCROLL = 6;
-    public static final int STATE_FLING_STOP = 7;
+    public static final int STATE_SCROLL_STOP_AFTER_FLING = 7;
+    public static final int STATE_FLING_STOP = 8;
 //    public static final int STATE_STOP = 8;
 
     private int mState = STATE_IDLE;
@@ -53,34 +54,43 @@ public class ScrollableStateManager implements CheckpointListener {
     }
 
     public interface ScrollableStateListener {
-        void onScrollableStateChanged(ScrollableState scrollableState, Checkpoint front, Checkpoint back);
+        void onScrollableStateChanged(ScrollableState scrollableState, Checkpoint front,
+                                      Checkpoint back);
     }
 
     @Override
-    public void onStart(@ScrollableBehaviorController.EdgeFlag int edgeFlag, @ViewCompat.NestedScrollType int type) {
-        moveToState(edgeFlag, type == ViewCompat.TYPE_TOUCH ? STATE_SCROLL_START : STATE_FLING_START, Integer.MIN_VALUE, null, null, type);
+    public void onStart(@ScrollableBehaviorController.EdgeFlag int edgeFlag,
+                        @ViewCompat.NestedScrollType int type) {
+        moveToState(edgeFlag, type == ViewCompat.TYPE_TOUCH
+                        ? STATE_SCROLL_START : STATE_FLING_START,
+                Integer.MIN_VALUE, null, null, type);
     }
 
     @Override
     public void onScroll(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int currentOffset,
                          Checkpoint front, Checkpoint back, @ViewCompat.NestedScrollType int type) {
-        moveToState(edgeFlag, type == ViewCompat.TYPE_TOUCH ? STATE_SCROLL : STATE_FLING_SCROLL, currentOffset, front, back, type);
+        moveToState(edgeFlag, type == ViewCompat.TYPE_TOUCH ? STATE_SCROLL : STATE_FLING_SCROLL,
+                currentOffset, front, back, type);
     }
 
     @Override
-    public void onFling(@ScrollableBehaviorController.EdgeFlag int edgeFlag, @NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, Configuration config, int currentOffset, float velocityX, float velocityY) {
-        moveToState(edgeFlag, STATE_FLING, Integer.MIN_VALUE, null, null, ViewCompat.TYPE_NON_TOUCH);
+    public void onFling(@ScrollableBehaviorController.EdgeFlag int edgeFlag,
+                        @NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                        Configuration config, int currentOffset, float velocityX, float velocityY) {
+        moveToState(edgeFlag, STATE_FLING, Integer.MIN_VALUE, null, null,
+                ViewCompat.TYPE_NON_TOUCH);
     }
 
     @Override
     public void onStop(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int currentOffset,
                        Checkpoint front, Checkpoint back, @ViewCompat.NestedScrollType int type) {
-        moveToState(edgeFlag, type == ViewCompat.TYPE_TOUCH ? STATE_SCROLL_STOP : STATE_FLING_STOP, currentOffset, front, back, type);
+        moveToState(edgeFlag, type == ViewCompat.TYPE_TOUCH ? STATE_SCROLL_STOP : STATE_FLING_STOP,
+                currentOffset, front, back, type);
     }
 
     private void moveToState(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int state,
                              int offset, Checkpoint front, Checkpoint back, int type) {
-        Log.d(TAG, "moveToState: " + state + " Current-state: " + mState);
+        Log.d(TAG, "edge: " + edgeFlag + " moveToState: " + state + " Current-state: " + mState);
         switch (state) {
             case STATE_SCROLL_START:
                 if (mState == STATE_IDLE) {
@@ -105,7 +115,7 @@ public class ScrollableStateManager implements CheckpointListener {
                 }
                 break;
             case STATE_FLING_SCROLL:
-                if (mState == STATE_FLING_START || mState == STATE_SCROLL_STOP || mState == STATE_FLING_SCROLL) {
+                if (mState == STATE_FLING_START || mState == STATE_SCROLL_STOP_AFTER_FLING || mState == STATE_FLING_SCROLL) {
                     moveToTargetState(edgeFlag, state, offset, front, back);
                 }
                 break;
@@ -113,13 +123,14 @@ public class ScrollableStateManager implements CheckpointListener {
                 if (mState == STATE_SCROLL) {
                     moveToTargetState(edgeFlag, state, offset, front, back);
                     setState(STATE_IDLE);
-                } else if (mState == STATE_FLING_START){
-                    moveToTargetState(edgeFlag, state, offset, front, back);
+                } else if (mState == STATE_FLING || mState == STATE_FLING_START
+                        || mState == STATE_FLING_SCROLL) {
+                    moveToTargetState(edgeFlag, STATE_SCROLL_STOP_AFTER_FLING, offset, front, back);
                 }
                 break;
 
             case STATE_FLING_STOP:
-                if (mState == STATE_FLING_SCROLL) {
+                if (mState == STATE_FLING_SCROLL || mState == STATE_SCROLL_STOP_AFTER_FLING) {
                     moveToTargetState(edgeFlag, state, offset, front, back);
                     setState(STATE_IDLE);
                 }
@@ -127,9 +138,11 @@ public class ScrollableStateManager implements CheckpointListener {
             default:
                 break;
         }
+        Log.d(TAG, "edge: " + edgeFlag + " Moved to scrollable State: " + mState);
     }
 
-    private void moveToTargetState(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int state, int offset, Checkpoint front, Checkpoint back) {
+    private void moveToTargetState(@ScrollableBehaviorController.EdgeFlag int edgeFlag, int state,
+                                   int offset, Checkpoint front, Checkpoint back) {
         setState(state);
         dispatchStateChanged(edgeFlag, offset, front, back);
     }
@@ -137,7 +150,8 @@ public class ScrollableStateManager implements CheckpointListener {
     private void dispatchStateChanged(@ScrollableBehaviorController.EdgeFlag int edgeFlag,
                                       int offset, Checkpoint front, Checkpoint back) {
         if (scrollableStateListener != null) {
-            scrollableStateListener.onScrollableStateChanged(new ScrollableState(edgeFlag, mState, offset), front, back);
+            scrollableStateListener.onScrollableStateChanged(new ScrollableState(edgeFlag, mState,
+                    offset), front, back);
         }
     }
 

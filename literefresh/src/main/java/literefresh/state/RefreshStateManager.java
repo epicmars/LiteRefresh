@@ -72,16 +72,16 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
     public void onScrollableStateChanged(ScrollableState scrollableState, Checkpoint front, Checkpoint back) {
         CheckpointRange range = new CheckpointRange(front, back);
         final boolean isRangeChanged = isCurrentRangeChanged(range);
-        Log.d(TAG, "onScrollableStateChanged: Scrollable-State:" + scrollableState.getState() + " isRangeChanged: " + isRangeChanged + " "
+        Log.d(TAG, "onScrollableStateChanged: Scrollable-State:" + scrollableState.getState() + " isRangeChanged: " + isRangeChanged + " front-back:"
                 + ((front != null && back != null) ? front.offset() + "-" + back.offset() : "null") + " Current-refresh-State: " + mState);
         switch (scrollableState.getState()) {
             case ScrollableStateManager.STATE_SCROLL_START:
                 moveToRefreshState(REFRESH_STATE_START);
                 break;
-
+            case ScrollableStateManager.STATE_FLING_START:
+                break;
             case ScrollableStateManager.STATE_SCROLL:
             case ScrollableStateManager.STATE_FLING:
-            case ScrollableStateManager.STATE_FLING_START:
             case ScrollableStateManager.STATE_FLING_SCROLL:
                 if (isRangeChanged) {
                     // Checkpoint range has changed.
@@ -106,6 +106,7 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
                 break;
 
             case ScrollableStateManager.STATE_SCROLL_STOP:
+            case ScrollableStateManager.STATE_SCROLL_STOP_AFTER_FLING:
                 // For the sake of we get a STATE_COMPLETE here.
                 // It may happen when the next scroll started before the refresh complete.
                 // So it will miss the onStartScroll() callback and the STATE_COMPLETE can

@@ -22,6 +22,7 @@ public class ScrollableState {
     private @ScrollableBehaviorController.EdgeFlag int edgeFlag;
     private @ScrollableStateManager.ScrollableStateFlag int state;
     private int offset;
+    private int direction;
 
     public ScrollableState(int edgeFlag, int state, int offset) {
         this.edgeFlag = edgeFlag;

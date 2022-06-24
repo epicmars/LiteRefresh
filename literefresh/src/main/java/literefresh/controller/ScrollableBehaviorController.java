@@ -61,9 +61,18 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
     public static final int FLAG_EDGE_TOP_LEFT = 1;
     public static final int FLAG_EDGE_BOTTOM_RIGHT = 2;
 
+
+    public static final int SCROLL_DIRECTION_UP_LEFT = 0;
+    public static final int SCROLL_DIRECTION_DOWN_RIGHT = 1;
+
     @IntDef({FLAG_EDGE_UNKNOWN, FLAG_EDGE_TOP_LEFT, FLAG_EDGE_BOTTOM_RIGHT})
     public @interface EdgeFlag {
     }
+
+    @IntDef({SCROLL_DIRECTION_UP_LEFT, SCROLL_DIRECTION_DOWN_RIGHT})
+    public @interface ScrollDirection {
+    }
+
 
     private final StateHandler footerStateHandler = new StateHandler() {
         @Override
@@ -191,7 +200,8 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
         }
     };
 
-    private RefreshStateManager.RefreshStateHandler topEdgeRefreshStateHandler = new RefreshStateManager.RefreshStateHandler() {
+    private RefreshStateManager.RefreshStateHandler topEdgeRefreshStateHandler
+            = new RefreshStateManager.RefreshStateHandler() {
         @Override
         public void resetRefreshOffset() {
             refreshHeader();
@@ -203,7 +213,8 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
         }
     };
 
-    private RefreshStateManager.RefreshStateListener topEdgeRefreshStateListener = new RefreshStateManager.RefreshStateListener() {
+    private RefreshStateManager.RefreshStateListener topEdgeRefreshStateListener
+            = new RefreshStateManager.RefreshStateListener() {
         @Override
         public void onRefreshStateChanged(RefreshState state, Throwable throwable) {
             switch (state.getRefreshState()) {
@@ -214,7 +225,8 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
                     onReleaseToRefresh();
                     break;
                 case RefreshStateManager.REFRESH_STATE_CANCELLED:
-                    // fixme Attempt java.lang.NullPointerException: to invoke virtual method 'int literefresh.behavior.Checkpoint.offset()' on a null object reference
+                    // fixme Attempt java.lang.NullPointerException: to invoke virtual method
+                    //  'int literefresh.behavior.Checkpoint.offset()' on a null object reference
                     behavior.animateToPosition(topEdgeRefreshStateManager.getAnchorPoint().offset());
 //                    stopScroll(false);
                     break;
@@ -231,7 +243,8 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
         }
     };
 
-    private RefreshStateManager.RefreshStateHandler bottomEdgeRefreshStateHandler = new RefreshStateManager.RefreshStateHandler() {
+    private RefreshStateManager.RefreshStateHandler bottomEdgeRefreshStateHandler
+            = new RefreshStateManager.RefreshStateHandler() {
         @Override
         public void resetRefreshOffset() {
             refreshFooter();
@@ -298,6 +311,10 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
         return child.getTop() >= config.getTopEdgeConfig().getMinOffset();
     }
 
+    private boolean isBottomInRange(@NonNull View child, Configuration config) {
+        return getBehavior().getBottomPosition() < config.getBottomEdgeConfig().getMaxOffset();
+    }
+
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                               Configuration config, @ViewCompat.NestedScrollType int type) {
@@ -305,12 +322,14 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
 //            stateMachine.onStartScroll(coordinatorLayout, child, config, type);
 //        }
         super.onStartScroll(coordinatorLayout, child, config, type);
-        dispatchStart(type);
+        topScrollableStateManager.onStart(FLAG_EDGE_TOP_LEFT, type);
+        bottomScrollableStateManager.onStart(FLAG_EDGE_BOTTOM_RIGHT, type);
     }
 
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                            Configuration config, int currentOffset, @ViewCompat.NestedScrollType int type) {
+                            Configuration config, int currentOffset,
+                            @ViewCompat.NestedScrollType int type) {
 //        for (StateMachine stateMachine : stateMachines) {
 //            stateMachine.onPreScroll(coordinatorLayout, child, config, currentOffset, type);
 //        }
@@ -318,29 +337,34 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
     }
 
     @Override
-    public void onPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, Configuration config, int currentOffset, float velocityX, float velocityY) {
+    public void onPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                           Configuration config, int currentOffset, float velocityX, float velocityY) {
         super.onPreFling(coordinatorLayout, child, config, currentOffset, velocityX, velocityY);
     }
 
     @Override
-    public void onFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, Configuration config, int currentOffset, float velocityX, float velocityY) {
+    public void onFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                        Configuration config, int currentOffset, float velocityX, float velocityY) {
         super.onFling(coordinatorLayout, child, config, currentOffset, velocityX, velocityY);
 //        dispatchFling();
         // Scroll down
         if (velocityY < 0) {
             if (getBehavior().getTopPosition() <= getConfig().getTopEdgeConfig().getMinOffset()) {
-                topScrollableStateManager.onFling(FLAG_EDGE_TOP_LEFT, coordinatorLayout, child, config, currentOffset, velocityX, velocityY);
+                topScrollableStateManager.onFling(FLAG_EDGE_TOP_LEFT, coordinatorLayout, child,
+                        config, currentOffset, velocityX, velocityY);
             }
-        } else if (velocityX > 0) {
+        } else if (velocityY > 0) {
             if (getBehavior().getBottomPosition() >= getConfig().getBottomEdgeConfig().getMinOffset()) {
-                bottomScrollableStateManager.onFling(FLAG_EDGE_BOTTOM_RIGHT, coordinatorLayout, child, config, currentOffset, velocityX, velocityY);
+                bottomScrollableStateManager.onFling(FLAG_EDGE_BOTTOM_RIGHT, coordinatorLayout,
+                        child, config, currentOffset, velocityX, velocityY);
             }
         }
     }
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                         Configuration config, int currentOffset, int delta, @ViewCompat.NestedScrollType int type) {
+                         Configuration config, int currentOffset, int delta,
+                         @ViewCompat.NestedScrollType int type) {
         ScrollableConfiguration cfg = getBehavior().getConfig();
 
         // The original StateMachine implements pull to refresh and pull to load more.
@@ -380,65 +404,63 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
                 return;
             }
 
-            bottomScrollableStateManager.onScroll(FLAG_EDGE_BOTTOM_RIGHT, currentOffset, front, back, type);
+            bottomScrollableStateManager.onScroll(FLAG_EDGE_BOTTOM_RIGHT, currentOffset, front,
+                    back, type);
         }
     }
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                             Configuration config, int currentOffset, @ViewCompat.NestedScrollType int type) {
+                             Configuration config, int currentOffset, @ViewCompat.NestedScrollType
+                                     int type) {
 //        for (StateMachine stateMachine : stateMachines) {
 //            stateMachine.onStopScroll(coordinatorLayout, child, config, currentOffset, type);
 //        }
         super.onStopScroll(coordinatorLayout, child, config, currentOffset, type);
         Checkpoint front = null;
         Checkpoint back = null;
-        if (isTopInRange(child, config)) {
-            Checkpoint closest = config.getTopEdgeConfig().findClosestCheckpoint(currentOffset);
-            if (currentOffset >= closest.getOffsetConfig().getOffset()) {
-                front = closest;
-                back = closest.getMNext();
-            } else {
-                back = closest;
-                front = closest.getMPrevious();
-            }
-            if (front == null || back == null) {
-                Log.e(TAG, "onStopScroll front : " + front + " back: " + back);
-                return;
-            }
+        // TODO bottom and top position conflict
+        if (type == ViewCompat.TYPE_TOUCH) {
+            if (isBottomInRange(child, config)){
+                int bottomOffset = currentOffset + child.getHeight();
+                Checkpoint closest = config.getBottomEdgeConfig().findClosestCheckpoint(bottomOffset);
+                if (bottomOffset >= closest.getOffsetConfig().getOffset()) {
+                    front = closest;
+                    back = closest.getMNext();
+                } else {
+                    back = closest;
+                    front = closest.getMPrevious();
+                }
+                if (front == null || back == null) {
+                    Log.e(TAG, "onStopScroll front : " + front + " back: " + back);
+                    return;
+                }
 
-            topScrollableStateManager.onStop(FLAG_EDGE_TOP_LEFT, currentOffset, front, back, type);
+                bottomScrollableStateManager.onStop(FLAG_EDGE_BOTTOM_RIGHT, currentOffset, front, back,
+                        type);
+            } else {
+                Checkpoint closest = config.getTopEdgeConfig().findClosestCheckpoint(currentOffset);
+                if (currentOffset >= closest.getOffsetConfig().getOffset()) {
+                    front = closest;
+                    back = closest.getMNext();
+                } else {
+                    back = closest;
+                    front = closest.getMPrevious();
+                }
+                if (front == null || back == null) {
+                    Log.e(TAG, "onStopScroll front : " + front + " back: " + back);
+                    return;
+                }
+
+                topScrollableStateManager.onStop(FLAG_EDGE_TOP_LEFT, currentOffset, front, back, type);
+            }
         } else {
-            int bottomOffset = currentOffset + child.getHeight();
-            Checkpoint closest = config.getBottomEdgeConfig().findClosestCheckpoint(bottomOffset);
-            if (bottomOffset >= closest.getOffsetConfig().getOffset()) {
-                front = closest;
-                back = closest.getMNext();
-            } else {
-                back = closest;
-                front = closest.getMPrevious();
-            }
-            if (front == null || back == null) {
-                Log.e(TAG, "onStopScroll front : " + front + " back: " + back);
-                return;
-            }
-
-            bottomScrollableStateManager.onStop(FLAG_EDGE_BOTTOM_RIGHT, currentOffset, front, back, type);
+            bottomScrollableStateManager.onStop(FLAG_EDGE_BOTTOM_RIGHT, currentOffset, front, back,
+                    type);
+            topScrollableStateManager.onStop(FLAG_EDGE_TOP_LEFT, currentOffset, front, back, type);
         }
 
     }
-
-    private void dispatchStart(int type) {
-        for (CheckpointListener listener : checkpointListeners) {
-            listener.onStart(FLAG_EDGE_UNKNOWN, type);
-        }
-    }
-//
-//    private void dispatchFling() {
-//        for (CheckpointListener listener : checkpointListeners) {
-//            listener.onFling(FLAG_EDGE_UNKNOWN);
-//        }
-//    }
 
     @Override
     public void onLoadStart() {
