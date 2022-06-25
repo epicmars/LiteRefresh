@@ -45,6 +45,7 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
     private CheckpointRange currentRange = new CheckpointRange();
     private Checkpoint anchorPoint;
     private Checkpoint triggerPoint;
+    private boolean flingAsCommand = true;
 
     public interface RefreshStateListener {
         /**
@@ -78,10 +79,8 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
             case ScrollableStateManager.STATE_SCROLL_START:
                 moveToRefreshState(REFRESH_STATE_START);
                 break;
-            case ScrollableStateManager.STATE_FLING_START:
-                break;
             case ScrollableStateManager.STATE_SCROLL:
-            case ScrollableStateManager.STATE_FLING:
+            case ScrollableStateManager.STATE_FLING_START:
             case ScrollableStateManager.STATE_FLING_SCROLL:
                 if (isRangeChanged) {
                     // Checkpoint range has changed.
@@ -105,8 +104,47 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
                 }
                 break;
 
-            case ScrollableStateManager.STATE_SCROLL_STOP:
             case ScrollableStateManager.STATE_SCROLL_STOP_AFTER_FLING:
+                if (flingAsCommand && scrollableState.getDirection() != ScrollableStateManager.SCROLL_DIRECTION_UNKNOWN) {
+                    if (scrollableState.getDirection() == ScrollableStateManager.SCROLL_DIRECTION_UP) {
+                        Checkpoint nextAnchor = front;
+                        while (nextAnchor != null) {
+                            if (nextAnchor.isAnchorPoint()) {
+                                break;
+                            }
+                            if (nextAnchor.getMPrevious() == null) {
+                                break;
+                            }
+                            nextAnchor = nextAnchor.getMPrevious();
+                        }
+                        anchorPoint = nextAnchor;
+                    } else if (scrollableState.getDirection() == ScrollableStateManager.SCROLL_DIRECTION_DOWN) {
+                        Checkpoint nextAnchor = back;
+                        while (nextAnchor != null) {
+                            if (nextAnchor.isAnchorPoint()) {
+                                break;
+                            }
+                            if (nextAnchor.getMNext() == null) {
+                                break;
+                            }
+                            nextAnchor = nextAnchor.getMNext();
+                        }
+                        anchorPoint = nextAnchor;
+                    }
+                    if (!moveToRefreshState(REFRESH_STATE_REFRESH)) {
+                        // Another case is that we are still refreshing, no need to change the state.
+                        // But need to reset the refreshing indicator's offset.
+                        if (mState == REFRESH_STATE_REFRESH) {
+                            if (refreshStateHandler != null) {
+                                refreshStateHandler.resetRefreshOffset();
+                            }
+                        } else {
+                            moveToRefreshState(REFRESH_STATE_CANCELLED);
+                        }
+                    }
+                    break;
+                }
+            case ScrollableStateManager.STATE_SCROLL_STOP:
                 // For the sake of we get a STATE_COMPLETE here.
                 // It may happen when the next scroll started before the refresh complete.
                 // So it will miss the onStartScroll() callback and the STATE_COMPLETE can

@@ -389,7 +389,7 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
                 return;
             }
 
-            topScrollableStateManager.onScroll(FLAG_EDGE_TOP_LEFT, currentOffset, front, back, type);
+            topScrollableStateManager.onScroll(FLAG_EDGE_TOP_LEFT, currentOffset, delta, front, back, type);
         } else {
             int bottomOffset = currentOffset + child.getHeight();
             Checkpoint closest = config.getBottomEdgeConfig().findClosestCheckpoint(bottomOffset);
@@ -405,8 +405,8 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
                 return;
             }
 
-            bottomScrollableStateManager.onScroll(FLAG_EDGE_BOTTOM_RIGHT, currentOffset, front,
-                    back, type);
+            bottomScrollableStateManager.onScroll(FLAG_EDGE_BOTTOM_RIGHT, currentOffset, delta,
+                    front, back, type);
         }
     }
 
