@@ -373,7 +373,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         // If content offset is larger than header's visible height or smaller than minimum offset,
         // which means content has scrolled to a insignificant or invalid position.
         // We need to reset it.
-        if (null == getChild() || getParent() == null) return;
+        if (null == getChild() || getParent() == null || isInTouch()) return;
         if (getTopPosition() > getConfig().getTopEdgeConfig().getMinOffset()
                 || getTopPosition() < getConfig().getTopEdgeConfig().getMinOffset()
                 || getBottomPosition() < getParent().getHeight()) {

@@ -15,6 +15,7 @@
  */
 package literefresh.behavior;
 
+import static androidx.core.view.ViewCompat.TYPE_NON_TOUCH;
 import static androidx.core.view.ViewCompat.TYPE_TOUCH;
 
 import android.content.Context;
@@ -361,14 +362,14 @@ public abstract class VerticalIndicatorBehavior<V extends View>
     @Override
     public void onFlingStart(CoordinatorLayout parent, V layout) {
         if (ensureScrollingContentBehavior() && ensureDependencyView()) {
-            scrollableBehavior.dispatchOnStartScroll(parent, dependency, TYPE_TOUCH);
+            scrollableBehavior.dispatchOnStartScroll(parent, dependency, TYPE_NON_TOUCH);
         }
     }
 
     @Override
     public void onFlingFinished(CoordinatorLayout parent, V layout) {
         if (ensureScrollingContentBehavior() && ensureDependencyView()) {
-            scrollableBehavior.dispatchOnStopScroll(parent, dependency, getTopAndBottomOffset(), TYPE_TOUCH);
+            scrollableBehavior.dispatchOnStopScroll(parent, dependency, getTopAndBottomOffset(), TYPE_NON_TOUCH);
         }
     }
 

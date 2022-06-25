@@ -287,6 +287,7 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
     ScrollableStateManager topScrollableStateManager = new ScrollableStateManager();
     ScrollableStateManager bottomScrollableStateManager = new ScrollableStateManager();
 
+
     private List<CheckpointListener> checkpointListeners = new ArrayList<CheckpointListener>() {
         {
             topEdgeRefreshStateManager.setRefreshStateHandler(topEdgeRefreshStateHandler);

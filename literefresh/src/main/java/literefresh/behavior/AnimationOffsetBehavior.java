@@ -35,6 +35,7 @@ import literefresh.R;
 import literefresh.animator.OffsetAnimator;
 import literefresh.animator.SpringOffsetAnimator;
 import literefresh.controller.BehaviorController;
+import literefresh.state.TouchStateManager;
 
 /**
  * A behavior that with offset animation feature.
@@ -61,6 +62,7 @@ public abstract class AnimationOffsetBehavior<V extends View>
     private Queue<Runnable> pendingActions = new LinkedList<>();
     protected BehaviorController controller;
     private Configuration config;
+    private TouchStateManager touchStateManager = new TouchStateManager();
 
     public AnimationOffsetBehavior(Context context) {
         this(context, null);
@@ -286,7 +288,12 @@ public abstract class AnimationOffsetBehavior<V extends View>
         }
     }
 
+    public boolean isInTouch() {
+        return touchStateManager.isInTouch();
+    }
+
     protected void dispatchOnStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int type) {
+        touchStateManager.onStart(type);
         for (NestedScrollingListener l : mListeners) {
             l.onStartScroll(coordinatorLayout, child, getConfig(), type);
         }
@@ -318,6 +325,7 @@ public abstract class AnimationOffsetBehavior<V extends View>
     }
 
     protected void dispatchOnStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int currentOffset, int type) {
+        touchStateManager.onStop(type);
         for (NestedScrollingListener l : mListeners) {
             l.onStopScroll(coordinatorLayout, child, getConfig(), currentOffset, type);
         }
