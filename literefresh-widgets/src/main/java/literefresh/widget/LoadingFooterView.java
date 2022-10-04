@@ -28,7 +28,7 @@ import literefresh.LiteRefresh;
 import literefresh.OnLoadListener;
 import literefresh.OnScrollListener;
 import literefresh.behavior.Configuration;
-import literefresh.behavior.RefreshFooterBehavior;
+import literefresh.behavior.FooterLoaderBehavior;
 
 public class LoadingFooterView extends RefreshFooterLayout implements OnScrollListener, OnLoadListener {
 
@@ -53,7 +53,7 @@ public class LoadingFooterView extends RefreshFooterLayout implements OnScrollLi
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        RefreshFooterBehavior footerBehavior = LiteRefresh.getAttachedBehavior(this);
+        FooterLoaderBehavior footerBehavior = LiteRefresh.getAttachedBehavior(this);
         if (footerBehavior != null) {
             footerBehavior.addOnScrollListener(this);
             footerBehavior.addOnLoadListener(this);

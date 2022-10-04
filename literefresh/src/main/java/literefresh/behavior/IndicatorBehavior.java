@@ -136,8 +136,9 @@ public abstract class IndicatorBehavior<V extends View>
 
     @Override
     public boolean onTouchEvent(@NonNull CoordinatorLayout parent, @NonNull V child, @NonNull MotionEvent ev) {
-        if (!isDraggable)
+        if (!isDraggable) {
             return super.onTouchEvent(parent, child, ev);
+        }
         int action = ev.getAction();
         int actionIndex = ev.getActionIndex();
         int pointerId = ev.getPointerId(actionIndex);
@@ -151,6 +152,7 @@ public abstract class IndicatorBehavior<V extends View>
                     lastMotionY = y;
                     activePointerId = ev.getPointerId(0);
                     ensureVelocityTracker();
+                    onScrollStart(parent, child);
                 } else {
                     return false;
                 }
@@ -182,7 +184,6 @@ public abstract class IndicatorBehavior<V extends View>
                 if (isBeingDragged) {
                     lastMotionY = y;
                     Log.d(TAG, "onScrollStart");
-                    onScrollStart(parent, child);
                     scroll(parent, child, dy);
                 }
             }
@@ -193,17 +194,19 @@ public abstract class IndicatorBehavior<V extends View>
                 if (velocityTracker != null) {
                     velocityTracker.addMovement(ev);
                     velocityTracker.computeCurrentVelocity(1000);
+                    float xvel = velocityTracker.getXVelocity(activePointerId);
                     float yvel = velocityTracker.getYVelocity(activePointerId);
                     Log.d(TAG, "onFlingStart");
-                    onFlingStart(parent, child);
+                    onFlingStart(parent, child, xvel, yvel);
                     fling(parent, child, yvel);
+                    onScrollStop(parent, child);
                 }
             case MotionEvent.ACTION_CANCEL:
                 logPointer("cancel", actionIndex, pointerId);
             {
+                onScrollStop(parent, child);
                 if (isBeingDragged && !isFling) {
                     Log.d(TAG, "onScrollStop");
-                    onScrollStop(parent, child);
                 }
                 isBeingDragged = false;
                 activePointerId = INVALID_POINTER;
@@ -232,7 +235,7 @@ public abstract class IndicatorBehavior<V extends View>
         updateTopBottomOffset(
                 coordinatorLayout,
                 header,
-                getCurrentTopBottomOffset() - dy, -dy);
+                getCurrentTopBottomOffset() - dy, -dy, ViewCompat.TYPE_TOUCH);
     }
 
     final boolean fling(
@@ -349,7 +352,7 @@ public abstract class IndicatorBehavior<V extends View>
                 int last = getCurrentTopBottomOffset();
                 if (scroller.computeScrollOffset()) {
                     int current = scroller.getCurrY();
-                    updateTopBottomOffset(parent, child, current, current - last);
+                    updateTopBottomOffset(parent, child, current, current - last, ViewCompat.TYPE_NON_TOUCH);
                     ViewCompat.postOnAnimation(child, this);
                 } else {
                     Log.d(TAG, "onFlingFinished");
@@ -363,13 +366,9 @@ public abstract class IndicatorBehavior<V extends View>
     public abstract int getCurrentTopBottomOffset();
     public abstract int getMinTopBottomOffset();
     public abstract int getMaxTopBottomOffset();
-    public abstract void updateTopBottomOffset(CoordinatorLayout parent, View child, int offset, int delta);
+    public abstract void updateTopBottomOffset(CoordinatorLayout parent, View child, int offset, int delta, int type);
     public abstract void onScrollStart(CoordinatorLayout parent, V layout);
     public abstract void onScrollStop(CoordinatorLayout parent, V layout);
-    public abstract void onFlingStart(CoordinatorLayout parent, V layout);
-    /**
-     * Called when a fling has finished, or the fling was initiated but there wasn't enough velocity
-     * to start it.
-     */
+    public abstract void onFlingStart(CoordinatorLayout parent, V layout, float xvel, float yvel);
     public abstract void onFlingFinished(CoordinatorLayout parent, V layout);
 }

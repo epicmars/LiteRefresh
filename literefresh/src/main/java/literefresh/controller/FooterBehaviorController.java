@@ -37,13 +37,13 @@ public class FooterBehaviorController extends VerticalIndicatorBehaviorControlle
     public int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent, View child,
                                                         View dependency,
                                                         VerticalIndicatorBehavior behavior,
-                                                        ScrollableBehavior contentBehavior) {
-        if (contentBehavior.isBottomMinOffsetReached()
+                                                        ScrollableBehavior scrollableBehavior) {
+        if (scrollableBehavior.isBottomMinOffsetReached()
                 && behavior.getTopPosition()
-                <= contentBehavior.getConfig().getBottomEdgeConfig().getMinOffset()) {
+                <= scrollableBehavior.getConfig().getBottomEdgeConfig().getMinOffset()) {
             return 0;
         }
-        return contentBehavior.getBottomPosition() - behavior.getTopPosition();
+        return scrollableBehavior.getBottomPosition() - behavior.getTopPosition();
     }
 
     @Override

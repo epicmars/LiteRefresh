@@ -44,6 +44,7 @@ import literefresh.state.TouchStateManager;
 public abstract class AnimationOffsetBehavior<V extends View>
         extends ViewOffsetBehavior<V> implements Handler.Callback {
 
+    private final String TAG = getClass().getName();
     public static final int TYPE_UNKNOWN = 2;
 
     static final long HOLD_ON_DURATION = 500L;
@@ -318,7 +319,7 @@ public abstract class AnimationOffsetBehavior<V extends View>
     }
 
     protected void dispatchOnScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, int currentOffset, int offsetDelta, int type) {
-        Log.d("ScrollableBehavior", "dispatchOnScroll currentOffset: " + currentOffset + " offsetDelta: " + offsetDelta);
+        Log.d(TAG, "dispatchOnScroll currentOffset: " + currentOffset + " offsetDelta: " + offsetDelta + " type: " + type);
         for (NestedScrollingListener l : mListeners) {
             l.onScroll(coordinatorLayout, child, getConfig(), currentOffset, offsetDelta, type);
         }

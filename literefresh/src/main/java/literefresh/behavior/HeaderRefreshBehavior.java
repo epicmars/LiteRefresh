@@ -15,6 +15,8 @@
  */
 package literefresh.behavior;
 
+import static literefresh.behavior.IndicatorConfiguration.MODE_FOLLOW;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -29,21 +31,19 @@ import literefresh.R;
 import literefresh.Refresher;
 import literefresh.controller.HeaderBehaviorController;
 
-import static literefresh.behavior.IndicatorConfiguration.MODE_FOLLOW;
-
 /**
  * This class is used to attach to a header view and add nested scrolling features to it.
  *
  * Note that this behavior can not work standalone, the header view to which this behavior is
  * attached must work with a nested scrolling content view that is attached with an
- * {@link RefreshContentBehavior}, otherwise it'll not work.
+ * {@link ContentScrollableBehavior}, otherwise it'll not work.
  *
  * <strong>
  *     The view to which this behavior is attached must be a direct child of {@link CoordinatorLayout}.
  * </strong>
  */
 
-public class RefreshHeaderBehavior<V extends View>
+public class HeaderRefreshBehavior<V extends View>
         extends VerticalIndicatorBehavior<V> implements Refresher {
 
     {
@@ -59,11 +59,11 @@ public class RefreshHeaderBehavior<V extends View>
         });
     }
 
-    public RefreshHeaderBehavior(Context context) {
+    public HeaderRefreshBehavior(Context context) {
         this(context, null);
     }
 
-    public RefreshHeaderBehavior(Context context, AttributeSet attrs) {
+    public HeaderRefreshBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.IndicatorBehavior, 0, 0);
@@ -80,29 +80,19 @@ public class RefreshHeaderBehavior<V extends View>
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
 //        CoordinatorLayout.LayoutParams lp =
 //                ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
-//        final int initialVisibleHeight = getInitialVisibleHeight();
-//        getConfig().setInitialVisibleHeight(initialVisibleHeight);
-//        // If initial visible height is non-positive, to make header visible when the trigger offset
-//        // has been reached, we have scrolled over the header's bottom margin at least.
-//        int triggerOffset = getConfig().getTriggerOffset();
-//        if (initialVisibleHeight <= 0) {
-//            triggerOffset += lp.bottomMargin;
-//        }
-//        getConfig().setTriggerOffset(triggerOffset);
+////        final int initialVisibleHeight = getInitialVisibleHeight();
 //        // Config maximum offset.
-//        configMaxOffset(parent, child, initialVisibleHeight, triggerOffset);
 //        ScrollableBehavior contentBehavior = getContentBehavior(parent, child);
 //        if (!getConfig().isSettled() || !contentBehavior.getConfig().isSettled()) {
 //            getConfig().setSettled(true);
 //            // If we have set a minimum offset for content, but header's initial visible height is smaller,
 //            // than use it as the minimum offset.
 //            if (contentBehavior != null) {
-//                contentBehavior.configTopMinOffset(getConfig().getInitialVisibleHeight());
 //                requestLayout();
 //            }
 //            // The header's height may have changed, it can occur in such a situation when you set
 //            // adjustViewBound to true in a image view's layout attributes and then load image async.
-////            setTopAndBottomOffset(-getConfiguration().getInvisibleHeight());ContentBehavior
+//            setTopAndBottomOffset(getConfig().getTopEdgeConfig().getMinOffset());
 //        }
         return handled;
     }
@@ -182,16 +172,7 @@ public class RefreshHeaderBehavior<V extends View>
      * @return header view's initial visible height.
      */
     private int getInitialVisibleHeight() {
-        int initialVisibleHeight = 0;
-//        if (getConfig().getHeight() <= 0 || getConfig().getVisibleHeight() <= 0) {
-//            initialVisibleHeight = getConfig().getVisibleHeight();
-//        } else if (getConfig().getVisibleHeight() >= getConfig().getHeight()) {
-//            initialVisibleHeight = getConfig().getVisibleHeight() + getConfig().getTopMargin()
-//                    + getConfig().getBottomMargin();
-//        } else {
-//            initialVisibleHeight = getConfig().getVisibleHeight() + getConfig().getBottomMargin();
-//        }
-        return initialVisibleHeight;
+        return getConfig().getTopEdgeConfig().getMinOffset();
     }
 
 }

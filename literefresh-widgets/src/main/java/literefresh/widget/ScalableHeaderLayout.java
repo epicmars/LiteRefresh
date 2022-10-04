@@ -24,7 +24,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import literefresh.OnScrollListener;
 import literefresh.behavior.Configuration;
-import literefresh.behavior.RefreshHeaderBehavior;
+import literefresh.behavior.HeaderRefreshBehavior;
 
 /**
  * A simple scalable header layout.
@@ -92,7 +92,7 @@ public class ScalableHeaderLayout extends RefreshHeaderLayout implements OnScrol
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
-        RefreshHeaderBehavior behavior = (RefreshHeaderBehavior) params.getBehavior();
+        HeaderRefreshBehavior behavior = (HeaderRefreshBehavior) params.getBehavior();
         if (behavior != null) {
             // todo : remove scroll listener
         }

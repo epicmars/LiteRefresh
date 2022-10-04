@@ -178,8 +178,9 @@ public abstract class VerticalIndicatorBehavior<V extends View>
                 (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
         CoordinatorLayout.Behavior behavior = lp.getBehavior();
         if (behavior instanceof ScrollableBehavior) {
+
             final ScrollableBehavior contentBehavior = (ScrollableBehavior) behavior;
-            if (isLayedOut()) {
+            if (isLayOutComplete()) {
                 return onDependenceOffsetChanged(parent, child, dependency, contentBehavior,
                         this);
             } else {
@@ -195,7 +196,7 @@ public abstract class VerticalIndicatorBehavior<V extends View>
         return false;
     }
 
-    private boolean isLayedOut() {
+    private boolean isLayOutComplete() {
         return getParent() != null && getChild() != null;
     }
 
@@ -205,36 +206,31 @@ public abstract class VerticalIndicatorBehavior<V extends View>
         final int offsetDelta = getController().computeOffsetDeltaOnDependentViewChanged(parent, child,
                 dependency, this, contentBehavior);
         if (offsetDelta != 0) {
-            consumeOffsetOnDependentViewChanged(parent, child, contentBehavior, offsetDelta,
+            internalConsumeOffsetOnDependentViewChanged(parent, child, contentBehavior, offsetDelta,
                     TYPE_UNKNOWN);
             return true;
         }
         return false;
     }
 
-    private void consumeOffsetOnDependentViewChanged(CoordinatorLayout coordinatorLayout,
-                                                     V child,
-                                                     ScrollableBehavior contentBehavior,
-                                                     int offsetDelta, int type) {
+    private void internalConsumeOffsetOnDependentViewChanged(CoordinatorLayout coordinatorLayout,
+                                                             V child,
+                                                             ScrollableBehavior contentBehavior,
+                                                             int offsetDelta, int type) {
         int currentOffset = getTopPosition();
         int resultOffset = currentOffset + offsetDelta;
-        if (offsetDelta < 0) {
-            // scroll up
-            if (resultOffset < getConfig().getTopEdgeConfig().getMinOffset()) {
-                offsetDelta = getConfig().getTopEdgeConfig().getMinOffset() - currentOffset;
-            }
-        } else if (offsetDelta > 0) {
-            // scroll down
-            if (resultOffset > getConfig().getTopEdgeConfig().getMaxOffset()) {
-                offsetDelta = getConfig().getTopEdgeConfig().getMaxOffset() - currentOffset;
-            }
+
+        if (resultOffset < getConfig().getTopEdgeConfig().getMinOffset()) {
+            offsetDelta = getConfig().getTopEdgeConfig().getMinOffset() - currentOffset;
+        } else if (resultOffset > getConfig().getTopEdgeConfig().getMaxOffset()) {
+            offsetDelta = getConfig().getTopEdgeConfig().getMaxOffset() - currentOffset;
         }
 
         if (offsetDelta == 0) {
             return;
         }
 
-            int height = child.getHeight();
+        int height = child.getHeight();
         // Before child consume the offset.
 //        for (ScrollingListener l : mListeners) {
 //            l.onPreScroll(coordinatorLayout, child, , getController().transformOffsetCoordinate(
@@ -341,8 +337,8 @@ public abstract class VerticalIndicatorBehavior<V extends View>
     }
 
     @Override
-    public void updateTopBottomOffset(CoordinatorLayout parent, View child, int offset, int delta) {
-        scrollableBehavior.updateTopAndBottomOffset(offset, delta, TYPE_TOUCH);
+    public void updateTopBottomOffset(CoordinatorLayout parent, View child, int offset, int delta, int type) {
+        scrollableBehavior.updateTopAndBottomOffset(offset, delta, type);
     }
 
     @Override
@@ -360,8 +356,10 @@ public abstract class VerticalIndicatorBehavior<V extends View>
     }
 
     @Override
-    public void onFlingStart(CoordinatorLayout parent, V layout) {
+    public void onFlingStart(CoordinatorLayout parent, V layout, float xvel, float yvel) {
         if (ensureScrollingContentBehavior() && ensureDependencyView()) {
+            scrollableBehavior.dispatchOnPreFling(parent, layout, 0, xvel, yvel);
+            scrollableBehavior.dispatchOnFling(parent, layout, 0, xvel, yvel);
             scrollableBehavior.dispatchOnStartScroll(parent, dependency, TYPE_NON_TOUCH);
         }
     }

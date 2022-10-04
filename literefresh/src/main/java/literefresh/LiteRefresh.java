@@ -21,9 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import literefresh.behavior.AnimationOffsetBehavior;
-import literefresh.behavior.RefreshContentBehavior;
-import literefresh.behavior.RefreshFooterBehavior;
-import literefresh.behavior.RefreshHeaderBehavior;
+import literefresh.behavior.ContentScrollableBehavior;
+import literefresh.behavior.FooterLoaderBehavior;
+import literefresh.behavior.HeaderRefreshBehavior;
 
 /**
  * Some convenient util method.
@@ -54,33 +54,33 @@ public class LiteRefresh {
     }
 
     /**
-     * Get the {@link RefreshContentBehavior} attached to the specified view.
+     * Get the {@link ContentScrollableBehavior} attached to the specified view.
      *
      * @param view
      * @return
      */
     @NonNull
-    public static RefreshContentBehavior getContentBehavior(View view) {
+    public static ContentScrollableBehavior getScrollableBehavior(View view) {
         return getAttachedBehavior(view);
     }
 
     /**
-     * Get the {@link RefreshHeaderBehavior} attached to the specified view.
+     * Get the {@link HeaderRefreshBehavior} attached to the specified view.
      * @param view
      * @return
      */
     @NonNull
-    public static RefreshHeaderBehavior getHeaderBehavior(View view) {
+    public static HeaderRefreshBehavior getHeaderBehavior(View view) {
         return getAttachedBehavior(view);
     }
 
     /**
-     * Get the {@link RefreshFooterBehavior} attached to the specified view.
+     * Get the {@link FooterLoaderBehavior} attached to the specified view.
      * @param view
      * @return
      */
     @NonNull
-    public static RefreshFooterBehavior getFooterBehavior(View view) {
+    public static FooterLoaderBehavior getFooterBehavior(View view) {
         return getAttachedBehavior(view);
     }
 }

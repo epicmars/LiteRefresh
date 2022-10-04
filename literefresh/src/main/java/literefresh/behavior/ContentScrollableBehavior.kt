@@ -48,7 +48,7 @@ import literefresh.controller.ScrollableBehaviorController
  * [androidx.coordinatorlayout.widget.CoordinatorLayout].
  ** *
  */
-class RefreshContentBehavior<V : View?> @JvmOverloads constructor(
+class ContentScrollableBehavior<V : View?> @JvmOverloads constructor(
     context: Context?,
     attrs: AttributeSet? = null
 ) : ScrollableBehavior<V>(context, attrs), Refresher, Loader {

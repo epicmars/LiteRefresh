@@ -104,7 +104,7 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
                 }
                 break;
 
-            case ScrollableStateManager.STATE_SCROLL_STOP_AFTER_FLING:
+            case ScrollableStateManager.STATE_SCROLL_STOP_AFTER_FLING_STARTED:
                 if (flingAsCommand && scrollableState.getDirection() != ScrollableStateManager.SCROLL_DIRECTION_UNKNOWN) {
                     if (scrollableState.getDirection() == ScrollableStateManager.SCROLL_DIRECTION_UP) {
                         Checkpoint nextAnchor = front;

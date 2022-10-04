@@ -38,16 +38,18 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
                                                         View child,
                                                         View dependency,
                                                         VerticalIndicatorBehavior behavior,
-                                                        ScrollableBehavior contentBehavior) {
+                                                        ScrollableBehavior scrollableBehavior) {
         // For now we don't care about invisible changes.
         // And when content has reached minimum offset, we should not changed with it.
         // If content has reach it's minimum offset, header may have not changed yet.
-        if (contentBehavior.isTopMinOffsetReached()
+        if (scrollableBehavior.isTopMinOffsetReached()
                 && behavior.getBottomPosition()
-                <= contentBehavior.getConfig().getTopEdgeConfig().getMinOffset()) {
+                <= scrollableBehavior.getConfig().getTopEdgeConfig().getMinOffset()) {
             return 0;
         }
-        return contentBehavior.getTopPosition() - behavior.getBottomPosition();
+        return scrollableBehavior.getTopPosition() - (behavior.getTopPosition()
+                + scrollableBehavior.getConfig().getTopEdgeConfig().getMinOffset()
+                - behavior.getConfig().getTopEdgeConfig().getMinOffset());
     }
 
     @Override

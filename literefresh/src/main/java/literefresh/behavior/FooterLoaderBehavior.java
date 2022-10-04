@@ -38,14 +38,14 @@ import static literefresh.behavior.IndicatorConfiguration.MODE_FOLLOW;
  * <p>
  * Note that the footer behavior can not work standalone, the footer view to which this behavior is
  * attached must work with a nested scrolling content view that is attached with an
- * {@link RefreshContentBehavior}, otherwise it'll not work.
+ * {@link ContentScrollableBehavior}, otherwise it'll not work.
  * <p>
  * <strong>
  * The view to which this behavior is attached must be a direct child of {@link CoordinatorLayout}.
  * </strong>
  */
 
-public class RefreshFooterBehavior<V extends View>
+public class FooterLoaderBehavior<V extends View>
         extends VerticalIndicatorBehavior<V> implements Loader {
 
     {
@@ -61,11 +61,11 @@ public class RefreshFooterBehavior<V extends View>
         });
     }
 
-    public RefreshFooterBehavior(Context context) {
+    public FooterLoaderBehavior(Context context) {
         this(context, null);
     }
 
-    public RefreshFooterBehavior(Context context, AttributeSet attrs) {
+    public FooterLoaderBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IndicatorBehavior,
                 0, 0);
@@ -224,7 +224,7 @@ public class RefreshFooterBehavior<V extends View>
                 (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
         if (null != lp) {
             CoordinatorLayout.Behavior behavior = lp.getBehavior();
-            return behavior instanceof ScrollableBehavior || behavior instanceof RefreshHeaderBehavior;
+            return behavior instanceof ScrollableBehavior || behavior instanceof HeaderRefreshBehavior;
         }
         return false;
     }

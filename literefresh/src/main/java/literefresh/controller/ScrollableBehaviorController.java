@@ -322,6 +322,7 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
 //        for (StateMachine stateMachine : stateMachines) {
 //            stateMachine.onStartScroll(coordinatorLayout, child, config, type);
 //        }
+        Log.d(TAG, "onStartScroll: type=" + type);
         super.onStartScroll(coordinatorLayout, child, config, type);
         topScrollableStateManager.onStart(FLAG_EDGE_TOP_LEFT, type);
         bottomScrollableStateManager.onStart(FLAG_EDGE_BOTTOM_RIGHT, type);

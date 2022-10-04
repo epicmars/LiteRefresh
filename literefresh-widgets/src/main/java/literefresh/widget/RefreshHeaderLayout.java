@@ -22,14 +22,14 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import literefresh.behavior.RefreshHeaderBehavior;
+import literefresh.behavior.HeaderRefreshBehavior;
 
 /**
- * A scrolling header layout that has a attached {@link RefreshHeaderBehavior}.
+ * A scrolling header layout that has a attached {@link HeaderRefreshBehavior}.
  */
 public class RefreshHeaderLayout extends FrameLayout implements CoordinatorLayout.AttachedBehavior{
 
-    protected RefreshHeaderBehavior behavior;
+    protected HeaderRefreshBehavior behavior;
 
     public RefreshHeaderLayout(Context context) {
         this(context, null);
@@ -41,7 +41,7 @@ public class RefreshHeaderLayout extends FrameLayout implements CoordinatorLayou
 
     public RefreshHeaderLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        behavior = new RefreshHeaderBehavior(context, attrs);
+        behavior = new HeaderRefreshBehavior(context, attrs);
     }
 
     @NonNull

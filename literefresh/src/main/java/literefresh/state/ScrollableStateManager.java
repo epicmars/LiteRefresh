@@ -34,12 +34,35 @@ public class ScrollableStateManager implements CheckpointListener {
     private static final String TAG = ScrollableStateManager.class.getName();
 
     public static final int STATE_IDLE = 0;
+    /**
+     * [TOUCH] Scroll start
+     */
     public static final int STATE_SCROLL_START = 1;
+    /**
+     * [TOUCH] Scrolling
+     */
     public static final int STATE_SCROLL = 2;
+    /**
+     * [TOUCH] Scroll stop,
+     * If it happens after a fling has started and not finished.
+     * It will be translate to {@link ScrollableStateManager#STATE_SCROLL_STOP_AFTER_FLING_STARTED}
+     */
     public static final int STATE_SCROLL_STOP = 3;
+    /**
+     * [Fling] Fling start
+     */
     public static final int STATE_FLING_START = 4;
+    /**
+     * [Fling] Scroll start initiated by a fling
+     */
     public static final int STATE_FLING_SCROLL = 5;
-    public static final int STATE_SCROLL_STOP_AFTER_FLING = 6;
+    /**
+     * [Fling] Scroll stop event initiated by a scroll happened after fling has started
+     */
+    public static final int STATE_SCROLL_STOP_AFTER_FLING_STARTED = 6;
+    /**
+     * [Fling] Scroll stop event initiated by a fling happened。
+      */
     public static final int STATE_FLING_STOP = 7;
 
     public static final int SCROLL_DIRECTION_UNKNOWN = 0;
@@ -114,7 +137,7 @@ public class ScrollableStateManager implements CheckpointListener {
                 }
                 break;
             case STATE_FLING_SCROLL:
-                if (mState == STATE_FLING_START || mState == STATE_SCROLL_STOP_AFTER_FLING || mState == STATE_FLING_SCROLL) {
+                if (mState == STATE_FLING_START || mState == STATE_SCROLL_STOP_AFTER_FLING_STARTED || mState == STATE_FLING_SCROLL) {
                     moveToTargetState(edgeFlag, state, offset, delta, front, back);
                 }
                 break;
@@ -123,12 +146,12 @@ public class ScrollableStateManager implements CheckpointListener {
                     moveToTargetState(edgeFlag, state, offset, delta, front, back);
                     setState(STATE_IDLE);
                 } else if (mState == STATE_FLING_START || mState == STATE_FLING_SCROLL) {
-                    moveToTargetState(edgeFlag, STATE_SCROLL_STOP_AFTER_FLING, offset, delta, front, back);
+                    moveToTargetState(edgeFlag, STATE_SCROLL_STOP_AFTER_FLING_STARTED, offset, delta, front, back);
                 }
                 break;
 
             case STATE_FLING_STOP:
-                if (mState == STATE_FLING_SCROLL || mState == STATE_SCROLL_STOP_AFTER_FLING) {
+                if (mState == STATE_FLING_SCROLL || mState == STATE_SCROLL_STOP_AFTER_FLING_STARTED) {
                     moveToTargetState(edgeFlag, state, offset, delta, front, back);
                     setState(STATE_IDLE);
                 }

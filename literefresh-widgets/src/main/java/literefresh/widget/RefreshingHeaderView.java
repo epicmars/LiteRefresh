@@ -32,7 +32,7 @@ import literefresh.LiteRefresh;
 import literefresh.OnRefreshListener;
 import literefresh.OnScrollListener;
 import literefresh.behavior.Configuration;
-import literefresh.behavior.RefreshHeaderBehavior;
+import literefresh.behavior.HeaderRefreshBehavior;
 
 public class RefreshingHeaderView extends RefreshHeaderLayout implements OnScrollListener, OnRefreshListener {
 
@@ -64,7 +64,7 @@ public class RefreshingHeaderView extends RefreshHeaderLayout implements OnScrol
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        RefreshHeaderBehavior behavior = LiteRefresh.getAttachedBehavior(this);
+        HeaderRefreshBehavior behavior = LiteRefresh.getAttachedBehavior(this);
         if (behavior != null) {
             behavior.addOnRefreshListener(this);
             behavior.addOnScrollListener(this);

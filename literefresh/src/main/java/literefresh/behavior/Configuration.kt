@@ -53,6 +53,10 @@ abstract class Configuration(builder: Builder) {
         topEdgeConfig.addCheckpoint(config, *types)
     }
 
+    fun addBottomCheckpoint(config: OffsetConfig, vararg types: Checkpoint.Type) {
+        bottomEdgeConfig.addCheckpoint(config, *types)
+    }
+
     abstract class Builder {
         @JvmField
         var behavior: AnimationOffsetBehavior<*>? = null

@@ -22,13 +22,13 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import literefresh.behavior.RefreshFooterBehavior;
+import literefresh.behavior.FooterLoaderBehavior;
 
 /**
  */
 public class RefreshFooterLayout extends FrameLayout implements CoordinatorLayout.AttachedBehavior{
 
-    protected RefreshFooterBehavior behavior;
+    protected FooterLoaderBehavior behavior;
 
     public RefreshFooterLayout(Context context) {
         this(context, null);
@@ -40,7 +40,7 @@ public class RefreshFooterLayout extends FrameLayout implements CoordinatorLayou
 
     public RefreshFooterLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        behavior = new RefreshFooterBehavior(context, attrs);
+        behavior = new FooterLoaderBehavior(context, attrs);
     }
 
     @NonNull
