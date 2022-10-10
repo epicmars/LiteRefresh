@@ -44,7 +44,7 @@ import literefresh.state.TouchStateManager;
 public abstract class AnimationOffsetBehavior<V extends View>
         extends ViewOffsetBehavior<V> implements Handler.Callback {
 
-    private final String TAG = getClass().getName();
+    private final String TAG = AnimationOffsetBehavior.class.getSimpleName();
     public static final int TYPE_UNKNOWN = 2;
 
     static final long HOLD_ON_DURATION = 500L;
@@ -187,7 +187,7 @@ public abstract class AnimationOffsetBehavior<V extends View>
                         if (!offsetChanged) {
                             parent.dispatchDependentViewsChanged(child);
                         }
-                        dispatchOnScroll(parent, child, value, type, offsetDelta);
+                        dispatchOnScroll(parent, child, value, offsetDelta, type);
                         last = value;
                     }
 

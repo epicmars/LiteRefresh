@@ -217,6 +217,7 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
             = new RefreshStateManager.RefreshStateListener() {
         @Override
         public void onRefreshStateChanged(RefreshState state, Throwable throwable) {
+            Log.d("topRefreshState", "onRefreshStateChanged: " + state.getRefreshState());
             switch (state.getRefreshState()) {
                 case RefreshStateManager.REFRESH_STATE_START:
                     onRefreshStart();
@@ -227,8 +228,11 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
                 case RefreshStateManager.REFRESH_STATE_CANCELLED:
                     // fixme Attempt java.lang.NullPointerException: to invoke virtual method
                     //  'int literefresh.behavior.Checkpoint.offset()' on a null object reference
-                    behavior.animateToPosition(topEdgeRefreshStateManager.getAnchorPoint().offset());
-//                    stopScroll(false);
+                    if (topEdgeRefreshStateManager.getAnchorPoint() == null) {
+                        stopScroll(false);
+                    } else {
+                        behavior.animateToPosition(topEdgeRefreshStateManager.getAnchorPoint().offset());
+                    }
                     break;
                 case RefreshStateManager.REFRESH_STATE_REFRESH:
                     onRefresh();
@@ -259,6 +263,7 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
     private RefreshStateManager.RefreshStateListener bottomEdgeRefreshStateListener = new RefreshStateManager.RefreshStateListener() {
         @Override
         public void onRefreshStateChanged(RefreshState state, Throwable throwable) {
+            Log.d("bottomRefreshState", "onRefreshStateChanged: " + state.getRefreshState());
             switch (state.getRefreshState()) {
                 case RefreshStateManager.REFRESH_STATE_START:
                     onLoadStart();
@@ -423,7 +428,7 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
         Checkpoint back = null;
         // TODO bottom and top position conflict
         if (type == ViewCompat.TYPE_TOUCH) {
-            if (isBottomInRange(child, config)){
+            if (isBottomInRange(child, config)) {
                 int bottomOffset = currentOffset + child.getHeight();
                 Checkpoint closest = config.getBottomEdgeConfig().findClosestCheckpoint(bottomOffset);
                 if (bottomOffset >= closest.getOffsetConfig().getOffset()) {

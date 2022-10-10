@@ -122,7 +122,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
                 //}
                 restoreTopAndBottomOffset(parent, child, savedOffset, TYPE_NON_TOUCH);
             } else {
-                int offset = getConfig().getTopEdgeConfig().getMinOffset() - getViewOffsetHelper().getLayoutTop();
+                int offset = getConfig().getTopEdgeConfig().getInitiateOffset() - getViewOffsetHelper().getLayoutTop();
                 setTopAndBottomOffset(offset);
             }
         }
@@ -374,7 +374,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         // which means content has scrolled to a insignificant or invalid position.
         // We need to reset it.
         if (null == getChild() || getParent() == null || isInTouch()) return;
-        if (getTopPosition() > getConfig().getTopEdgeConfig().getMinOffset()
+        if (getTopPosition() > getConfig().getTopEdgeConfig().getMaxOffset()
                 || getTopPosition() < getConfig().getTopEdgeConfig().getMinOffset()
                 || getBottomPosition() < getParent().getHeight()) {
             // Remove previous pending callback.
@@ -382,6 +382,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
             offsetCallback = new Runnable() {
                 @Override
                 public void run() {
+                    // todo 如果发生越界，才需要进行重置
                     reset(RESET_DURATION);
                 }
             };

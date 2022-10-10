@@ -19,6 +19,7 @@ import android.util.Log
 import android.util.SparseArray
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.math.MathUtils
 import androidx.core.util.containsKey
 import java.lang.Math.abs
 
@@ -30,18 +31,21 @@ class EdgeConfig {
     var mMap: SparseArray<Checkpoint> = SparseArray<Checkpoint>()
     var mMinOffset: Int? = null
     var mMaxOffset: Int? = null
-    var shouldRebuildCheckpoint = false
+    var mShouldRebuildCheckpoint = false
+    var mDefaultLayoutOffset: OffsetConfig? = null
 
     fun onMeasure(
         parent: CoordinatorLayout, child: View
     ) {
         rebuildCheckpoints(parent.measuredHeight, 0)
         updateOffsetRange()
+        updateInitiateOffset(parent.height)
     }
 
     fun onLayout(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
         rebuildCheckpoints(parent.height, layoutDirection)
         updateOffsetRange()
+        updateInitiateOffset(parent.height)
     }
 
     fun getMinOffset(): Int {
@@ -50,6 +54,22 @@ class EdgeConfig {
 
     fun getMaxOffset(): Int {
         return mMaxOffset ?: 0
+    }
+
+    fun  getInitiateOffset(): Int {
+        if (mDefaultLayoutOffset == null) {
+            return getMinOffset()
+        } else {
+            return MathUtils.clamp(mDefaultLayoutOffset!!.offset, getMinOffset(), getMaxOffset())
+        }
+    }
+
+    fun setInitiateOffset(offsetConfig: OffsetConfig) {
+        mDefaultLayoutOffset = offsetConfig
+    }
+
+    fun updateInitiateOffset(parentSize: Int) {
+        mDefaultLayoutOffset?.updateOffset(parentSize)
     }
 
     /**
@@ -82,7 +102,7 @@ class EdgeConfig {
 
     fun addCheckpoint(config: OffsetConfig, vararg types: Checkpoint.Type) {
         mCheckpoints.add(Checkpoint(config, *types))
-        shouldRebuildCheckpoint = true
+        mShouldRebuildCheckpoint = true
     }
 
     // fixme stop point is special for now
@@ -94,15 +114,15 @@ class EdgeConfig {
                 ite.remove()
             }
         }
-        shouldRebuildCheckpoint = true;
+        mShouldRebuildCheckpoint = true;
     }
 
     private fun rebuildCheckpoints(parentSize: Int, layoutDirection: Int) {
         if (parentSize == 0) {
-            shouldRebuildCheckpoint = true
+            mShouldRebuildCheckpoint = true
             return
         }
-        if (!shouldRebuildCheckpoint) {
+        if (!mShouldRebuildCheckpoint) {
             return
         }
         Log.d(TAG, "rebuildCheckpoints")
@@ -119,7 +139,7 @@ class EdgeConfig {
             }
             insertCheckpoint(it)
         }
-        shouldRebuildCheckpoint = false
+        mShouldRebuildCheckpoint = false
     }
 
     private fun updateOffsetRange() {

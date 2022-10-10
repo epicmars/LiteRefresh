@@ -18,6 +18,7 @@ package literefresh.state;
 import android.util.Log;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
 
 import literefresh.behavior.Checkpoint;
 import literefresh.behavior.CheckpointRange;
@@ -107,29 +108,11 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
             case ScrollableStateManager.STATE_SCROLL_STOP_AFTER_FLING_STARTED:
                 if (flingAsCommand && scrollableState.getDirection() != ScrollableStateManager.SCROLL_DIRECTION_UNKNOWN) {
                     if (scrollableState.getDirection() == ScrollableStateManager.SCROLL_DIRECTION_UP) {
-                        Checkpoint nextAnchor = front;
-                        while (nextAnchor != null) {
-                            if (nextAnchor.isAnchorPoint()) {
-                                break;
-                            }
-                            if (nextAnchor.getMPrevious() == null) {
-                                break;
-                            }
-                            nextAnchor = nextAnchor.getMPrevious();
-                        }
-                        anchorPoint = nextAnchor;
+                        Checkpoint nextAnchor = getPreviousAnchor(front);
+                        setAnchorPoint(nextAnchor);
                     } else if (scrollableState.getDirection() == ScrollableStateManager.SCROLL_DIRECTION_DOWN) {
-                        Checkpoint nextAnchor = back;
-                        while (nextAnchor != null) {
-                            if (nextAnchor.isAnchorPoint()) {
-                                break;
-                            }
-                            if (nextAnchor.getMNext() == null) {
-                                break;
-                            }
-                            nextAnchor = nextAnchor.getMNext();
-                        }
-                        anchorPoint = nextAnchor;
+                        Checkpoint nextAnchor = getNextAnchor(back);
+                        setAnchorPoint(nextAnchor);
                     }
                     if (!moveToRefreshState(REFRESH_STATE_REFRESH)) {
                         // Another case is that we are still refreshing, no need to change the state.
@@ -162,7 +145,7 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
                     }
 
                     if (closestAnchor != null && closestAnchor.isAnchorPoint()) {
-                        anchorPoint = closestAnchor;
+                        setAnchorPoint(closestAnchor);
                     }
                 } else if (scrollableState.isBottomRightEdge()) {
                     Checkpoint closestAnchor = front;
@@ -176,7 +159,7 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
                         }
                     }
                     if (closestAnchor != null && closestAnchor.isAnchorPoint()) {
-                        anchorPoint = closestAnchor;
+                        setAnchorPoint(closestAnchor);
                     }
                 }
 
@@ -197,6 +180,46 @@ public class RefreshStateManager implements ScrollableStateManager.ScrollableSta
         }
         Log.d(TAG, "onScrollableStateChanged: Current-refresh-State: " + mState);
         currentRange.update(front, back);
+    }
+
+    @Nullable
+    private Checkpoint getNextAnchor(Checkpoint back) {
+        Checkpoint nextAnchor = back;
+        while (nextAnchor != null) {
+            if (nextAnchor.isAnchorPoint()) {
+                break;
+            }
+            if (nextAnchor.getMNext() == null) {
+                break;
+            }
+            nextAnchor = nextAnchor.getMNext();
+        }
+        if (nextAnchor != null && !nextAnchor.isAnchorPoint()) {
+            return null;
+        }
+        return nextAnchor;
+    }
+
+    @Nullable
+    private Checkpoint getPreviousAnchor(Checkpoint front) {
+        Checkpoint prevAnchor = front;
+        while (prevAnchor != null) {
+            if (prevAnchor.isAnchorPoint()) {
+                break;
+            }
+            if (prevAnchor.getMPrevious() == null) {
+                break;
+            }
+            prevAnchor = prevAnchor.getMPrevious();
+        }
+        if (prevAnchor != null && !prevAnchor.isAnchorPoint()) {
+            return null;
+        }
+        return prevAnchor;
+    }
+
+    private void setAnchorPoint(Checkpoint closestAnchor) {
+        anchorPoint = closestAnchor;
     }
 
     public boolean isCurrentRangeChanged(CheckpointRange range) {
