@@ -23,11 +23,10 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 class ScrollableConfiguration(builder: Builder) : Configuration(builder), IScrollableConfig {
 
     companion object {
-        val TAG = ScrollableConfiguration.javaClass.name
+        val TAG = ScrollableConfiguration::javaClass.name
     }
 
     init {
-
         // Compute max offset, it will not exceed parent height.
         topEdgeConfig.addCheckpoint(
             OffsetConfig.Builder()
@@ -57,7 +56,6 @@ class ScrollableConfiguration(builder: Builder) : Configuration(builder), IScrol
 
     override fun onLayout(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
         super.onLayout(parent, child, layoutDirection)
-        Log.d(TAG, "onLayout")
     }
 
 

@@ -21,6 +21,7 @@ import static androidx.core.view.ViewCompat.TYPE_TOUCH;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -66,7 +67,7 @@ import literefresh.controller.VerticalIndicatorBehaviorController;
  */
 public abstract class VerticalIndicatorBehavior<V extends View>
         extends IndicatorBehavior<V> {
-    private final String TAG = "VerticalIndicator";
+    private final String TAG = getClass().getSimpleName();
     private final int defaultMinTriggerOffset;
     private ScrollableBehavior scrollableBehavior;
     private View dependency;
@@ -239,11 +240,12 @@ public abstract class VerticalIndicatorBehavior<V extends View>
 //                    type);
 //        }
         dispatchOnPreScroll(coordinatorLayout, child, currentOffset, type);
-        float consumed = getController().consumeOffsetOnDependentViewChanged(coordinatorLayout, child,
+        float consumed = getController().consumedOffsetOnDependentViewChanged(coordinatorLayout, child,
                 this, contentBehavior, currentOffset, offsetDelta);
         int consumedInt = Math.round(consumed);
         currentOffset += consumedInt;
         // If the offset is already at the top don't reset it again.
+        Log.d(TAG, "setTopAndBottomOffset:" + currentOffset);
         setTopAndBottomOffset(currentOffset);
         dispatchOnScroll(coordinatorLayout, child, currentOffset, consumedInt, type);
     }

@@ -20,15 +20,17 @@ class OffsetConfig {
     var initialOffset = 0
     var defaultOffset = 0
     var cachedOffset = 0
-    var offsetRatioOfParent = 0f
+    var offsetRatioOfSelf: Float? = null
+    var offsetRatioOfParent: Float? = null
     var isUseDefaultOffset = false
-    var parentSize = 0
+    var parentSizePx = 0
+    var selfSizePx = 0
 
     constructor() {}
     constructor(
         initialOffset: Int, defaultOffset: Int, cachedOffset: Int,
         offsetRatioOfParent: Float, isUseDefaultOffset: Boolean,
-        parentSizePx: Int, childSizePx: Int
+        parentSizePx: Int, selfSizePx: Int
     ) {
         this.offset = initialOffset
         this.initialOffset = initialOffset
@@ -36,19 +38,28 @@ class OffsetConfig {
         this.cachedOffset = cachedOffset
         this.offsetRatioOfParent = offsetRatioOfParent
         this.isUseDefaultOffset = isUseDefaultOffset
-        this.parentSize = parentSize;
+        this.parentSizePx = parentSizePx
+        this.selfSizePx = selfSizePx
     }
 
     /**
      * Must call this method when the view layout.
+     * @param parentSizePx parent height if vertical scroll or parent width if horizon scroll
+     * @param selfSizePx self height in pixel if vertical scroll or self width if horizon scroll
      */
-    fun updateOffset(parentSizePx: Int) : Int {
-        this.parentSize = parentSizePx;
+    fun updateOffset(parentSizePx: Int, selfSizePx: Int) : Int {
+        this.parentSizePx = parentSizePx;
+        this.selfSizePx = selfSizePx
+
         if (isUseDefaultOffset) {
             offset = defaultOffset;
         }
-        if (offsetRatioOfParent > 0) {
-            offset = (offsetRatioOfParent * parentSize).toInt()
+        if (offsetRatioOfParent != null) {
+            offset = (offsetRatioOfParent!! * parentSizePx).toInt()
+        }
+
+        if (offsetRatioOfSelf != null) {
+            offset = (offsetRatioOfSelf!! * selfSizePx).toInt()
         }
         return offset;
     }
@@ -58,10 +69,11 @@ class OffsetConfig {
         var initialOffset = 0
         var defaultOffset = 0
         var cachedOffset = 0
-        var offsetRatioOfSelf = 0f
-        var offsetRatioOfParent = 0f
+        var offsetRatioOfSelf : Float? = null
+        var offsetRatioOfParent : Float? = null
         var isUseDefaultOffset = false
-        var parentSize = 0
+        var parentSizePx = 0
+        var selfSizePx = 0
 
         constructor() {}
         constructor(config: OffsetConfig?) {
@@ -71,10 +83,14 @@ class OffsetConfig {
         private fun init(config: OffsetConfig?) {
             if (config == null) return
             offset = config.offset
+            initialOffset = config.initialOffset
+            offsetRatioOfSelf = config.offsetRatioOfSelf
             offsetRatioOfParent = config.offsetRatioOfParent
             defaultOffset = config.defaultOffset
             cachedOffset = config.cachedOffset
             isUseDefaultOffset = config.isUseDefaultOffset
+            parentSizePx = config.parentSizePx
+            selfSizePx = config.selfSizePx
         }
 
         fun setOffset(minOffset: Int): Builder {
@@ -109,7 +125,7 @@ class OffsetConfig {
         }
 
         fun setParentSize(parentSizePx: Int): Builder {
-            this.parentSize = parentSizePx;
+            this.parentSizePx = parentSizePx;
             return this;
         }
 
@@ -118,10 +134,12 @@ class OffsetConfig {
             config.offset = offset
             config.cachedOffset = cachedOffset
             config.defaultOffset = defaultOffset
+            config.offsetRatioOfSelf = offsetRatioOfSelf
             config.offsetRatioOfParent = offsetRatioOfParent
             config.isUseDefaultOffset = isUseDefaultOffset
-            config.parentSize = parentSize
-            config.updateOffset(parentSize)
+            config.parentSizePx = parentSizePx
+            config.selfSizePx = selfSizePx
+            config.updateOffset(parentSizePx, selfSizePx)
             return config
         }
     }

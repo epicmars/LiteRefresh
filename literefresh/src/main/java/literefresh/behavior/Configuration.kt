@@ -16,6 +16,7 @@
 package literefresh.behavior
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 
@@ -44,6 +45,7 @@ abstract class Configuration(builder: Builder) {
     open fun onLayout(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
         height = child.height
         parentHeight = parent.height
+        Log.d(javaClass.name, "parentHeight: " + parentHeight + " childHeight: " + height)
 
         topEdgeConfig.onLayout(parent, child, layoutDirection)
         bottomEdgeConfig.onLayout(parent, child, layoutDirection)

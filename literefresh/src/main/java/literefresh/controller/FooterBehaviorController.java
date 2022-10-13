@@ -47,10 +47,10 @@ public class FooterBehaviorController extends VerticalIndicatorBehaviorControlle
     }
 
     @Override
-    public float consumeOffsetOnDependentViewChanged(CoordinatorLayout parent, View child,
-                                                     VerticalIndicatorBehavior behavior,
-                                                     ScrollableBehavior contentBehavior,
-                                                     int currentOffset, int offsetDelta) {
+    public float consumedOffsetOnDependentViewChanged(CoordinatorLayout parent, View child,
+                                                      VerticalIndicatorBehavior behavior,
+                                                      ScrollableBehavior contentBehavior,
+                                                      int currentOffset, int offsetDelta) {
         switch (behavior.getConfig().getFollowMode()) {
 //            case MODE_STILL:
 //                if (child.getTop() - behavior.getConfig().getTopMargin() ==

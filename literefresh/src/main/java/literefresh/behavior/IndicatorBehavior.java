@@ -32,8 +32,8 @@ import androidx.core.math.MathUtils;
 import androidx.core.view.ViewCompat;
 
 /**
- * @see com.google.android.material.appbar.HeaderBehavior
  * @param <V>
+ * @see com.google.android.material.appbar.HeaderBehavior
  */
 public abstract class IndicatorBehavior<V extends View>
         extends AnimationOffsetBehavior<V> {
@@ -144,8 +144,7 @@ public abstract class IndicatorBehavior<V extends View>
         int pointerId = ev.getPointerId(actionIndex);
 
         switch (ev.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN:
-            {
+            case MotionEvent.ACTION_DOWN: {
                 final int x = (int) ev.getX();
                 final int y = (int) ev.getY();
                 if (isPointInChildBounds(parent, child, x, y)) {
@@ -161,8 +160,7 @@ public abstract class IndicatorBehavior<V extends View>
             case MotionEvent.ACTION_POINTER_DOWN:
                 logPointer("down_pointer", actionIndex, pointerId);
                 break;
-            case MotionEvent.ACTION_MOVE:
-            {
+            case MotionEvent.ACTION_MOVE: {
                 Log.d(TAG, "touch move");
                 final int activePointerIndex = ev.findPointerIndex(activePointerId);
                 if (activePointerIndex == -1) {
@@ -187,7 +185,7 @@ public abstract class IndicatorBehavior<V extends View>
                     scroll(parent, child, dy);
                 }
             }
-                break;
+            break;
 
             case MotionEvent.ACTION_UP:
                 logPointer("up", actionIndex, pointerId);
@@ -215,7 +213,7 @@ public abstract class IndicatorBehavior<V extends View>
                     velocityTracker = null;
                 }
             }
-                break;
+            break;
         }
 
         if (velocityTracker != null) {
@@ -364,11 +362,18 @@ public abstract class IndicatorBehavior<V extends View>
     }
 
     public abstract int getCurrentTopBottomOffset();
+
     public abstract int getMinTopBottomOffset();
+
     public abstract int getMaxTopBottomOffset();
+
     public abstract void updateTopBottomOffset(CoordinatorLayout parent, View child, int offset, int delta, int type);
+
     public abstract void onScrollStart(CoordinatorLayout parent, V layout);
+
     public abstract void onScrollStop(CoordinatorLayout parent, V layout);
+
     public abstract void onFlingStart(CoordinatorLayout parent, V layout, float xvel, float yvel);
+
     public abstract void onFlingFinished(CoordinatorLayout parent, V layout);
 }

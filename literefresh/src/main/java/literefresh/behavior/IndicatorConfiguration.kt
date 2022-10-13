@@ -16,11 +16,38 @@
 package literefresh.behavior
 
 import android.content.Context
+import android.view.View
 import androidx.annotation.IntDef
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 
 class IndicatorConfiguration(builder: Builder) : Configuration(builder) {
+
+
+    companion object {
+        val TAG = IndicatorConfiguration::class.java.name
+        /**
+         * Follow content view.
+         */
+        const val MODE_FOLLOW = 0
+
+        /**
+         * Still, does not follow content view.
+         */
+        const val MODE_STILL = 1
+
+        /**
+         * Follow when scroll down.
+         */
+        const val MODE_FOLLOW_DOWN = 2
+
+        /**
+         * Follow when scroll up.
+         */
+        const val MODE_FOLLOW_UP = 3
+    }
+
     @IntDef(MODE_FOLLOW, MODE_STILL, MODE_FOLLOW_DOWN, MODE_FOLLOW_UP)
     @Retention(RetentionPolicy.SOURCE)
     internal annotation class FollowMode
@@ -32,10 +59,14 @@ class IndicatorConfiguration(builder: Builder) : Configuration(builder) {
     var followMode: Int
 
     init {
+        showUpWhenRefresh = builder.showUpWhenRefresh
+        followMode = builder.followMode
+
         // Compute max offset, it will not exceed parent height.
         topEdgeConfig.addCheckpoint(
             OffsetConfig.Builder()
-                .setOffset(Integer.MIN_VALUE).build(),
+                .setOffsetRatioOfSelf(-1.0f)
+                .build(),
             Checkpoint.Type.STOP_POINT,
         )
         topEdgeConfig.addCheckpoint(
@@ -54,6 +85,11 @@ class IndicatorConfiguration(builder: Builder) : Configuration(builder) {
                 .setOffset(Integer.MAX_VALUE).build(),
             Checkpoint.Type.STOP_POINT
         )
+    }
+
+    override fun onLayout(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
+        super.onLayout(parent, child, layoutDirection)
+
     }
 
     class Builder : Configuration.Builder {
@@ -117,30 +153,4 @@ class IndicatorConfiguration(builder: Builder) : Configuration(builder) {
         }
     }
 
-    companion object {
-        /**
-         * Follow content view.
-         */
-        const val MODE_FOLLOW = 0
-
-        /**
-         * Still, does not follow content view.
-         */
-        const val MODE_STILL = 1
-
-        /**
-         * Follow when scroll down.
-         */
-        const val MODE_FOLLOW_DOWN = 2
-
-        /**
-         * Follow when scroll up.
-         */
-        const val MODE_FOLLOW_UP = 3
-    }
-
-    init {
-        showUpWhenRefresh = builder.showUpWhenRefresh
-        followMode = builder.followMode
-    }
 }

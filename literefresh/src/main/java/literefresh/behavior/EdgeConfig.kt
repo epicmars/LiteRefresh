@@ -37,15 +37,15 @@ class EdgeConfig {
     fun onMeasure(
         parent: CoordinatorLayout, child: View
     ) {
-        rebuildCheckpoints(parent.measuredHeight, 0)
+        rebuildCheckpoints(parent.measuredHeight, child.measuredHeight, 0)
         updateOffsetRange()
-        updateInitiateOffset(parent.height)
+        updateInitiateOffset(parent.height, child.height)
     }
 
     fun onLayout(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
-        rebuildCheckpoints(parent.height, layoutDirection)
+        rebuildCheckpoints(parent.height, child.height, layoutDirection)
         updateOffsetRange()
-        updateInitiateOffset(parent.height)
+        updateInitiateOffset(parent.height, child.height)
     }
 
     fun getMinOffset(): Int {
@@ -68,8 +68,8 @@ class EdgeConfig {
         mDefaultLayoutOffset = offsetConfig
     }
 
-    fun updateInitiateOffset(parentSize: Int) {
-        mDefaultLayoutOffset?.updateOffset(parentSize)
+    fun updateInitiateOffset(parentSize: Int, selfSize: Int) {
+        mDefaultLayoutOffset?.updateOffset(parentSize, selfSize)
     }
 
     /**
@@ -117,7 +117,7 @@ class EdgeConfig {
         mShouldRebuildCheckpoint = true;
     }
 
-    private fun rebuildCheckpoints(parentSize: Int, layoutDirection: Int) {
+    private fun rebuildCheckpoints(parentSize: Int, selfSize: Int, layoutDirection: Int) {
         if (parentSize == 0) {
             mShouldRebuildCheckpoint = true
             return
@@ -125,13 +125,13 @@ class EdgeConfig {
         if (!mShouldRebuildCheckpoint) {
             return
         }
-        Log.d(TAG, "rebuildCheckpoints")
+        Log.d(TAG, "rebuildCheckpoints: " + parentSize + " " + selfSize)
         mMap.clear()
         mDeactived.forEach {
-            it.offsetConfig.updateOffset(parentSize)
+            it.offsetConfig.updateOffset(parentSize, selfSize)
         }
         mCheckpoints.forEach {
-            it.offsetConfig.updateOffset(parentSize)
+            it.offsetConfig.updateOffset(parentSize, selfSize)
             mDeactived.forEach { deactive ->
                 if (it.offset() == deactive.offset()) {
                     it.deactive(deactive.types.keys.toTypedArray())

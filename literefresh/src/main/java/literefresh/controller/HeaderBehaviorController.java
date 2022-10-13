@@ -47,6 +47,8 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
                 <= scrollableBehavior.getConfig().getTopEdgeConfig().getMinOffset()) {
             return 0;
         }
+        // After scroll stop, the header top position plus the distance from header min-offset to content min-offset
+        // should equal to the content top position.
         return scrollableBehavior.getTopPosition() - (behavior.getTopPosition()
                 + scrollableBehavior.getConfig().getTopEdgeConfig().getMinOffset()
                 - behavior.getConfig().getTopEdgeConfig().getMinOffset());
@@ -59,10 +61,10 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
     }
 
     @Override
-    public float consumeOffsetOnDependentViewChanged(CoordinatorLayout parent, View child,
-                                                     VerticalIndicatorBehavior behavior,
-                                                     ScrollableBehavior contentBehavior,
-                                                     int currentOffset, int offsetDelta) {
+    public float consumedOffsetOnDependentViewChanged(CoordinatorLayout parent, View child,
+                                                      VerticalIndicatorBehavior behavior,
+                                                      ScrollableBehavior contentBehavior,
+                                                      int currentOffset, int offsetDelta) {
         switch (behavior.getConfig().getFollowMode()) {
 //            case MODE_STILL:
 //                // If child has reached it's initial position then don't move again.

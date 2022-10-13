@@ -44,10 +44,10 @@ public abstract class VerticalIndicatorBehaviorController<B extends VerticalIndi
                                                                  VerticalIndicatorBehavior behavior,
                                                                  ScrollableBehavior contentBehavior);
 
-    public abstract float consumeOffsetOnDependentViewChanged(CoordinatorLayout parent, View child,
-                                                              VerticalIndicatorBehavior behavior,
-                                                              ScrollableBehavior contentBehavior,
-                                                              int currentOffset, int offsetDelta);
+    public abstract float consumedOffsetOnDependentViewChanged(CoordinatorLayout parent, View child,
+                                                               VerticalIndicatorBehavior behavior,
+                                                               ScrollableBehavior contentBehavior,
+                                                               int currentOffset, int offsetDelta);
 
     public abstract int transformOffsetCoordinate(CoordinatorLayout parent, View child,
                                                   VerticalIndicatorBehavior behavior,
