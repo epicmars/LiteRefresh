@@ -228,16 +228,13 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
                 case RefreshStateManager.REFRESH_STATE_CANCELLED:
                     // fixme Attempt java.lang.NullPointerException: to invoke virtual method
                     //  'int literefresh.behavior.Checkpoint.offset()' on a null object reference
-                    if (topEdgeRefreshStateManager.getAnchorPoint() == null) {
-                        stopScroll(false);
-                    } else {
-                        behavior.animateToPosition(topEdgeRefreshStateManager.getAnchorPoint().offset());
-                    }
+                    stopScroll(false);
                     break;
                 case RefreshStateManager.REFRESH_STATE_REFRESH:
                     onRefresh();
                     break;
                 case RefreshStateManager.REFRESH_STATE_COMPLETE:
+                    stopScroll(false);
                     onRefreshComplete(throwable);
                     break;
                 case RefreshStateManager.REFRESH_STATE_IDLE:
@@ -260,30 +257,27 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
         }
     };
 
-    private RefreshStateManager.RefreshStateListener bottomEdgeRefreshStateListener = new RefreshStateManager.RefreshStateListener() {
-        @Override
-        public void onRefreshStateChanged(RefreshState state, Throwable throwable) {
-            Log.d("bottomRefreshState", "onRefreshStateChanged: " + state.getRefreshState());
-            switch (state.getRefreshState()) {
-                case RefreshStateManager.REFRESH_STATE_START:
-                    onLoadStart();
-                    break;
-                case RefreshStateManager.REFRESH_STATE_READY:
-                    onReleaseToLoad();
-                    break;
-                case RefreshStateManager.REFRESH_STATE_CANCELLED:
-                    stopScroll(false);
-                    break;
-                case RefreshStateManager.REFRESH_STATE_REFRESH:
-                    onLoad();
-                    break;
-                case RefreshStateManager.REFRESH_STATE_COMPLETE:
-                    onLoadComplete(throwable);
-                    break;
-                case RefreshStateManager.REFRESH_STATE_IDLE:
-                default:
-                    break;
-            }
+    private RefreshStateManager.RefreshStateListener bottomEdgeRefreshStateListener = (state, throwable) -> {
+        Log.d("bottomRefreshState", "onRefreshStateChanged: " + state.getRefreshState());
+        switch (state.getRefreshState()) {
+            case RefreshStateManager.REFRESH_STATE_START:
+                onLoadStart();
+                break;
+            case RefreshStateManager.REFRESH_STATE_READY:
+                onReleaseToLoad();
+                break;
+            case RefreshStateManager.REFRESH_STATE_CANCELLED:
+                stopScroll(false);
+                break;
+            case RefreshStateManager.REFRESH_STATE_REFRESH:
+                onLoad();
+                break;
+            case RefreshStateManager.REFRESH_STATE_COMPLETE:
+                onLoadComplete(throwable);
+                break;
+            case RefreshStateManager.REFRESH_STATE_IDLE:
+            default:
+                break;
         }
     };
 
@@ -624,7 +618,11 @@ public class ScrollableBehaviorController extends BehaviorController<ScrollableB
     }
 
     public void stopScroll(boolean holdOn) {
-        behavior.stopScroll(holdOn);
+        if (topEdgeRefreshStateManager.getAnchorPoint() == null) {
+            behavior.stopScroll(holdOn);
+        } else {
+            behavior.animateToPosition(topEdgeRefreshStateManager.getAnchorPoint().offset());
+        }
     }
 
 }

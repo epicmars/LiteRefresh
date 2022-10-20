@@ -92,6 +92,23 @@ class IndicatorConfiguration(builder: Builder) : Configuration(builder) {
 
     }
 
+    fun deactivateTopDefaultMinOffset() {
+        topEdgeConfig.deactivateCheckpoint(
+            OffsetConfig.Builder()
+                .setOffsetRatioOfSelf(-1.0f)
+                .build(),
+            Checkpoint.Type.STOP_POINT,
+        )
+    }
+
+    fun deactivateBottomDefaultMinOffset() {
+        topEdgeConfig.deactivateCheckpoint(
+            OffsetConfig.Builder()
+                .setOffset(Integer.MIN_VALUE).build(),
+            Checkpoint.Type.STOP_POINT,
+        )
+    }
+
     class Builder : Configuration.Builder {
         var showUpWhenRefresh: Boolean? = null
 

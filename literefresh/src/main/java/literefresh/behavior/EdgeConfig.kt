@@ -96,7 +96,7 @@ class EdgeConfig {
         return current
     }
 
-    fun deactiveCheckpoint(config: OffsetConfig, vararg types: Checkpoint.Type) {
+    fun deactivateCheckpoint(config: OffsetConfig, vararg types: Checkpoint.Type) {
         mDeactived.add(Checkpoint(config, *types))
     }
 

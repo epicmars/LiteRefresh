@@ -364,9 +364,9 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
     /**
      * If view has scroll to a invalid position, reset it, otherwise do nothing.
      *
-     * @param holdOn
+     * @param delay
      */
-    public void stopScroll(boolean holdOn) {
+    public void stopScroll(boolean delay) {
         // There is an issue that when a refresh complete immediately, the header or footer
         // showing animation may be just started, need to be cancelled.
         cancelAnimation();
@@ -374,6 +374,7 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
         // which means content has scrolled to a insignificant or invalid position.
         // We need to reset it.
         if (null == getChild() || getParent() == null || isInTouch()) return;
+        // todo 根据检查点判断如何滑动
         if (getTopPosition() > getConfig().getTopEdgeConfig().getMaxOffset()
                 || getTopPosition() < getConfig().getTopEdgeConfig().getMinOffset()
                 || getBottomPosition() < getParent().getHeight()) {
@@ -386,8 +387,12 @@ public class ScrollableBehavior<V extends View> extends AnimationOffsetBehavior<
                     reset(RESET_DURATION);
                 }
             };
-            handler.postDelayed(offsetCallback, holdOn ? HOLD_ON_DURATION : 0L);
+            handler.postDelayed(offsetCallback, delay ? HOLD_ON_DURATION : 0L);
         }
+    }
+
+    public void finishScroll(boolean delay) {
+        getController().stopScroll(delay);
     }
 
     public void animateToPositionIfLarger(int position) {
