@@ -16,4 +16,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = 'LiteRefresh'
-include ':samples', ':literefresh', ':literefresh-widgets'
+include ':literefresh', ':literefresh-widgets'
